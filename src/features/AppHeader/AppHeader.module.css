@@ -9,41 +9,41 @@
   justify-content: space-between;
   padding: 0 var(--spacing-4);
   user-select: none;
+  font-family: var(--font-family-sans);
 }
 
 .left, .center, .right {
   display: flex;
   align-items: center;
-  gap: var(--spacing-2);
+  gap: var(--spacing-3);
 }
 
 .left { flex: 1; justify-content: flex-start; }
 .center { justify-content: center; height: 100%; }
 .right { flex: 1; justify-content: flex-end; }
 
-
-.appHeader h3 {
-  font-size: 1.1em;
-  font-weight: 600;
-  margin: 0;
-  color: var(--surface-fg-primary);
+.appTitle {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--surface-fg-primary);
 }
 
-.settingsMenu {
-  padding: var(--spacing-2);
-  width: 240px;
+.divider {
+    width: 1px;
+    height: 20px;
+    background-color: var(--surface-border-secondary);
 }
 
 .menuItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-2);
+  width: 100%; /* Ensure label and switch take full width */
   font-size: 0.9em;
   color: var(--surface-fg-primary);
 }
 
-.menuDivider {
+.menuSeparator {
   height: 1px;
   background-color: var(--surface-border-secondary);
   margin: var(--spacing-1);
