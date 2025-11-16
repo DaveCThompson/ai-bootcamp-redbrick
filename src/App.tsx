@@ -4,25 +4,21 @@ import { DndContext, DragOverlay, DropAnimation, defaultDropAnimationSideEffects
 
 // Features
 import { AppHeader } from './features/AppHeader/AppHeader';
-import { ComponentBrowser } from './features/ComponentBrowser/ComponentBrowser';
 import { GeneralComponentsBrowser } from './features/ComponentBrowser/GeneralComponentsBrowser';
 import { PlaceholderPanel } from './features/ComponentBrowser/PlaceholderPanel';
 import { EditorCanvas } from './features/Editor/EditorCanvas';
 import { MainToolbar } from './features/Editor/MainToolbar';
 import { PropertiesPanel } from './features/Editor/PropertiesPanel/PropertiesPanel';
 import { DndDragOverlay } from './features/Editor/DndDragOverlay';
-import { PreviewView } from './features/Preview/PreviewView';
 import { SettingsPage } from './features/Settings/SettingsPage';
 
 // Generic Components
 import { ResizablePanel } from './components/ResizablePanel';
-import { DataBindingModal } from './components/DataBindingModal';
 import { ToastContainer } from './components/ToastContainer';
 
 // Data and Hooks
 import { useCanvasDnd } from './data/useCanvasDnd';
 import { useEditorHotkeys } from './data/useEditorHotkeys';
-import { useUrlSync } from './data/useUrlSync';
 import {
   isComponentBrowserVisibleAtom,
   activeToolbarTabAtom,
@@ -57,7 +53,6 @@ function App() {
   
   // Centralized hotkey management
   useEditorHotkeys();
-  useUrlSync();
 
   // MODIFIED: Added an activation constraint to the PointerSensor.
   // This delay allows click events (select, edit) to fire before a drag is initiated.
@@ -72,9 +67,6 @@ function App() {
   const renderLeftPanelContent = () => {
     if (!isLeftPanelVisible) return null;
 
-    if (activeTabId === 'data') {
-      return <ComponentBrowser />;
-    }
     if (activeTabId === 'general' || activeTabId === 'layout') {
       return <GeneralComponentsBrowser />;
     }
@@ -84,8 +76,6 @@ function App() {
 
   const renderMainContent = () => {
     switch (viewMode) {
-      case 'preview':
-        return <PreviewView />;
       case 'settings':
         return <SettingsPage />;
       case 'editor':
@@ -131,7 +121,6 @@ function App() {
       <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw', overflow: 'hidden' }}>
         <AppHeader />
         {renderMainContent()}
-        <DataBindingModal />
         <ToastContainer />
       </div>
        <DragOverlay dropAnimation={dropAnimation}>

@@ -2,7 +2,7 @@
 import { useSetAtom } from 'jotai';
 import { 
   startEditingOnEmptyCanvasAtom,
-} from '../../data/atoms';
+} from '../../data/historyAtoms';
 import styles from './CanvasEmptyState.module.css';
 
 export const CanvasEmptyState = () => {

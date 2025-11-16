@@ -7,7 +7,6 @@ import styles from './MainToolbar.module.css';
 const toolbarGroups: { id: ToolbarTabId; label: string; icon: string }[][] = [
   [
     { id: 'general', label: 'General', icon: 'widgets' },
-    { id: 'data', label: 'Data fields', icon: 'database' },
   ],
   [
     { id: 'templates', label: 'Templates', icon: 'file_present' },

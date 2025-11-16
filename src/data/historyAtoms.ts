@@ -1,8 +1,15 @@
 // src/data/historyAtoms.ts
 import { atom } from 'jotai';
 import { produce, Draft } from 'immer';
-import { BoundData, LayoutComponent, FormComponent, CanvasComponent, AppearanceProperties, NormalizedCanvasComponents, DraggableComponent } from '../types';
-import { canvasInteractionAtom, CanvasInteractionState, scrollRequestAtom } from './atoms';
+import { LayoutComponent, FormComponent, CanvasComponent, AppearanceProperties, NormalizedCanvasComponents } from '../types';
+import { 
+  canvasInteractionAtom, 
+  CanvasInteractionState, 
+  scrollRequestAtom,
+  isPropertiesPanelVisibleAtom,
+  activeToolbarTabAtom,
+  isComponentBrowserVisibleAtom,
+} from './atoms';
 import { createFormComponent, createLayoutComponent } from './componentFactory';
 
 // 1. DEFINE THE CORE SHAPES
@@ -31,15 +38,11 @@ export type HistoryAction =
   | { type: 'COMPONENT_ADD'; payload: { 
       componentType: 'layout' | 'widget' | 'field'; 
       name: string; // For layouts, this is the name. For form components, it's the initial label.
-      origin?: 'data' | 'general'; 
       parentId: string; 
       index: number; 
       controlType?: FormComponent['properties']['controlType']; // NEW: Allow specifying control type
       controlTypeProps?: Partial<FormComponent['properties']>;
-      bindingData?: { nodeId: string, nodeName: string, fieldId: string, path: string };
     } }
-  // NEW: Bulk add action for Data Navigator
-  | { type: 'COMPONENTS_ADD_BULK'; payload: { componentsToAdd: DraggableComponent[]; targetParentId: string; targetIndex?: number; } }
   | { type: 'COMPONENT_DELETE'; payload: { componentId: string } }
   | { type: 'COMPONENTS_DELETE_BULK'; payload: { componentIds: string[] } }
   | { type: 'COMPONENT_MOVE'; payload: { componentId: string; newParentId: string; oldParentId: string; newIndex: number; } }
@@ -47,7 +50,6 @@ export type HistoryAction =
   | { type: 'COMPONENTS_WRAP'; payload: { componentIds: string[]; parentId: string; } }
   | { type: 'COMPONENT_UNWRAP'; payload: { componentId: string; } } // NEW
   | { type: 'COMPONENT_CONVERT'; payload: { componentId: string; targetType: 'heading' | 'paragraph' | 'link' } }
-  | { type: 'COMPONENT_UPDATE_BINDING'; payload: { componentId: string; newBinding: BoundData | null } }
   | { type: 'COMPONENT_UPDATE_PROPERTIES'; payload: { componentId: string; newProperties: Partial<Omit<LayoutComponent['properties'], 'appearance'>>; } }
   | { type: 'COMPONENT_UPDATE_APPEARANCE'; payload: { componentId: string; newAppearance: Partial<AppearanceProperties>; } }
   | { type: 'COMPONENT_UPDATE_CONTEXTUAL_LAYOUT'; payload: { componentId: string; newLayout: Partial<FormComponent['contextualLayout']> } }
@@ -140,32 +142,6 @@ export const commitActionAtom = atom(
                 set(scrollRequestAtom, { componentId: newComponent.id });
               }
             }
-            break;
-          }
-          case 'COMPONENTS_ADD_BULK': {
-            const { componentsToAdd, targetParentId, targetIndex } = action.action.payload;
-            const parent = presentState.components[targetParentId];
-            if (!parent || parent.componentType !== 'layout') break;
-
-            const newComponentIds: string[] = [];
-            for (const comp of componentsToAdd) {
-                const newComponent = createFormComponent({
-                    parentId: targetParentId,
-                    name: comp.name,
-                    origin: 'data',
-                    bindingData: comp.nodeId && comp.nodeName && comp.path ? {
-                        nodeId: comp.nodeId,
-                        nodeName: comp.nodeName,
-                        fieldId: comp.id,
-                        path: comp.path
-                    } : undefined,
-                });
-                presentState.components[newComponent.id] = newComponent;
-                newComponentIds.push(newComponent.id);
-            }
-            
-            const finalIndex = targetIndex ?? parent.children.length;
-            parent.children.splice(finalIndex, 0, ...newComponentIds);
             break;
           }
           case 'COMPONENT_DELETE': {
@@ -302,14 +278,6 @@ export const commitActionAtom = atom(
             }
             break;
           }
-          case 'COMPONENT_UPDATE_BINDING': {
-            const { componentId, newBinding } = action.action.payload;
-            const component = presentState.components[componentId];
-            if (component && (component.componentType === 'field' || component.componentType === 'widget')) {
-                component.binding = newBinding;
-            }
-            break;
-          }
           case 'COMPONENT_UPDATE_FORM_PROPERTIES': { // NEW
             const { componentId, newProperties } = action.action.payload;
             const component = presentState.components[componentId];
@@ -393,3 +361,12 @@ export const canvasComponentsByIdAtom = atom<NormalizedCanvasComponents>((get) =
 export const rootComponentIdAtom = atom<string>((get) => get(undoableStateAtom).rootComponentId);
 export const canUndoAtom = atom<boolean>((get) => get(historyAtom).past.length > 0);
 export const canRedoAtom = atom<boolean>((get) => get(historyAtom).future.length > 0);
+
+// --- User Flow Atom ---
+export const startEditingOnEmptyCanvasAtom = atom(null, (get, set) => {
+  const rootId = get(rootComponentIdAtom);
+  set(canvasInteractionAtom, { mode: 'selecting', ids: [rootId] });
+  set(isPropertiesPanelVisibleAtom, true);
+  set(activeToolbarTabAtom, 'general');
+  set(isComponentBrowserVisibleAtom, true);
+});

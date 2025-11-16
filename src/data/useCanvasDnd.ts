@@ -85,7 +85,7 @@ export const useCanvasDnd = () => {
   };
   
   const handleAddNewComponent = (activeData: DndData, dropTarget: { parentId: string, index: number }) => {
-    const { name, type, origin, controlType, controlTypeProps } = activeData;
+    const { name, type, controlType, controlTypeProps } = activeData;
     const { parentId, index } = dropTarget;
     
     commitAction({
@@ -94,15 +94,10 @@ export const useCanvasDnd = () => {
         payload: {
           componentType: type as 'layout' | 'widget',
           name, 
-          origin,
           parentId,
           index,
           controlType,
           controlTypeProps,
-          bindingData: activeData.data ? {
-            fieldId: String(activeData.id),
-            ...activeData.data
-          } : undefined,
         }
       },
       message: `Add '${name}'`

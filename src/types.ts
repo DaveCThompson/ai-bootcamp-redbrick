@@ -10,28 +10,11 @@ export interface DraggableComponent {
   type: 'layout' | 'widget' | 'field';
   icon: string;
   iconColor?: string;
-  nodeId?: string;
-  nodeName?: string;
-  path?: string;
 }
 
 export interface ComponentGroup {
   title: string;
   components: DraggableComponent[];
-}
-
-export interface ComponentNode {
-  id: string;
-  name: string;
-  connections: number;
-}
-
-export interface DropdownItem {
-  id: string;
-  name: string;
-  isNavigable: boolean;
-  icon: string;
-  iconColor: string;
 }
 
 export interface DndData {
@@ -40,29 +23,15 @@ export interface DndData {
   type: string;
   icon?: string;
   isNew?: boolean;
-  origin?: 'data' | 'general';
   controlType?: FormComponent['properties']['controlType'];
   controlTypeProps?: Partial<FormComponent['properties']>;
   childrenCount?: number;
-  data?: {
-    nodeId: string;
-    nodeName: string;
-    path: string;
-  };
 }
 
 
 // =================================================================
 //                       CANVAS COMPONENTS
 // =================================================================
-
-export interface BoundData {
-  nodeId: string;
-  nodeName: string;
-  fieldId: string;
-  fieldName: string;
-  path: string;
-}
 
 export type AppearanceType = 'transparent' | 'primary' | 'secondary' | 'tertiary' | 'info' | 'warning' | 'error';
 export interface AppearanceProperties {
@@ -96,8 +65,6 @@ export interface LayoutComponent extends BaseComponent {
 
 export interface FormComponent extends BaseComponent {
   componentType: 'widget' | 'field';
-  origin?: 'data' | 'general';
-  binding: BoundData | null;
   properties: {
     label: string;
     content?: string;

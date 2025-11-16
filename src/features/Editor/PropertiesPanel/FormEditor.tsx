@@ -1,10 +1,8 @@
 // src/features/Editor/PropertiesPanel/FormEditor.tsx
 import { useSetAtom } from 'jotai';
 import { commitActionAtom } from '../../../data/historyAtoms';
-import { dataBindingRequestAtom } from '../../../data/atoms';
 import { FormComponent, CanvasComponent } from '../../../types';
 import { registerPropertyEditor, PropertyEditorProps } from './propertyEditorRegistry';
-import { DataBindingPicker } from '../../../components/DataBindingPicker';
 import { Switch } from '../../../components/Switch';
 import { IconToggleGroup } from '../../../components/IconToggleGroup';
 import { Select, SelectItem } from '../../../components/Select';
@@ -39,7 +37,6 @@ const textElementOptions: { value: NonNullable<FormComponent['properties']['text
 ];
 
 const FormEditor = ({ component }: PropertyEditorProps<CanvasComponent>) => {
-  const setBindingRequest = useSetAtom(dataBindingRequestAtom);
   const commitAction = useSetAtom(commitActionAtom);
 
   if (component.componentType !== 'field' && component.componentType !== 'widget') {
@@ -47,13 +44,6 @@ const FormEditor = ({ component }: PropertyEditorProps<CanvasComponent>) => {
   }
 
   const { controlType } = component.properties;
-
-  const handleOpenBindingModal = () => {
-    setBindingRequest({
-      componentId: component.id,
-      currentBinding: component.binding,
-    });
-  };
 
   const handlePropertyChange = (newProperties: Partial<FormComponent['properties']>) => {
     commitAction({
@@ -142,7 +132,7 @@ const FormEditor = ({ component }: PropertyEditorProps<CanvasComponent>) => {
   }
 
   return (
-    <Accordion defaultValue={['display', 'data', 'field-settings', 'validation', 'contextual-layout']}>
+    <Accordion defaultValue={['display', 'field-settings', 'validation', 'contextual-layout']}>
       <AccordionItem value="display" trigger="Display">
         <div className={styles.propItem}>
           <label htmlFor="display-as-toggle">Display as</label>
@@ -151,16 +141,6 @@ const FormEditor = ({ component }: PropertyEditorProps<CanvasComponent>) => {
             options={displayOptions}
             value={controlType}
             onValueChange={value => handlePropertyChange({ controlType: value })}
-          />
-        </div>
-      </AccordionItem>
-
-      <AccordionItem value="data" trigger="Data">
-        <div className={styles.propItem}>
-          <label>Data binding</label>
-          <DataBindingPicker 
-            binding={component.binding}
-            onOpen={handleOpenBindingModal}
           />
         </div>
       </AccordionItem>
