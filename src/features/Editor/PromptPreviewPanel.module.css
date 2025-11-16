@@ -1,0 +1,60 @@
+/* src/features/Editor/PromptPreviewPanel.module.css */
+.previewContainer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  height: 100%;
+  background-color: var(--surface-bg-tertiary);
+  font-family: var(--font-family-sans);
+  overflow-y: auto;
+  padding: var(--spacing-8);
+}
+
+.previewContainer.splitView {
+  flex: 1;
+  min-width: 0; /* Important for flexbox sizing */
+}
+
+.previewCard {
+  background-color: var(--surface-bg-primary);
+  border-radius: var(--radius-3xl);
+  max-width: 800px;
+  width: 100%;
+  margin: var(--spacing-8) auto;
+  box-shadow: var(--surface-shadow-lg);
+  border: 1px solid var(--surface-border-secondary);
+  display: flex;
+  flex-direction: column;
+}
+
+.previewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-4) var(--spacing-6);
+  border-bottom: 1px solid var(--surface-border-secondary);
+  flex-shrink: 0;
+}
+
+.previewHeader h3 {
+  margin: 0;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--surface-fg-primary);
+}
+
+.previewContent {
+  flex-grow: 1;
+  padding: var(--spacing-6);
+  min-height: 200px;
+}
+
+.markdownOutput {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: var(--font-family-sans);
+  font-size: 1em;
+  line-height: 1.7;
+  color: var(--surface-fg-primary);
+  margin: 0;
+}

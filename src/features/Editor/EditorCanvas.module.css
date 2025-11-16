@@ -1,4 +1,27 @@
 /* src/features/Editor/EditorCanvas.module.css */
+.editorViewContainer {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column; /* Changed to column for toolbar positioning */
+  position: relative; 
+  overflow: hidden;
+  height: 100%; /* Ensure container fills height */
+}
+
+.editorContent {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row; /* Main content is a row (canvas/split) */
+  min-height: 0; /* Prevents flexbox overflow issues */
+}
+
+.splitView {
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
+  min-height: 0;
+}
+
 .canvasContainer {
   width: 100%;
   height: 100%;
@@ -9,6 +32,12 @@
   display: flex;
   align-items: flex-start; 
   justify-content: center;
+}
+
+.splitView .canvasContainer {
+  flex: 1;
+  min-width: 0;
+  border-right: 1px solid var(--surface-border-secondary);
 }
 
 .promptCard {
@@ -68,7 +97,7 @@
 }
 
 /* --- HOVER & SELECTION STYLES --- */
-.promptElementContent, .layoutContainer, .roleContainer {
+.promptElementContent, .layoutContainer, .roleContainer, .templateContainer {
   border: 1px solid transparent;
   padding: var(--spacing-1);
   margin: 0;
@@ -78,14 +107,16 @@
 
 .selectableWrapper:not(.selected):hover > .promptElementContent,
 .selectableWrapper:not(.selected):hover > .layoutContainer,
-.selectableWrapper:not(.selected):hover > .roleContainer {
+.selectableWrapper:not(.selected):hover > .roleContainer,
+.selectableWrapper:not(.selected):hover > .templateContainer {
   background-color: var(--surface-bg-primary_hover);
   border-color: var(--control-border-tertiary-hover);
 }
 
 .selectableWrapper.selected > .promptElementContent,
 .selectableWrapper.selected > .layoutContainer,
-.selectableWrapper.selected > .roleContainer {
+.selectableWrapper.selected > .roleContainer,
+.selectableWrapper.selected > .templateContainer {
   border-color: var(--control-border-selected);
   background-color: var(--control-bg-selected);
 }

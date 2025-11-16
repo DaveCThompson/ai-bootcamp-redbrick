@@ -32,6 +32,7 @@ export const RoleRenderer = ({ component, mode }: RendererProps<DynamicComponent
           <span className="material-symbols-rounded">person</span>
           <h4>{roleInfo?.label || 'Role'}</h4>
         </div>
+        <p className={styles.roleDescription}>{roleInfo?.description}</p>
         <div className={styles.roleContent}>
           {component.children.map(childId => <CanvasNode key={childId} componentId={childId} />)}
         </div>

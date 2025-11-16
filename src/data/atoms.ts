@@ -31,6 +31,9 @@ export const focusIntentAtom = atom<string | null>(null);
 //                         Canvas State
 // =================================================================
 
+export type EditorLayoutMode = 'split' | 'builder' | 'preview';
+export const editorLayoutModeAtom = atom<EditorLayoutMode>('split');
+
 export type CanvasInteractionState =
   | { mode: 'idle' }
   | { mode: 'selecting'; ids: string[] }

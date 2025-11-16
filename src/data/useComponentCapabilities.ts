@@ -30,9 +30,9 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
   const isRootSelected = selectedIds.includes(rootId);
   const parent = allComponents[primaryComponent.parentId] as LayoutComponent | undefined;
 
-  // Universal lock check for single-selected items
+  // CRITICAL CHANGE: A locked component (like Template Container) can be deleted and moved,
+  // but not renamed or structurally changed.
   if (isSingleSelection && primaryComponent.isLocked) {
-    // A locked component can only be nudged up/down. It cannot be renamed, deleted, or structurally changed.
     let canNudgeUp = false;
     let canNudgeDown = false;
     if (parent) {
@@ -40,20 +40,26 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
       canNudgeUp = index > 0;
       canNudgeDown = index < parent.children.length - 1;
     }
-    return { ...defaultState, canNudgeUp, canNudgeDown };
+    // Allow deletion and movement for locked items.
+    return { ...defaultState, canDelete: !isRootSelected, canNudgeUp, canNudgeDown };
   }
 
-  const canDelete = !isRootSelected && selectedIds.every(id => !allComponents[id]?.isLocked);
-  const canWrap = !isRootSelected && selectedIds.every(id => !allComponents[id]?.isLocked);
+  // If any selected component is locked, bulk actions like wrap/delete are disabled.
+  const anyLocked = selectedIds.some(id => allComponents[id]?.isLocked);
+  if (anyLocked) {
+    return defaultState;
+  }
+
+  const canDelete = !isRootSelected;
+  const canWrap = !isRootSelected;
   
   const canUnwrap = isSingleSelection &&
     primaryComponent.componentType === 'layout' &&
     !isRootSelected &&
     primaryComponent.children.length > 0 &&
-    !!parent &&
-    !primaryComponent.isLocked;
+    !!parent;
 
-  const canRename = isSingleSelection && !isRootSelected && !primaryComponent.isLocked;
+  const canRename = isSingleSelection && !isRootSelected;
 
   const canSelectParent = isSingleSelection && !!parent && parent.id !== rootId;
 

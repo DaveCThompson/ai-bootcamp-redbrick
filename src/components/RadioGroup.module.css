@@ -2,27 +2,35 @@
 .radioGroupRoot {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+}
+
+.radioGroupItemWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  cursor: pointer;
 }
 
 .radioGroupItem {
   all: unset;
-  background-color: white;
+  background-color: var(--surface-bg-primary);
   width: 18px;
   height: 18px;
   border-radius: 100%;
   border: 1px solid var(--surface-border-primary);
   box-shadow: var(--surface-shadow-sm);
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  flex-shrink: 0;
 }
 
-.radioGroupItem:hover {
+.radioGroupItemWrapper:hover .radioGroupItem {
   border-color: var(--surface-border-theme);
 }
 
 .radioGroupItem:focus-visible {
-  outline: 2px solid var(--control-focus-ring-standard);
-  outline-offset: 2px;
+  border-color: var(--surface-border-theme);
+  box-shadow: 0 0 0 2px var(--control-focus-ring-standard);
 }
 
 .radioGroupIndicator {
@@ -45,9 +53,8 @@
 
 .label {
   color: var(--surface-fg-primary);
-  font-size: 15px;
-  line-height: 1;
-  padding-left: 15px;
+  font-size: 0.9em;
+  font-weight: 500;
+  line-height: 1.4;
   user-select: text;
-  cursor: pointer;
 }

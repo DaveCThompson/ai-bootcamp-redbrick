@@ -5,6 +5,7 @@ import {
   canvasInteractionAtom,
   selectedCanvasComponentIdsAtom,
   appViewModeAtom,
+  editorLayoutModeAtom, // Import the new layout mode atom
 } from './atoms';
 import { canvasComponentsByIdAtom } from './historyAtoms';
 import { useUndoRedo } from './useUndoRedo';
@@ -17,11 +18,12 @@ export const useEditorHotkeys = () => {
   const { undo, redo } = useUndoRedo();
   const actions = useCanvasActions(selectedIds);
   const viewMode = useAtomValue(appViewModeAtom);
+  const editorLayoutMode = useAtomValue(editorLayoutModeAtom); // Read the new layout mode
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // CRITICAL: Disable all editor hotkeys if not in editor view.
-      if (viewMode !== 'editor') {
+      // CRITICAL: Disable all editor hotkeys if not in editor view or if in preview layout mode.
+      if (viewMode !== 'editor' || editorLayoutMode === 'preview') {
         return;
       }
 
@@ -88,7 +90,7 @@ export const useEditorHotkeys = () => {
         const component = allComponents[selectedIds[0]];
         if (!component) return;
         const parent = allComponents[component.parentId];
-        if (!parent || parent.componentType !== 'layout') return;
+        if (!parent || (parent.componentType !== 'layout' && parent.componentType !== 'dynamic')) return;
 
         if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
           const direction = event.key === 'ArrowUp' ? 'up' : 'down';
@@ -99,5 +101,5 @@ export const useEditorHotkeys = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [interactionState, selectedIds, allComponents, undo, redo, actions, viewMode]);
+  }, [interactionState, selectedIds, allComponents, undo, redo, actions, viewMode, editorLayoutMode]);
 };

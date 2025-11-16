@@ -1,5 +1,5 @@
 // src/features/Editor/EditorCanvas.tsx
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useAtomValue, useSetAtom, useAtom } from 'jotai';
 import { useDroppable } from '@dnd-kit/core';
 import {
@@ -11,6 +11,8 @@ import {
   contextMenuTargetIdAtom,
   isContextMenuOpenAtom,
   contextMenuInstanceKeyAtom,
+  editorLayoutModeAtom,
+  EditorLayoutMode,
 } from '../../data/atoms';
 import { rootComponentIdAtom, promptNameAtom } from '../../data/historyAtoms';
 import { useEditorHotkeys } from '../../data/useEditorHotkeys';
@@ -19,12 +21,14 @@ import { useAutoScroller } from '../../data/useAutoScroller';
 import { CanvasNode } from './CanvasNode';
 import { FloatingMultiSelectToolbar } from './CanvasUI';
 import { CanvasContextMenu } from './CanvasContextMenu';
+import { ScreenToolbar } from './ScreenToolbar';
+import { PromptPreviewPanel } from './PromptPreviewPanel';
 
 import styles from './EditorCanvas.module.css';
 
 const CANVAS_BACKGROUND_ID = '--canvas-background--';
 
-export const EditorCanvas = () => {
+const CanvasView = () => {
   const rootId = useAtomValue(rootComponentIdAtom);
   const promptName = useAtomValue(promptNameAtom);
   const [interactionState, setInteractionState] = useAtom(canvasInteractionAtom);
@@ -43,8 +47,7 @@ export const EditorCanvas = () => {
     canvasContainerRef.current = node;
     setBackgroundNodeRef(node);
   };
-
-  useEditorHotkeys();
+  
   useAutoScroller(canvasContainerRef);
 
   const handleCanvasClick = (e: React.MouseEvent) => {
@@ -105,5 +108,52 @@ export const EditorCanvas = () => {
         <FloatingMultiSelectToolbar />
       </div>
     </CanvasContextMenu>
+  );
+}
+
+export const EditorCanvas = () => {
+  const [layoutMode, setLayoutMode] = useAtom(editorLayoutModeAtom);
+  const setIsPropertiesPanelVisible = useSetAtom(isPropertiesPanelVisibleAtom);
+
+  // Sync properties panel visibility with the layout mode
+  useEffect(() => {
+    if (layoutMode === 'preview') {
+      setIsPropertiesPanelVisible(false);
+    } else {
+      // In split or builder mode, the properties panel is potentially visible
+      setIsPropertiesPanelVisible(true);
+    }
+  }, [layoutMode, setIsPropertiesPanelVisible]);
+  
+  useEditorHotkeys();
+
+  const renderContent = () => {
+    switch (layoutMode) {
+      case 'builder':
+        return <CanvasView />;
+      case 'preview':
+        return <PromptPreviewPanel isPrimaryView />;
+      case 'split':
+        return (
+          <div className={styles.splitView}>
+            <CanvasView />
+            <PromptPreviewPanel isPrimaryView={false} />
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className={styles.editorViewContainer}>
+      <ScreenToolbar
+        layoutMode={layoutMode}
+        onLayoutModeChange={(mode: EditorLayoutMode) => setLayoutMode(mode)}
+      />
+      <div className={styles.editorContent}>
+        {renderContent()}
+      </div>
+    </div>
   );
 };
