@@ -1,0 +1,42 @@
+/* src/features/Welcome/WelcomePage.module.css */
+.welcomeContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--surface-bg-tertiary);
+  font-family: var(--font-family-sans);
+  height: 100%;
+  overflow: auto;
+}
+
+.welcomeContent {
+  text-align: center;
+  color: var(--surface-fg-secondary);
+  max-width: 600px;
+  padding: var(--spacing-8);
+}
+
+.welcomeIcon {
+  font-size: 64px !important;
+  margin-bottom: var(--spacing-4);
+  color: var(--surface-fg-brand-primary);
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48;
+}
+
+.welcomeContent h1 {
+  font-size: 2em;
+  font-weight: 700;
+  color: var(--surface-fg-primary);
+  margin: 0 0 var(--spacing-2) 0;
+}
+
+.welcomeContent p {
+  font-size: 1.1em;
+  line-height: 1.6;
+  margin: 0 0 var(--spacing-4) 0;
+}

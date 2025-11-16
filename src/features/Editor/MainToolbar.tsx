@@ -1,4 +1,5 @@
 // src/features/Editor/MainToolbar.tsx
+import React from 'react'; // CORRECTED: This import is essential for JSX to work.
 import { useAtom, useAtomValue } from 'jotai';
 import { isToolbarCompactAtom, activeToolbarTabAtom, isComponentBrowserVisibleAtom, ToolbarTabId } from '../../data/atoms';
 import { Tooltip } from '../../components/Tooltip';
@@ -6,16 +7,12 @@ import styles from './MainToolbar.module.css';
 
 const toolbarGroups: { id: ToolbarTabId; label: string; icon: string }[][] = [
   [
-    { id: 'general', label: 'General', icon: 'widgets' },
+    { id: 'lab-1', label: 'Lab 1', icon: 'science' },
+    { id: 'lab-2', label: 'Lab 2', icon: 'biotech' },
   ],
   [
-    { id: 'templates', label: 'Templates', icon: 'file_present' },
-  ],
-  [
-    { id: 'conditions', label: 'Conditions', icon: 'account_tree' },
-  ],
-  [
-    { id: 'layers', label: 'Layers', icon: 'layers' },
+    { id: 'lab-3', label: 'Lab 3', icon: 'experiment' },
+    { id: 'lab-4', label: 'Lab 4', icon: 'labs' },
   ],
 ];
 
@@ -58,12 +55,14 @@ export const MainToolbar = () => {
   return (
     <div className={toolbarClassName}>
       {toolbarGroups.map((group, groupIndex) => (
-        <div key={groupIndex} className={styles.toolbarGroup}>
-          {group.map(renderButton)}
-          {!isCompact && groupIndex < toolbarGroups.length - 1 && (
+        <React.Fragment key={groupIndex}>
+          <div className={styles.toolbarGroup}>
+            {group.map(renderButton)}
+          </div>
+          {groupIndex < toolbarGroups.length - 1 && (
             <div className={styles.toolbarDividerHorizontal} />
           )}
-        </div>
+        </React.Fragment>
       ))}
     </div>
   );

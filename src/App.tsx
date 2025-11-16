@@ -10,7 +10,8 @@ import { EditorCanvas } from './features/Editor/EditorCanvas';
 import { MainToolbar } from './features/Editor/MainToolbar';
 import { PropertiesPanel } from './features/Editor/PropertiesPanel/PropertiesPanel';
 import { DndDragOverlay } from './features/Editor/DndDragOverlay';
-import { SettingsPage } from './features/Settings/SettingsPage';
+import { ReferencesPage } from './features/References/ReferencesPage';
+import { WelcomePage } from './features/Welcome/WelcomePage';
 
 // Generic Components
 import { ResizablePanel } from './components/ResizablePanel';
@@ -54,8 +55,6 @@ function App() {
   // Centralized hotkey management
   useEditorHotkeys();
 
-  // MODIFIED: Added an activation constraint to the PointerSensor.
-  // This delay allows click events (select, edit) to fire before a drag is initiated.
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -67,7 +66,7 @@ function App() {
   const renderLeftPanelContent = () => {
     if (!isLeftPanelVisible) return null;
 
-    if (activeTabId === 'general' || activeTabId === 'layout') {
+    if (activeTabId === 'lab-1') {
       return <GeneralComponentsBrowser />;
     }
 
@@ -76,8 +75,10 @@ function App() {
 
   const renderMainContent = () => {
     switch (viewMode) {
-      case 'settings':
-        return <SettingsPage />;
+      case 'welcome':
+        return <WelcomePage />;
+      case 'references':
+        return <ReferencesPage />;
       case 'editor':
       default:
         return (

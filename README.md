@@ -11,7 +11,7 @@ This project began its life as **Screen Studio**, a flexible, high-craft form an
 The project is now evolving. To better serve the emerging need for structured AI prompt and workflow creation, we are pivoting to **AI Bootcamp**. This new direction embraces simplicity and structure over stylistic flexibility.
 
 Key changes in this evolution include:
--   **A Simplified Component Model:** The "Layout Container" has become a purely structural "Group" with no visual styling options. Components like "Link" have been removed to narrow the project's focus.
+-   **A Simplified Component Model:** The "Layout Container" has become a purely structural "Context Container" with no visual styling options. Components like "Link" have been removed to narrow the project's focus.
 -   **Focus on Hierarchy:** By removing layout and styling controls, the editor's primary function is now to help users build a clear, hierarchical structure for their content, which is ideal for complex AI prompts.
 -   **Preservation of High-Craft UX:** The core principles of a stable canvas, reliable undo/redo, and an intuitive selection model from Screen Studio have all been preserved.
 
@@ -48,10 +48,10 @@ The project uses **Jotai** for its minimal, atomic state management model.
 
 The canvas is built for intuitive drag-and-drop interaction with a small, focused set of components.
 
--   **Group:** A purely structural container for organizing other components. It defaults to a simple vertical stack and has no configurable visual properties (no padding, background, etc.). It is the primary tool for creating hierarchy.
--   **Heading:** A simple text element for creating titles and subtitles within the prompt structure.
--   **Paragraph:** A simple multi-line text element for descriptive content.
--   **Form Fields (Text Input, etc.):** Simple input placeholders that represent data collection points in a prompt or workflow.
+-   **Context Container:** A purely structural container for organizing other components. It defaults to a simple vertical stack and has no configurable visual properties (no padding, background, etc.). It is the primary tool for creating hierarchy.
+-   **Section Header:** A simple text element for creating titles and subtitles within the prompt structure.
+-   **Text Block:** A simple multi-line text element for descriptive content.
+-   **Form Fields (Text Input, etc.):** Simple input placeholders that represent data collection points (variables) in a prompt or workflow.
 
 ### Unified Rendering Pattern
 All canvas components are rendered through a single, unified set of renderer components located in `src/features/Editor/renderers/`. Each renderer accepts a `mode: 'canvas' | 'preview'` prop to separate its interactive editor appearance from its clean "final" appearance.

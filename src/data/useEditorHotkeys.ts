@@ -20,7 +20,7 @@ export const useEditorHotkeys = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // CRITICAL FIX: Disable all editor hotkeys if not in editor view.
+      // CRITICAL: Disable all editor hotkeys if not in editor view.
       if (viewMode !== 'editor') {
         return;
       }
@@ -70,14 +70,8 @@ export const useEditorHotkeys = () => {
         return;
       }
 
-      if (event.key === 'Enter' && selectedIds.length === 1) {
-        event.preventDefault();
-        const idToEdit = selectedIds[0];
-        if (idToEdit) {
-          actions.handleRename(); // MODIFIED: handleRename no longer needs an ID
-        }
-        return;
-      }
+      // REMOVED: 'Enter' key no longer triggers edit mode to allow for better multi-line input.
+      // The only ways to enter edit mode are now Double-Click or Alt/Option+Click.
 
       if (isCtrlOrCmd && event.key.toLowerCase() === 'g') {
         event.preventDefault();
@@ -96,8 +90,6 @@ export const useEditorHotkeys = () => {
         const parent = allComponents[component.parentId];
         if (!parent || parent.componentType !== 'layout') return;
 
-        // CRITICAL FIX: Translate event.key to the required literal type.
-        // This resolves the TypeScript error shown in the screenshot.
         if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
           const direction = event.key === 'ArrowUp' ? 'up' : 'down';
           actions.handleNudge(direction);

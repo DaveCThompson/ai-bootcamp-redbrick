@@ -23,7 +23,6 @@ export interface UndoableState {
 
 interface ActionMeta {
   message: string;
-  // FIX: Store the entire interaction state to allow for a perfect undo/redo.
   interactionState: CanvasInteractionState;
 }
 
@@ -57,8 +56,7 @@ export type HistoryAction =
 const historyAtom = atom<HistoryData>({
   past: [],
   present: {
-    // Change the default screen name
-    formName: "New AI Flow",
+    formName: "New Prompt",
     rootComponentId: 'root',
     components: {
       'root': {
@@ -238,7 +236,6 @@ export const commitActionAtom = atom(
       });
       return nextState;
     });
-    // FIX: Get the interaction state from the correct source atom.
     const currentInteractionState = get(canvasInteractionAtom);
     const newMeta: ActionMeta = { message: action.message, interactionState: currentInteractionState };
     set(actionMetaHistoryAtom, (currentMetaHistory) => ({
@@ -263,7 +260,6 @@ export const undoAtom = atom(null, (_get, set) => {
     if (!currentMetaHistory.past.length) return currentMetaHistory;
     const lastMeta = currentMetaHistory.past[currentMetaHistory.past.length - 1];
     const newPastMetas = currentMetaHistory.past.slice(0, -1);
-    // FIX: Set the source atom, not the derived one, to restore the full interaction state.
     set(canvasInteractionAtom, lastMeta.interactionState);
     return {
       past: newPastMetas,
@@ -287,7 +283,6 @@ export const redoAtom = atom(null, (_get, set) => {
     if (!currentMetaHistory.future.length) return currentMetaHistory;
     const nextMeta = currentMetaHistory.future[0];
     const newFutureMetas = currentMetaHistory.future.slice(1);
-    // FIX: Set the source atom, not the derived one, to restore the full interaction state.
     set(canvasInteractionAtom, nextMeta.interactionState);
     return {
       past: [...currentMetaHistory.past, nextMeta],
@@ -309,6 +304,6 @@ export const startEditingOnEmptyCanvasAtom = atom(null, (get, set) => {
   const rootId = get(rootComponentIdAtom);
   set(canvasInteractionAtom, { mode: 'selecting', ids: [rootId] });
   set(isPropertiesPanelVisibleAtom, true);
-  set(activeToolbarTabAtom, 'general');
+  set(activeToolbarTabAtom, 'lab-1');
   set(isComponentBrowserVisibleAtom, true);
 });

@@ -59,13 +59,14 @@ export const AppHeader = () => {
             <HeaderMenu />
         </DropdownMenu.Root>
         <div className={styles.divider} />
-        <span className={styles.appTitle}>BestHuman x Redbrick | AI Bootcamp</span>
+        <span className={styles.appTitle}>AI Bootcamp</span>
       </div>
       
       <div className={styles.center}>
         <AnimatedTabs value={viewMode} onValueChange={(value) => setViewMode(value as AppViewMode)}>
-            <Tab value="editor">Editor</Tab>
-            <Tab value="settings">Settings</Tab>
+            <Tab value="welcome">Welcome</Tab>
+            <Tab value="editor">Prompt Builder</Tab>
+            <Tab value="references">References</Tab>
         </AnimatedTabs>
       </div>
       

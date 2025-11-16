@@ -5,14 +5,14 @@ import { UniqueIdentifier, ClientRect } from '@dnd-kit/core';
 // =================================================================
 //                         App State
 // =================================================================
-export type AppViewMode = 'editor' | 'settings';
-export type ToolbarTabId = 'layout' | 'general' | 'templates' | 'conditions' | 'layers';
+export type AppViewMode = 'welcome' | 'editor' | 'references';
+export type ToolbarTabId = 'lab-1' | 'lab-2' | 'lab-3' | 'lab-4';
 export type SettingsLayoutMode = 'single-column' | 'two-column';
 export type ScreenType = 'case-init' | 'insert' | 'update' | 'search' | 'folder-view' | 'header-screen';
 
 export const appViewModeAtom = atom<AppViewMode>('editor');
 export const isSettingsMenuOpenAtom = atom(false);
-export const activeToolbarTabAtom = atom<ToolbarTabId>('general');
+export const activeToolbarTabAtom = atom<ToolbarTabId>('lab-1');
 export const isComponentBrowserVisibleAtom = atom(false);
 export const isPropertiesPanelVisibleAtom = atom(true);
 
@@ -49,7 +49,6 @@ export const selectionAnchorIdAtom = atom<string | null>(null);
 
 // --- Context Menu State ---
 export const contextMenuTargetIdAtom = atom<string | null>(null);
-// FIX: Re-add the necessary atoms for the "keyed portal" architecture.
 export const isContextMenuOpenAtom = atom(false); 
 export const contextMenuInstanceKeyAtom = atom(0);
 

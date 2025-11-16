@@ -2,7 +2,7 @@
 import { useSetAtom } from 'jotai';
 import { useDraggable } from '@dnd-kit/core';
 import { isComponentBrowserVisibleAtom } from '../../data/atoms';
-import { generalComponents } from '../../data/generalComponentsMock';
+import { promptElements } from '../../data/promptElementsMock';
 import { DraggableComponent, DndData, FormComponent } from '../../types';
 import { PanelHeader } from '../../components/PanelHeader';
 import panelStyles from '../../components/panel.module.css';
@@ -21,8 +21,8 @@ const DraggableListItem = ({ component }: { component: DraggableComponent }) => 
         (component.id === 'heading' || component.id === 'paragraph') ? 'plain-text' : 
         (component.id === 'group-container') ? undefined : component.id as FormComponent['properties']['controlType'],
       controlTypeProps: 
-        component.id === 'heading' ? { textElement: 'h2', content: 'Heading' } :
-        component.id === 'paragraph' ? { textElement: 'p', content: 'This is a paragraph of text.' } :
+        component.id === 'heading' ? { textElement: 'h2', content: 'Section Header' } :
+        component.id === 'paragraph' ? { textElement: 'p', content: 'This is a block of text.' } :
         undefined,
     } satisfies DndData,
   });
@@ -53,10 +53,10 @@ export const GeneralComponentsBrowser = () => {
 
   return (
     <div className={panelStyles.componentBrowserContainer}>
-      <PanelHeader title="General Components" onClose={handleClosePanel} />
+      <PanelHeader title="Prompt Elements" onClose={handleClosePanel} />
       <div className={panelStyles.componentListContainer}>
         <ul className={panelStyles.componentList}>
-          {generalComponents.map((group) => (
+          {promptElements.map((group) => (
             <li key={group.title} className={panelStyles.componentListGroup}>
               <h5 className={panelStyles.listGroupTitle}>{group.title}</h5>
               <ul className={panelStyles.componentListGroupItems}>
