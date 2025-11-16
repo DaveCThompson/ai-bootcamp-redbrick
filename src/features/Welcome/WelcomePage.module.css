@@ -17,15 +17,23 @@
   padding: var(--spacing-8);
 }
 
-.welcomeIcon {
-  font-size: 64px !important;
-  margin-bottom: var(--spacing-4);
-  color: var(--surface-fg-theme-primary);
-  font-variation-settings:
-    'FILL' 1,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 48;
+.logoStack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-8);
+}
+
+.logoStack .logoLabel {
+  font-size: 1.5em;
+  font-weight: 700;
+  color: var(--surface-fg-primary);
+}
+
+.logoStack .material-symbols-rounded {
+  font-size: 24px;
+  color: var(--surface-fg-tertiary);
 }
 
 .welcomeContent h1 {

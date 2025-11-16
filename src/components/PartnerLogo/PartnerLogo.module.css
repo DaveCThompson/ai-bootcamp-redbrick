@@ -1,0 +1,13 @@
+/* src/components/PartnerLogo/PartnerLogo.module.css */
+.logoSvg {
+  height: auto;
+}
+
+/* --- Size Variants --- */
+.logoSvg[data-size='header'] {
+  width: 90px;
+}
+
+.logoSvg[data-size='welcome'] {
+  width: 180px;
+}

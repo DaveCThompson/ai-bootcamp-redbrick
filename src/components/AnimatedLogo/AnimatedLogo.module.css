@@ -1,0 +1,15 @@
+/* src/components/AnimatedLogo/AnimatedLogo.module.css */
+.logoSvg {
+  cursor: pointer;
+  height: auto;
+  overflow: visible; /* Allow stars to oscillate outside the default viewbox */
+}
+
+/* --- Size Variants --- */
+.logoSvg[data-size='header'] {
+  width: 125px;
+}
+
+.logoSvg[data-size='welcome'] {
+  width: 250px;
+}
