@@ -7,7 +7,6 @@ import { DndData, CanvasComponent } from '../../types';
 // Import all the new unified renderers
 import { TextInputRenderer } from './renderers/TextInputRenderer';
 import { PlainTextRenderer } from './renderers/PlainTextRenderer';
-import { CheckboxRenderer } from './renderers/CheckboxRenderer';
 import { RoleRenderer } from './renderers/RoleRenderer';
 
 // --- REPLACEMENTS FOR DELETED PREVIEW COMPONENTS ---
@@ -79,8 +78,6 @@ export const DndDragOverlay = ({ activeItem }: DndDragOverlayProps) => {
             return <TextInputRenderer component={comp} mode="preview" />;
           case 'plain-text':
             return <PlainTextRenderer component={comp} mode="preview" />;
-          case 'checkbox':
-            return <CheckboxRenderer component={comp} mode="preview" />;
           default:
             return null;
         }

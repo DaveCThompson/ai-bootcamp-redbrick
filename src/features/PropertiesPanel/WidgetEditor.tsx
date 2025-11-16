@@ -3,7 +3,6 @@ import { useSetAtom } from 'jotai';
 import { commitActionAtom } from '../../data/promptStateAtoms';
 import { WidgetComponent } from '../../types';
 import { registerPropertyEditor, PropertyEditorProps } from './propertyEditorRegistry';
-import { Switch } from '../../components/Switch';
 import { IconToggleGroup } from '../../components/IconToggleGroup';
 import { Accordion, AccordionItem } from '../../components/Accordion';
 import { getComponentName } from '../EditorCanvas/canvasUtils';
@@ -84,7 +83,7 @@ const WidgetEditor = ({ component }: PropertyEditorProps) => {
   }
 
   return (
-    <Accordion defaultValue={['display', 'field-settings', 'validation']}>
+    <Accordion defaultValue={['display', 'field-settings']}>
       <AccordionItem value="field-settings" trigger="Field Settings">
         {!isLabelHidden && (
           <div className={styles.propItem}>
@@ -115,17 +114,6 @@ const WidgetEditor = ({ component }: PropertyEditorProps) => {
             type="text"
             value={component.properties.hintText || ''}
             onChange={(e) => handlePropertyChange({ hintText: e.target.value })}
-          />
-        </div>
-      </AccordionItem>
-
-      <AccordionItem value="validation" trigger="Validation">
-        <div className={styles.propItemToggle}>
-          <label htmlFor={`required-${component.id}`}>Required</label>
-          <Switch
-            id={`required-${component.id}`}
-            checked={component.properties.required}
-            onCheckedChange={(checked) => handlePropertyChange({ required: checked })}
           />
         </div>
       </AccordionItem>

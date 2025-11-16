@@ -11,13 +11,12 @@ import { CanvasSelectionToolbar } from '../CanvasSelectionToolbar';
 import styles from '../EditorCanvas.module.css';
 
 // --- Pure View Component ---
-const TextInputView = memo(({ label, required, placeholder, isLabelHidden }: WidgetComponent['properties']) => {
+const TextInputView = memo(({ label, placeholder, isLabelHidden }: WidgetComponent['properties']) => {
   return (
     <div className={styles.promptElementContent}>
       {!isLabelHidden && (
         <label className={styles.promptElementLabel}>
           {label}
-          {required && <span className="required-indicator">*</span>}
         </label>
       )}
       <div className={styles.controlPlaceholder}>{placeholder}</div>

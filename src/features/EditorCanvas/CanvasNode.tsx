@@ -7,7 +7,6 @@ import { CanvasComponent } from '../../types';
 import { TextInputRenderer } from './renderers/TextInputRenderer';
 import { PlainTextRenderer } from './renderers/PlainTextRenderer';
 import { LayoutRenderer } from './renderers/LayoutRenderer';
-import { CheckboxRenderer } from './renderers/CheckboxRenderer';
 import { RoleRenderer } from './renderers/RoleRenderer';
 import { TemplateContainerRenderer } from './renderers/TemplateContainerRenderer';
 
@@ -41,8 +40,6 @@ export const CanvasNode = ({ componentId }: { componentId: string }) => {
             return <TextInputRenderer component={comp} mode="canvas" />;
           case 'plain-text':
             return <PlainTextRenderer component={comp} mode="canvas" />;
-          case 'checkbox':
-            return <CheckboxRenderer component={comp} mode="canvas" />;
           default:
             return <div>Unknown control type</div>;
         }

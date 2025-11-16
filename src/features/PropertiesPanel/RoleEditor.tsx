@@ -17,6 +17,7 @@ const RoleEditor = ({ component }: PropertyEditorProps) => {
   const selectedRoleKey = component.properties.roleType;
 
   const handleRoleChange = (newRoleType: string) => {
+    if (!newRoleType) return;
     commitAction({
       action: {
         type: 'COMPONENT_UPDATE_DYNAMIC_PROPERTIES',

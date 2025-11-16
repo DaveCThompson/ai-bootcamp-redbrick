@@ -9,6 +9,7 @@ import { componentSnippetSelectorAtom } from '../../data/markdownSelectors';
 import { getPropertyEditor } from './propertyEditorRegistry';
 import { PanelHeader } from '../../components/PanelHeader';
 import { Button } from '../../components/Button';
+import { Accordion, AccordionItem } from '../../components/Accordion';
 import { addToastAtom } from '../../data/toastAtoms';
 import { getComponentName } from '../EditorCanvas/canvasUtils';
 import styles from './PropertiesPanel.module.css';
@@ -21,38 +22,13 @@ import './WidgetEditor';
 import './RootEditor';
 import './RoleEditor';
 
-const SnippetPreview = ({ snippet }: { snippet: string | null }) => {
-  const addToast = useSetAtom(addToastAtom);
-
-  if (!snippet) {
-    return null;
-  }
-
-  const handleCopy = () => {
-    void navigator.clipboard.writeText(snippet);
-    addToast({ message: 'Snippet copied to clipboard', icon: 'content_copy' });
-  };
-
-  return (
-    <div className={styles.propSection}>
-      <div className={styles.snippetHeader}>
-        <h4>Snippet Preview</h4>
-        <Button variant="secondary" size="s" onClick={handleCopy}>
-          <span className="material-symbols-rounded">content_copy</span>
-          Copy
-        </Button>
-      </div>
-      <pre className={styles.codeSnippet}>{snippet}</pre>
-    </div>
-  );
-};
-
 export const PropertiesPanel = () => {
   const selectedIds = useAtomValue(selectedCanvasComponentIdsAtom);
   const allComponents = useAtomValue(canvasComponentsByIdAtom);
   const setIsPanelVisible = useSetAtom(isPropertiesPanelVisibleAtom);
   const rootId = useAtomValue(rootComponentIdAtom);
   const getComponentSnippet = useAtomValue(componentSnippetSelectorAtom);
+  const addToast = useSetAtom(addToastAtom);
 
   const primarySelectedId = selectedIds.length > 0 ? selectedIds[0] : null;
 
@@ -100,12 +76,35 @@ export const PropertiesPanel = () => {
     }
   }
 
+  const handleCopySnippet = () => {
+    if (snippet) {
+      void navigator.clipboard.writeText(snippet);
+      addToast({ message: 'Snippet copied to clipboard', icon: 'content_copy' });
+    }
+  };
+
   return (
     <div className={styles.propertiesPanelContainer}>
       <PanelHeader title={panelTitle} onClose={() => setIsPanelVisible(false)} />
       <div className={styles.panelContent}>
         {renderPanelContent()}
-        <SnippetPreview snippet={snippet} />
+        {snippet && (
+           <div className={styles.propSection} style={{ paddingBottom: 'var(--spacing-2)'}}>
+            <Accordion defaultValue={['snippet-preview']}>
+              <AccordionItem value="snippet-preview" trigger="Snippet Preview">
+                <Button 
+                  variant="secondary" 
+                  onClick={handleCopySnippet} 
+                  style={{ width: '100%', justifyContent: 'center', marginBottom: 'var(--spacing-2)'}}
+                >
+                  <span className="material-symbols-rounded">content_copy</span>
+                  Copy
+                </Button>
+                <pre className={styles.codeSnippet}>{snippet}</pre>
+              </AccordionItem>
+            </Accordion>
+          </div>
+        )}
       </div>
     </div>
   );

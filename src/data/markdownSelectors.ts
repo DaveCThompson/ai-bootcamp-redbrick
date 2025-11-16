@@ -3,7 +3,6 @@ import { atom } from 'jotai';
 import { canvasComponentsByIdAtom, rootComponentIdAtom } from './promptStateAtoms';
 import { NormalizedCanvasComponents, WidgetComponent } from '../types';
 import { roles } from './rolesMock';
-import { templates } from './templatesMock';
 
 const generateMarkdownRecursive = (
   componentId: string,
@@ -18,21 +17,20 @@ const generateMarkdownRecursive = (
     case 'layout':
       // Special handling for template containers
       if (component.properties.isTemplateContainer) {
-        // Find the original template name to use as a title
-        const originalTemplateId = Object.keys(templates).find(id => templates[id].name === component.name);
-        const title = originalTemplateId ? templates[originalTemplateId].name : "User Context";
-        output += `## ${title}\n\n`;
+        output += `## ${component.name}\n`;
 
         // Process children with special formatting
-        output += component.children
+        const childMarkdown = component.children
           .map(childId => {
             const child = allComponents[childId] as WidgetComponent;
             if (!child) return '';
-            const question = `### ${child.properties.label}\n\n`;
-            const answer = child.properties.content ? child.properties.content : '[not provided]';
-            return question + answer;
+            const question = `### ${child.properties.label}`;
+            const answer = child.properties.content?.trim() ? child.properties.content.trim() : '[not provided]';
+            return `${question}\n${answer}`;
           })
           .join('\n\n');
+        
+        output += `\n${childMarkdown}`;
         
         return output; // Return early to prevent default child processing
       }

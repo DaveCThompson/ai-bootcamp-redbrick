@@ -11,8 +11,10 @@ export interface MultiSelectEditorProps {
     count: number;
 }
 
-// FIX: Widened to `any` to allow registration of components with different prop shapes.
-// Type safety will be enforced at the call site in PropertiesPanel.tsx.
+// This is a deliberate use of `any` to allow for a heterogeneous registry
+// of components with different prop shapes. Type safety is ensured by the
+// conditional logic in `PropertiesPanel.tsx`.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type EditorComponent = React.ComponentType<any>;
 
 

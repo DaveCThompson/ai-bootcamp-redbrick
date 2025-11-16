@@ -54,8 +54,7 @@ export const useEditorInteractions = (component: CanvasComponent) => {
     const isEditableOnCanvas =
       (component.componentType === 'widget' || component.componentType === 'field') &&
       (component.properties.controlType === 'text-input' ||
-        component.properties.controlType === 'plain-text' ||
-        component.properties.controlType === 'checkbox');
+        component.properties.controlType === 'plain-text');
     
     if ((e.altKey && isEditableOnCanvas) || (e.detail === 2 && isEditableOnCanvas)) {
       setInteractionState({ mode: 'editing', id: component.id });

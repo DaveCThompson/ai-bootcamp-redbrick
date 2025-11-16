@@ -43,7 +43,6 @@ export const createWidgetComponent = (options: WidgetComponentOptions): WidgetCo
     properties: {
       label: isTextual ? '' : name,
       content: isTextual ? name : undefined,
-      required: false,
       placeholder: `Enter ${name}`, // Simplified placeholder logic
       controlType: controlType,
       ...controlTypeProps,

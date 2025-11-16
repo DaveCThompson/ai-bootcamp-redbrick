@@ -29,7 +29,6 @@ export interface WidgetComponent extends BaseCanvasComponent {
     // Common
     label: string;
     isLabelHidden?: boolean; // To hide labels for template inputs
-    required: boolean;
     placeholder?: string;
     hintText?: string;
     fieldName?: string;
@@ -37,7 +36,7 @@ export interface WidgetComponent extends BaseCanvasComponent {
     content?: string;
     textElement?: 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
     // Field-specific
-    controlType: 'text-input' | 'dropdown' | 'checkbox' | 'radio-buttons' | 'plain-text';
+    controlType: 'text-input' | 'dropdown' | 'radio-buttons' | 'plain-text';
   };
 }
 
