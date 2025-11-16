@@ -2,7 +2,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import {
-  appViewModeAtom, // MODIFIED: Import view mode atom
+  appViewModeAtom,
   canvasInteractionAtom,
   isPropertiesPanelVisibleAtom,
   selectionAnchorIdAtom,
@@ -18,7 +18,7 @@ import { CSS } from '@dnd-kit/utilities';
  * It provides props for sorting (dnd-kit), selection handling, and state flags.
  */
 export const useEditorInteractions = (component: CanvasComponent) => {
-  const viewMode = useAtomValue(appViewModeAtom); // MODIFIED: Read the current view mode
+  const viewMode = useAtomValue(appViewModeAtom);
   const [interactionState, setInteractionState] = useAtom(canvasInteractionAtom);
   const [anchorId, setAnchorId] = useAtom(selectionAnchorIdAtom);
   const allComponents = useAtomValue(canvasComponentsByIdAtom);
@@ -38,13 +38,13 @@ export const useEditorInteractions = (component: CanvasComponent) => {
       name: getComponentName(component),
       type: component.componentType,
       childrenCount: component.componentType === 'layout' ? component.children.length : undefined,
+      isNew: false, // This is an existing component on the canvas
+      icon: '', // Not needed for existing components, but satisfies type
     } satisfies DndData,
-    // MODIFIED: Disable sorting if not in editor mode
     disabled: isRoot || viewMode !== 'editor',
   });
 
   const handleSelect = (e: React.MouseEvent) => {
-    // MODIFIED: Add guard clause to disable all mouse interactions outside of editor mode
     if (viewMode !== 'editor') return;
 
     if (isRoot) return;
@@ -102,14 +102,6 @@ export const useEditorInteractions = (component: CanvasComponent) => {
     transition,
   };
   if (isRoot) sortableStyle.transform = 'none';
-
-  if (component.contextualLayout?.columnSpan) {
-    sortableStyle.gridColumn = `span ${component.contextualLayout.columnSpan}`;
-  }
-  const parent = allComponents[component.parentId];
-  if (parent && parent.componentType === 'layout' && parent.properties.arrangement === 'wrap') {
-    sortableStyle.flexShrink = component.contextualLayout?.preventShrinking ? 0 : 1;
-  }
 
   return {
     // State flags

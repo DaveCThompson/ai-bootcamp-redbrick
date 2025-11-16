@@ -174,7 +174,7 @@ export const useCanvasDnd = () => {
     if (!overComponent) return null;
 
     if (overComponent.componentType === 'layout' && overComponent.children.length === 0) {
-      return { parentId: overId, index: 0, viewportRect: null, isGrid: overComponent.properties.arrangement === 'grid' };
+      return { parentId: overId, index: 0, viewportRect: null, isGrid: false };
     }
 
     const parentId = overComponent.componentType === 'layout' ? overId : overComponent.parentId;
@@ -182,7 +182,7 @@ export const useCanvasDnd = () => {
     const parent = allComponents[parentId];
     if (!parent || parent.componentType !== 'layout') return null;
 
-    const isGrid = parent.properties.arrangement === 'grid';
+    const isGrid = false; // Grid layout is removed, always false.
     const children = parent.children;
     const overRect = over.rect;
     
