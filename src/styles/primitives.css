@@ -1,0 +1,155 @@
+/* src/styles/primitives.css */
+/* Contains only primitive, non-semantic design tokens. */
+
+:root {
+  /* ----------------------------------------- */
+  /*                 BREAKPOINTS               */
+  /* ----------------------------------------- */
+
+  --breakpoint-mobile: 768px;
+
+  /* ----------------------------------------- */
+  /*                 PRIMITIVES                */
+  /* ----------------------------------------- */
+
+  /* Base */
+  --primitives-base-white: #ffffff;
+  --primitives-base-black: #000000;
+  --primitives-base-transparent: #FFFFFF00;
+
+  /* Theme (Pink/Red) */
+  --primitives-theme-25: #fff4f4;
+  --primitives-theme-50: #ffecec;
+  --primitives-theme-100: #ffd9d9;
+  --primitives-theme-200: #ffc6c6;
+  --primitives-theme-300: #ffb6b6;
+  --primitives-theme-500: #ff6976;
+  --primitives-theme-600: #e1224c;
+  --primitives-theme-700: #b20036;
+  --primitives-theme-800: #8f002a;
+  --primitives-theme-900: #6e001e;
+  --primitives-theme-950: #500013;
+
+  /* Grey */
+  --primitives-grey-10: #fcfcfc;
+  --primitives-grey-20: #f9f9f9;
+  --primitives-grey-30: #f6f6f7;
+  --primitives-grey-40: #f3f3f4;
+  --primitives-grey-50: #f1f1f1;
+  --primitives-grey-60: #eeeeee;
+  --primitives-grey-100: #e2e2e4;
+  --primitives-grey-200: #e9ebea;
+  --primitives-grey-300: #d5dad7;
+  --primitives-grey-400: #a2ada6;
+  --primitives-grey-500: #6f7b74;
+  --primitives-grey-600: #515d56;
+  --primitives-grey-700: #3e4b44;
+  --primitives-grey-800: #213028;
+  --primitives-grey-900: #14221a;
+  --primitives-grey-950: #08100c;
+
+  /* Grey Tint (Alpha) - NOTE: These are preserved from the original file as they were not in the new theme */
+  --primitives-gray-tint-25: #F9F9F94C;
+  --primitives-gray-tint-50: #F1F1F14C;
+  --primitives-gray-tint-100: #E2E2E44C;
+  --primitives-gray-tint-200: #E9EAEB4C;
+  --primitives-gray-tint-300: #D5D7DA4C;
+  --primitives-gray-tint-400: #A4A7AE4C;
+  --primitives-gray-tint-500: #7176804C;
+  --primitives-gray-tint-600: #5358624C;
+  --primitives-gray-tint-700: #4146514C;
+  --primitives-gray-tint-800: #252B3799;
+  --primitives-gray-tint-900: #181D274C;
+  --primitives-gray-tint-950: #0A0D124C;
+
+  /* Red */
+  --primitives-red-50: #fef2f2;
+  --primitives-red-100: #fde3e3;
+  --primitives-red-300: #fea1a5;
+  --primitives-red-500: #f95f70;
+  --primitives-red-600: #e23e57;
+  --primitives-red-700: #ba2c43;
+  --primitives-red-800: #992437;
+  --primitives-red-900: #7d202e;
+
+  /* Yellow */
+  --primitives-yellow-50: #ffefc8;
+  --primitives-yellow-100: #ffdd9b;
+  --primitives-yellow-200: #fecb6d;
+  --primitives-yellow-300: #febc4d;
+  --primitives-yellow-600: #d36300;
+  --primitives-yellow-700: #a64014;
+  --primitives-yellow-800: #872d1c;
+  --primitives-yellow-900: #621a18;
+
+  /* Green */
+  --primitives-green-25: #ecfdf9;
+  --primitives-green-50: #c0fdf0;
+  --primitives-green-100: #affaea;
+  --primitives-green-200: #9df3e1;
+  --primitives-green-300: #74e0cb;
+  --primitives-green-600: #018c7a;
+  --primitives-green-700: #006e60;
+  --primitives-green-800: #00574c;
+  --primitives-green-900: #003d34;
+  --primitives-green-950: #12231f;
+
+  /* Blue */
+  --primitives-blue-25: #f0fcff;
+  --primitives-blue-50: #d8f6ff;
+  --primitives-blue-100: #c7f3ff;
+  --primitives-blue-200: #89e2f9;
+  --primitives-blue-300: #73ddf6;
+  --primitives-blue-500: #01b5d3;
+  --primitives-blue-600: #01849a;
+  --primitives-blue-700: #016c7e;
+  --primitives-blue-800: #015564;
+  --primitives-blue-900: #003b46;
+  --primitives-blue-950: #122226;
+
+  /* ----------------------------------------- */
+  /*                   SPACING                 */
+  /* ----------------------------------------- */
+
+  --spacing-0: 0px;
+  --spacing-0p25: 1px;
+  --spacing-0p5: 2px;
+  --spacing-1: 4px;
+  --spacing-1p5: 6px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+  --spacing-20: 80px;
+  --spacing-24: 96px;
+  --spacing-32: 128px;
+  --spacing-40: 160px;
+  --spacing-48: 192px;
+  --spacing-56: 224px;
+  --spacing-64: 256px;
+  --spacing-80: 320px;
+  --spacing-96: 384px;
+  --spacing-120: 480px;
+  --spacing-140: 560px;
+  --spacing-160: 640px;
+  --spacing-180: 720px;
+  --spacing-192: 768px;
+  --spacing-256: 1024px;
+  --spacing-320: 1280px;
+  --spacing-360: 1440px;
+  --spacing-400: 1600px;
+  --spacing-480: 1920px;
+
+  /* ----------------------------------------- */
+  /*                   RADII                   */
+  /* ----------------------------------------- */
+  --radius-md: 0.5rem;   /* 8px */
+  --radius-lg: 0.625rem; /* 10px */
+  --radius-xl: 0.75rem;  /* 12px */
+  --radius-2xl: 1rem;    /* 16px */
+}

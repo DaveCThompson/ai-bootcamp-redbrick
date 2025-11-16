@@ -1,0 +1,289 @@
+/* src/features/Editor/EditorCanvas/EditorCanvas.module.css */
+.canvasContainer {
+  width: 100%;
+  height: 100%;
+  background-color: var(--surface-bg-tertiary);
+  padding: var(--spacing-8);
+  overflow-y: auto;
+  position: relative;
+  display: flex;
+  align-items: flex-start; 
+  justify-content: center;
+}
+
+.formCard {
+  background-color: var(--surface-bg-primary);
+  border-radius: var(--spacing-3);
+  padding: var(--spacing-6);
+  max-width: 800px;
+  width: 100%;
+  margin: var(--spacing-8) auto; 
+  box-shadow: var(--surface-shadow-lg);
+  transition: background-color 0.2s ease, border-color 0.2s ease, outline-color 0.2s, box-shadow 0.2s;
+  border: 1px solid var(--surface-border-secondary);
+  position: relative;
+  min-height: 200px;
+  user-select: none;
+}
+
+.formCard.isBackgroundTarget {
+  border-color: var(--control-border-selected);
+  box-shadow: var(--surface-shadow-lg), 0 0 0 2px var(--control-border-selected);
+}
+
+.formCard.isRootSelected {
+  border-color: var(--control-border-selected);
+  box-shadow: var(--surface-shadow-lg), 0 0 0 1px var(--control-border-selected);
+}
+
+.formCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+}
+
+.formCardHeader h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin: 0;
+  color: var(--surface-fg-primary);
+  flex-grow: 1;
+  user-select: none; 
+}
+
+.selectableWrapper {
+  position: relative;
+  touch-action: none;
+  border-radius: var(--spacing-2);
+}
+
+.sortableItem {
+  position: relative;
+}
+
+.sortableItem.isDragging {
+  opacity: 0;
+}
+
+/* --- HOVER & SELECTION STYLES --- */
+.formItemContent, .layoutContainer {
+  border: 1px solid transparent;
+  padding: var(--spacing-1);
+  margin: 0;
+  border-radius: var(--spacing-2);
+  transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.selectableWrapper:not(.selected):hover > .formItemContent,
+.selectableWrapper:not(.selected):hover > .layoutContainer {
+  background-color: var(--surface-bg-primary_hover);
+  border-color: var(--control-border-tertiary-hover);
+}
+
+.selectableWrapper.selected > .formItemContent,
+.selectableWrapper.selected > .layoutContainer {
+  border-color: var(--control-border-selected);
+  background-color: var(--control-bg-selected);
+}
+
+/* --- LAYOUT CONTAINER SPECIFIC STYLES --- */
+.layoutContainer {
+  border: 1px dashed var(--surface-border-tertiary);
+  min-height: 40px;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s, border-style 0.2s;
+}
+
+.layoutContainer[data-has-user-border="true"] {
+  border-color: transparent;
+}
+
+.selectableWrapper:not(.selected):hover > .layoutContainer[data-has-user-border="true"] {
+  box-shadow: 0 0 0 1px var(--surface-border-primary);
+}
+
+.selectableWrapper.selected > .layoutContainer:not([data-is-root="true"]) {
+  border-style: solid;
+  border-width: 1px;
+}
+
+.selectableWrapper:not(.selected):hover > .layoutContainer {
+  background-color: var(--surface-bg-secondary_subtle);
+  border-color: var(--surface-border-primary);
+}
+
+.layoutContainer.is-over-container {
+  background-color: var(--primitives-theme-25);
+  border-color: var(--primitives-theme-300);
+  box-shadow: inset 0 0 0 2px var(--primitives-theme-200);
+}
+
+.layoutContainerEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--surface-fg-tertiary);
+  font-size: 0.9em;
+  user-select: none; 
+}
+
+.layoutContainerEmpty.drag-active:not(.is-over-container) {
+  background-color: var(--surface-bg-secondary_subtle);
+  border-style: solid;
+}
+.layoutContainerEmpty.drag-active .emptyText {
+  display: block;
+}
+
+.layoutContainerContent {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  border-radius: 6px;
+}
+
+/* --- DnD PLACEHOLDER --- */
+.dropPlaceholder {
+  position: absolute;
+  background-color: var(--control-border-primary);
+  border-radius: 2px;
+  z-index: 1;
+  pointer-events: none;
+  height: 4px; 
+}
+
+.dropPlaceholder.is-grid {
+  background-color: var(--primitives-theme-25);
+  height: auto;
+  border-radius: var(--spacing-2);
+  border: 1px solid var(--primitives-theme-300);
+  box-shadow: inset 0 0 0 2px var(--primitives-theme-200);
+  opacity: 1;
+}
+
+/* --- FLOATING TOOLBAR --- */
+.floatingSelectionToolbar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  background-color: var(--surface-bg-brand-solid);
+  border-radius: var(--spacing-2);
+  padding: var(--spacing-1p5) var(--spacing-2);
+  color: var(--control-fg-on-solid);
+  z-index: 20;
+  box-shadow: var(--surface-shadow-lg);
+  animation: fadeIn 0.15s ease-out;
+}
+
+.floatingToolbarText {
+  font-size: 0.9em;
+  font-weight: 400;
+  padding: 0 var(--spacing-2);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.floatingToolbarDivider {
+  width: 2px;
+  height: 20px;
+  background-color: var(--surface-border-theme);
+}
+
+/* --- FORM ITEM & INLINE EDITING --- */
+.formItemContent {
+  position: relative;
+  padding: var(--spacing-2);
+  background-color: transparent;
+  border-radius: 6px;
+}
+
+.formItemLabel {
+  font-size: 0.8em;
+  color: var(--surface-fg-secondary);
+  margin-bottom: var(--spacing-1);
+  display: block;
+  font-weight: 500;
+}
+
+.controlPlaceholder {
+  width: 100%;
+  height: 36px;
+  background-color: var(--surface-bg-primary);
+  border: 1px solid var(--surface-border-primary);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-3);
+  font-size: 0.9em;
+  color: var(--surface-fg-tertiary);
+}
+
+.controlWithIcon { justify-content: space-between; }
+.controlIcon { color: var(--surface-fg-secondary); font-size: 20px; }
+
+.radioGroupExample { display: flex; flex-direction: column; gap: var(--spacing-2); padding: var(--spacing-2) 0; }
+.radioOptionExample { display: flex; align-items: center; gap: var(--spacing-2); font-size: 0.9em; color: var(--surface-fg-tertiary); }
+.radioCircle { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--surface-border-primary); background-color: var(--surface-bg-primary); }
+.checkboxExample { display: flex; align-items: center; gap: var(--spacing-2); }
+.checkboxSquare { width: 16px; height: 16px; border-radius: 4px; border: 2px solid var(--surface-border-primary); background-color: var(--surface-bg-primary); }
+
+.inlineInput {
+  appearance: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  box-sizing: border-box;
+  width: 100%;
+  caret-color: var(--surface-fg-theme-primary);
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px var(--surface-border-theme);
+}
+
+/* NEW: WYSIWYG style for inputs that replace a .formItemLabel */
+.inlineInputForLabel {
+  font-size: 0.8em !important;
+  font-weight: 500 !important;
+  color: var(--surface-fg-secondary) !important;
+  margin-bottom: var(--spacing-1) !important;
+}
+
+.formItemContent > p,
+.formItemContent > h1,
+.formItemContent > h2,
+.formItemContent > h3,
+.formItemContent > h4,
+.formItemContent > h5,
+.formItemContent > h6,
+.formItemContent > a {
+  color: var(--surface-fg-primary);
+  padding: 1px 0; /* Match vertical padding of inline input */
+  margin: 0;
+}
+
+.formItemContent > h1 { font-size: 2em; font-weight: 800; }
+.formItemContent > h2 { font-size: 1.5em; font-weight: 700; }
+.formItemContent > h3 { font-size: 1.17em; font-weight: 600; }
+.formItemContent > h4 { font-size: 1em; font-weight: 600; }
+.formItemContent > h5 { font-size: .83em; font-weight: 600; }
+.formItemContent > h6 { font-size: .67em; font-weight: 600; }
+.formItemContent > p { font-size: 1em; font-weight: 400; line-height: 1.5; }
+
+.inlineInput.is-h1 { font-size: 2em; font-weight: 800; padding: 1px 0; }
+.inlineInput.is-h2 { font-size: 1.5em; font-weight: 700; padding: 1px 0; }
+.inlineInput.is-h3 { font-size: 1.17em; font-weight: 600; padding: 1px 0; }
+.inlineInput.is-h4 { font-size: 1em; font-weight: 600; padding: 1px 0; }
+.inlineInput.is-h5 { font-size: .83em; font-weight: 600; padding: 1px 0; }
+.inlineInput.is-h6 { font-size: .67em; font-weight: 600; padding: 1px 0; }
+.inlineInput.is-p { font-size: 1em; font-weight: 400; line-height: 1.5; padding: 1px 0; resize: vertical; min-height: 2em; }

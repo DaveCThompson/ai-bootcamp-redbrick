@@ -1,0 +1,191 @@
+/* src/views/SettingsPage.module.css */
+.settingsPageWrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--surface-bg-secondary);
+}
+
+/* --- Single Column Layout (with Nav) --- */
+.singleColumnLayout {
+  justify-content: flex-start; /* Anchor nav to the left */
+}
+
+.settingsNavigatorContainer {
+  width: 296px;
+  flex-shrink: 0;
+  height: 100%;
+  background-color: var(--surface-bg-primary);
+  border-right: 1px solid var(--surface-border-primary);
+  padding: var(--spacing-8) var(--spacing-6);
+}
+
+/* --- Two Column Layout (Centered) --- */
+.twoColumnLayout {
+  justify-content: center;
+  padding: 0 var(--spacing-8); /* Horizontal padding */
+}
+
+.settingsNavigatorList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  position: sticky;
+  top: 0;
+}
+
+.settingsNavigatorList a {
+  /* Base Layout & Typography */
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--surface-fg-primary);
+  cursor: pointer;
+
+  /* Sizing & Spacing */
+  height: 44px;
+  padding: 0 var(--spacing-3) 0 12px;
+  border-radius: 6px;
+  border-left: 6px solid transparent;
+  
+  /* Reserve space for border to prevent layout shift */
+  border: 1px solid transparent;
+  
+  transition: background-color 0.2s, color 0.2s, border-left-color 0.2s, border-color 0.2s;
+}
+
+/* On hover, apply background and color the outline for the faint border effect. */
+.settingsNavigatorList a:hover:not(.active) {
+  background-color: var(--control-bg-quaternary-hover);
+  border-color: var(--control-border-quaternary-hover);
+}
+
+/* The active state changes the border color and text styles. */
+.settingsNavigatorList a.active {
+  background-color: var(--control-bg-selected);
+  color: var(--control-fg-selected);
+  border-left-color: var(--control-border-selected);
+  border-color: transparent; 
+}
+.settingsNavigatorList a.active:hover {
+  background-color: var(--control-bg-selected-hover);
+}
+
+
+.settingsContentContainer {
+  flex-grow: 1;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+}
+.settingsContentContainer::-webkit-scrollbar {
+  display: none;
+}
+.settingsContentContainer {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* New settings frame for two-column layout */
+.settingsFrame {
+  width: 100%;
+  max-width: 1240px;
+  height: fit-content;
+  margin-top: var(--spacing-8); /* 32px margin from header */
+  margin-bottom: var(--spacing-8);
+  background-color: var(--surface-bg-primary);
+  border-radius: var(--spacing-3);
+  box-shadow: var(--surface-shadow-lg);
+  border: 1px solid var(--surface-border-secondary);
+  padding: var(--spacing-4); /* Standardized padding */
+}
+
+.settingsFormContainer {
+  height: fit-content;
+}
+
+/* Apply panel styles only in single-column mode */
+.singleColumnLayout .settingsFormContainer {
+  width: 600px;
+  background-color: var(--surface-bg-primary);
+  border-radius: var(--spacing-3);
+  box-shadow: var(--surface-shadow-lg);
+  border: 1px solid var(--surface-border-secondary);
+  margin: var(--spacing-8) 0;
+  padding: var(--spacing-4); /* Standardized padding */
+}
+
+/* Apply two-column styles to the container within the frame */
+.twoColumnLayout .settingsFormContainer {
+  column-count: 2;
+  column-gap: var(--spacing-12);
+}
+
+
+.twoColumnLayout .settingsSection {
+  /* In 2-col, sections are just logical groups, not cards */
+  break-inside: avoid;
+}
+
+@media (max-width: 1200px) {
+  .twoColumnLayout .settingsFormContainer {
+    column-count: 1;
+  }
+}
+
+.settingsSection {
+  margin-bottom: 0;
+  padding-bottom: var(--spacing-10);
+}
+
+.settingsSection:last-of-type {
+  padding-bottom: var(--spacing-4);
+}
+
+.settingsSection h2 {
+  font-size: 1rem; /* Standardized font size */
+  font-weight: 600;
+  color: var(--surface-fg-primary);
+  margin: 0 0 var(--spacing-4) 0; /* Standardized margin */
+  padding-bottom: var(--spacing-2); /* Standardized padding */
+  border-bottom: 1px solid var(--surface-border-secondary);
+}
+
+.settingsFormGrid {
+  display: grid;
+  gap: var(--spacing-6);
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1p5);
+}
+
+.formField label {
+  font-size: 0.9em;
+  font-weight: 500;
+  color: var(--surface-fg-primary);
+}
+
+.formField label .requiredAsterisk {
+  color: var(--surface-fg-alert-primary);
+  margin-left: 2px;
+}
+
+.formFieldCheckbox {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.formFieldCheckbox label {
+  cursor: pointer;
+}
