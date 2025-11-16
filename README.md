@@ -46,15 +46,16 @@ The project uses **Jotai** for its minimal, atomic state management model.
 
 ## 4. Canvas & Component Architecture
 
-The canvas is built for intuitive drag-and-drop interaction with a small, focused set of components.
+The canvas is built for intuitive interaction with a small, focused set of components. The rendering of these components is orchestrated by `CanvasNode.tsx`, which delegates to specialized renderers based on component type and properties.
 
--   **Context Container:** A purely structural container for organizing other components. It defaults to a simple vertical stack and has no configurable visual properties (no padding, background, etc.). It is the primary tool for creating hierarchy.
--   **Section Header:** A simple text element for creating titles and subtitles within the prompt structure.
+-   **Context Container:** A purely structural container for organizing other components. It defaults to a simple vertical stack and has no configurable visual properties. It is the primary tool for creating user-defined hierarchy. Its children are standard, individually selectable canvas components.
+-   **Template Container:** A specialized, locked container that renders a predefined set of questions as a cohesive, form-like unit. It is treated as a **single atomic block** on the canvas (selectable, draggable, and deletable as a whole). Its internal questions are not individually selectable and feature a high-craft, direct-input experience with native tab navigation.
+-   **Section Header:** A simple text element for creating titles and subtitles.
 -   **Text Block:** A simple multi-line text element for descriptive content.
--   **Variables (Text Input, etc.):** Simple input placeholders that represent data collection points (variables) in a prompt or workflow.
+-   **Variables (Text Input, Role, etc.):** Simple input placeholders that represent data collection points (variables) in a prompt or workflow.
 
 ### Unified Rendering Pattern
-All canvas components are rendered through a single, unified set of renderer components located in `src/features/Editor/renderers/`. Each renderer accepts a `mode: 'canvas' | 'preview'` prop to separate its interactive editor appearance from its clean "final" appearance.
+All canvas components are rendered through a unified set of renderer components located in `src/features/Editor/renderers/`. Each renderer accepts a `mode: 'canvas' | 'preview'` prop to separate its interactive editor appearance from its clean "final" appearance.
 
 ### Interaction Model
 The editor uses an industry-standard selection model:
@@ -62,6 +63,7 @@ The editor uses an industry-standard selection model:
 -   **Ctrl/Cmd + Click:** Toggles selection.
 -   **Shift + Click:** Selects a range.
 -   **Alt/Option + Click or Double-Click:** Enters inline text editing mode.
+-   **Note:** Some components, like the **Template Container**, are atomic and do not allow for the selection of their internal parts.
 
 ## 5. Key File Manifest
 
@@ -74,6 +76,9 @@ The editor uses an industry-standard selection model:
 ### Features (`src/features/`)
 *   **`Editor/`**: The main prompt-building feature.
     *   `EditorCanvas.tsx`: The main container component with core event handlers.
+    *   `CanvasNode.tsx`: The orchestrator that routes component data to the correct renderer.
     *   `renderers/`: The directory containing the single source of truth for component rendering.
+        *   `TemplateContainerRenderer.tsx`: A specialized renderer for the form-like template block.
     *   `PropertiesPanel/`: The right-hand panel for editing component properties.
+        *   `RoleEditor.tsx`: A custom properties editor for the "Role" component.
 *   **`ComponentBrowser/`**: The left-hand panel for adding new components.

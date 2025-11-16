@@ -11,7 +11,7 @@ import {
   isComponentBrowserVisibleAtom,
 } from './atoms';
 import { createWidgetComponent, createLayoutComponent, createDynamicComponent } from './componentFactory';
-import { templates } from './templatesMock';
+import { templates, TemplateItem } from './templatesMock';
 
 // 1. DEFINE THE CORE SHAPES
 export interface UndoableState {
@@ -136,25 +136,59 @@ export const commitActionAtom = atom(
           case 'TEMPLATE_ADD': {
             const { templateId, parentId, index } = action.action.payload;
             const template = templates[templateId];
-            if (!template || template.components.length === 0) break;
+            if (!template) break;
 
-            const createdComponentIds: string[] = [];
+            // Create the main container for the template form
+            const templateContainer = createLayoutComponent(parentId, template.name);
+            templateContainer.properties.isTemplateContainer = true;
+            templateContainer.isLocked = true;
+            presentState.components[templateContainer.id] = templateContainer;
 
-            template.components.forEach(item => {
-              const newComponent = createWidgetComponent({
-                parentId: parentId,
-                name: item.props.label || 'Template Input',
-                controlType: 'text-input',
-                controlTypeProps: item.props,
-              });
-              newComponent.isLocked = item.isLocked;
-              presentState.components[newComponent.id] = newComponent;
-              createdComponentIds.push(newComponent.id);
-            });
+            // Recursive function to create components from the template blueprint
+            const createFromTemplate = (item: TemplateItem, currentParentId: string): string => {
+              let newComponent: CanvasComponent;
+              if (item.type === 'group') {
+                // Groups within templates are flattened. We only care about their children.
+                // We extract the Header and Input and create them as direct children of the container.
+                const headerItem = item.children.find(c => c.type === 'Section Header');
+                const inputItem = item.children.find(c => c.type === 'Text Input');
+                
+                if (headerItem && inputItem && headerItem.type === 'Section Header' && inputItem.type === 'Text Input') {
+                  newComponent = createWidgetComponent({
+                    parentId: currentParentId,
+                    name: headerItem.content, // Use header content as the name/label
+                    controlType: 'text-input',
+                    controlTypeProps: {
+                      ...inputItem.props,
+                      label: headerItem.content, // Ensure label is set from header
+                    },
+                  });
+                  newComponent.isLocked = item.isLocked;
+                  presentState.components[newComponent.id] = newComponent;
+                  return newComponent.id;
+                }
+              }
+              // Handle standalone Text Blocks
+              else if (item.type === 'Text Block') {
+                newComponent = createWidgetComponent({
+                  parentId: currentParentId,
+                  name: 'Text Block',
+                  controlType: 'plain-text',
+                  controlTypeProps: { textElement: 'p', content: item.content },
+                });
+                newComponent.isLocked = item.isLocked;
+                presentState.components[newComponent.id] = newComponent;
+                return newComponent.id;
+              }
+              return ''; // Should not happen with valid template structure
+            };
+
+            const childrenIds = template.components.map(item => createFromTemplate(item, templateContainer.id)).filter(Boolean);
+            templateContainer.children = childrenIds;
 
             const parent = presentState.components[parentId];
             if (parent && (parent.componentType === 'layout' || parent.componentType === 'dynamic')) {
-              parent.children.splice(index, 0, ...createdComponentIds);
+              parent.children.splice(index, 0, templateContainer.id);
             }
             break;
           }

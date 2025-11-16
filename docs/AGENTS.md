@@ -49,8 +49,10 @@ These are non-negotiable rules learned from the project's history. Violating the
 
 5.  **Solve Nested Hovers with Child Targeting.** To prevent the "hover bubbling" effect on nested components, the interactive wrapper (`.selectableWrapper`) should be stylistically invisible. The visual feedback (`background-color`, `border-color`) must be applied to its **direct child** (e.g., `.selectableWrapper:hover > .formItemContent`).
 
-6.  **Precision in Imports is Mandatory.** All package names must be exact (e.g., `@dnd-kit/core`, `@floating-ui/react-dom`). All relative paths must be correct. There is no room for typos.
+6.  **Use Renderer Routing for Specialization.** To keep component renderers clean and maintainable, avoid overloading a single renderer with complex conditional logic. For components with significantly different view states or interaction models (e.g., a standard vs. a template container), use a **routing pattern**. An orchestrator component (like `CanvasNode.tsx`) should inspect the component's properties and delegate rendering to a dedicated, specialized renderer. This encapsulates complexity and adheres to the Single Responsibility Principle.
 
-7.  **"Ghost Errors" are Real.** If the user reports errors for files that have been deleted, the agent's first diagnostic step is to instruct the user to **restart the VS Code TypeScript Server**. This resolves stale cache issues.
+7.  **Precision in Imports is Mandatory.** All package names must be exact (e.g., `@dnd-kit/core`, `@floating-ui/react-dom`). All relative paths must be correct. There is no room for typos.
 
-8.  **Editor Systems Must Be View-Aware.** Any hook or system that provides editor-specific functionality (e.g., `useEditorHotkeys`, `useEditorInteractions`) **must** be conditionally disabled if the application's view mode is not `'editor'`. Failure to do so will cause editor logic to leak into read-only views like "Preview," breaking the user experience. Always check the `appViewModeAtom` as a guard clause.
+8.  **"Ghost Errors" are Real.** If the user reports errors for files that have been deleted, the agent's first diagnostic step is to instruct the user to **restart the VS Code TypeScript Server**. This resolves stale cache issues.
+
+9.  **Editor Systems Must Be View-Aware.** Any hook or system that provides editor-specific functionality (e.g., `useEditorHotkeys`, `useEditorInteractions`) **must** be conditionally disabled if the application's view mode is not `'editor'`. Failure to do so will cause editor logic to leak into read-only views like "Preview," breaking the user experience. Always check the `appViewModeAtom` as a guard clause.

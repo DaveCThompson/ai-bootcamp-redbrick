@@ -18,6 +18,7 @@ export interface LayoutComponent extends BaseCanvasComponent {
   children: string[];
   properties: {
     arrangement: 'stack' | 'row';
+    isTemplateContainer?: boolean; // NEW: To identify the special template form container
   };
 }
 
@@ -32,8 +33,6 @@ export interface WidgetComponent extends BaseCanvasComponent {
     placeholder?: string;
     hintText?: string;
     fieldName?: string;
-    // NEW: For structured template inputs
-    staticLabel?: string; 
     // Widget-specific
     content?: string;
     textElement?: 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';

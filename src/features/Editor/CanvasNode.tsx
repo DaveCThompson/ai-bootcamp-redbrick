@@ -11,6 +11,7 @@ import { PlainTextRenderer } from './renderers/PlainTextRenderer';
 import { LayoutRenderer } from './renderers/LayoutRenderer';
 import { CheckboxRenderer } from './renderers/CheckboxRenderer';
 import { RoleRenderer } from './renderers/RoleRenderer';
+import { TemplateContainerRenderer } from './renderers/TemplateContainerRenderer';
 
 // --- ORCHESTRATOR COMPONENT ---
 export const CanvasNode = ({ componentId }: { componentId: string }) => {
@@ -25,6 +26,10 @@ export const CanvasNode = ({ componentId }: { componentId: string }) => {
   const renderComponent = (comp: CanvasComponent) => {
     switch (comp.componentType) {
       case 'layout':
+        // NEW: Route to the specialized template renderer if the flag is set
+        if (comp.properties.isTemplateContainer) {
+          return <TemplateContainerRenderer component={comp} mode="canvas" />;
+        }
         return <LayoutRenderer component={comp} mode="canvas" />;
       case 'dynamic':
         if (comp.dynamicType === 'role') {
