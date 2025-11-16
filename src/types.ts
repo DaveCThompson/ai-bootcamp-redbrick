@@ -1,13 +1,74 @@
 // src/types.ts
-import { UniqueIdentifier } from '@dnd-kit/core';
 
 // =================================================================
-//                 COMPONENT BROWSER & DND-KIT
+//                         Component Core Shapes
 // =================================================================
+
+// The base for all components on the canvas
+interface BaseCanvasComponent {
+  id: string;
+  parentId: string;
+  contextualLayout?: {
+    columnSpan?: number;
+    preventShrinking?: boolean;
+  };
+}
+
+// A structural component for organizing other components
+export interface LayoutComponent extends BaseCanvasComponent {
+  componentType: 'layout';
+  name: string;
+  children: string[];
+  properties: {
+    // NOTE: Simplified to a single, non-configurable arrangement.
+    // Other properties like gap, distribution, etc., have been removed.
+    arrangement: 'stack' | 'row';
+  };
+}
+
+// A component that represents a form field or a static widget
+export interface FormComponent extends BaseCanvasComponent {
+  componentType: 'field' | 'widget';
+  origin?: 'data' | 'general';
+  binding?: BoundData | null;
+  properties: {
+    // Common
+    label: string;
+    required: boolean;
+    placeholder?: string;
+    hintText?: string;
+    fieldName?: string;
+    // Widget-specific
+    content?: string;
+    textElement?: 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+    // Field-specific
+    controlType: 'text-input' | 'dropdown' | 'checkbox' | 'radio-buttons' | 'plain-text';
+  };
+}
+
+export type CanvasComponent = LayoutComponent | FormComponent;
+
+// A map of component IDs to their data, for efficient lookups
+export type NormalizedCanvasComponents = Record<string, CanvasComponent>;
+
+
+// =================================================================
+//                         Supporting Types
+// =================================================================
+
+export interface BoundData {
+  nodeId: string;
+  nodeName: string;
+  fieldId: string;
+  fieldName: string;
+  path: string;
+}
+
+// For items in the component browser
 export interface DraggableComponent {
   id: string;
   name: string;
-  type: 'layout' | 'widget' | 'field';
+  type: 'layout' | 'widget';
   icon: string;
   iconColor?: string;
 }
@@ -17,72 +78,15 @@ export interface ComponentGroup {
   components: DraggableComponent[];
 }
 
+// For dnd-kit's `data` property
 export interface DndData {
-  id: UniqueIdentifier;
+  id: string;
   name: string;
-  type: string;
-  icon?: string;
-  isNew?: boolean;
+  type: 'layout' | 'widget' | 'field';
+  icon: string;
+  isNew: boolean;
+  origin?: 'data' | 'general';
   controlType?: FormComponent['properties']['controlType'];
   controlTypeProps?: Partial<FormComponent['properties']>;
   childrenCount?: number;
 }
-
-
-// =================================================================
-//                       CANVAS COMPONENTS
-// =================================================================
-
-export type AppearanceType = 'transparent' | 'primary' | 'secondary' | 'tertiary' | 'info' | 'warning' | 'error';
-export interface AppearanceProperties {
-  type: AppearanceType;
-  bordered: boolean;
-  padding: 'none' | 'sm' | 'md' | 'lg' | 'xl';
-}
-
-interface BaseComponent {
-  id: string;
-  parentId: string;
-  contextualLayout?: {
-    columnSpan?: number;
-    preventShrinking?: boolean;
-  };
-}
-
-export interface LayoutComponent extends BaseComponent {
-  componentType: 'layout';
-  name: string;
-  children: string[];
-  properties: {
-    arrangement: 'stack' | 'row' | 'wrap' | 'grid';
-    gap: 'none' | 'sm' | 'md' | 'lg';
-    distribution: 'start' | 'center' | 'end' | 'space-between';
-    verticalAlign: 'start' | 'center' | 'end' | 'stretch';
-    columnLayout: 'auto' | '2-col-50-50' | '3-col-33' | '2-col-split-left' | number;
-    appearance: AppearanceProperties;
-  };
-}
-
-export interface FormComponent extends BaseComponent {
-  componentType: 'widget' | 'field';
-  properties: {
-    label: string;
-    content?: string;
-    fieldName: string;
-    required: boolean;
-    hintText?: string;
-    placeholder?: string;
-    controlType: 'text-input' | 'dropdown' | 'radio-buttons' | 'plain-text' | 'link' | 'checkbox';
-    // Properties for Link
-    href?: string;
-    target?: '_self' | '_blank';
-    // Properties for Plain Text
-    textElement?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'div';
-  };
-}
-
-export type CanvasComponent = LayoutComponent | FormComponent;
-
-export type NormalizedCanvasComponents = {
-  [id: string]: CanvasComponent;
-};

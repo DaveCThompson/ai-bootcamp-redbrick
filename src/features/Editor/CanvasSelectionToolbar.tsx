@@ -43,21 +43,11 @@ export const CanvasSelectionToolbar = ({
 
     items.push({ id: 'rename', icon: 'edit', label: 'Rename', hotkey: 'Enter', onClick: actions.handleRename, disabled: !capabilities.canRename });
     
-    const conversionItems: ActionMenuItem[] = [];
-    if (capabilities.canConvertToHeading) conversionItems.push({ id: 'convert-heading', icon: 'title', label: 'Convert to Heading', onClick: () => actions.handleConvert('heading') });
-    if (capabilities.canConvertToParagraph) conversionItems.push({ id: 'convert-paragraph', icon: 'notes', label: 'Convert to Paragraph', onClick: () => actions.handleConvert('paragraph') });
-    if (capabilities.canConvertToLink) conversionItems.push({ id: 'convert-link', icon: 'link', label: 'Convert to Link', onClick: () => actions.handleConvert('link') });
-
-    if (conversionItems.length > 0) {
-      items.push('separator');
-      items.push(...conversionItems);
-    }
-    
     items.push('separator');
     items.push({ id: 'move-up', icon: 'arrow_upward', label: 'Move Up', hotkey: '↑', onClick: () => actions.handleNudge('up'), disabled: !capabilities.canNudgeUp });
     items.push({ id: 'move-down', icon: 'arrow_downward', label: 'Move Down', hotkey: '↓', onClick: () => actions.handleNudge('down'), disabled: !capabilities.canNudgeDown });
-    items.push({ id: 'wrap', icon: 'add_box', label: 'Wrap in Container', hotkey: `${modKey}+G`, onClick: actions.handleWrap, disabled: !capabilities.canWrap });
-    if (capabilities.canUnwrap) items.push({ id: 'unwrap', icon: 'disabled_by_default', label: 'Unwrap Container', hotkey: `${modKey}+Shift+G`, onClick: actions.handleUnwrap });
+    items.push({ id: 'wrap', icon: 'add_box', label: 'Wrap in Group', hotkey: `${modKey}+G`, onClick: actions.handleWrap, disabled: !capabilities.canWrap });
+    if (capabilities.canUnwrap) items.push({ id: 'unwrap', icon: 'disabled_by_default', label: 'Unwrap Group', hotkey: `${modKey}+Shift+G`, onClick: actions.handleUnwrap });
 
     items.push('separator');
     items.push({ id: 'duplicate', icon: 'content_copy', label: 'Duplicate', hotkey: `${modKey}+D`, onClick: () => {}, disabled: true });
@@ -84,7 +74,7 @@ export const CanvasSelectionToolbar = ({
             </Toolbar.Button>
           </Tooltip>
           {capabilities.canUnwrap && (
-            <Tooltip content="Unwrap Container" side="top">
+            <Tooltip content="Unwrap Group" side="top">
               <Toolbar.Button asChild>
                 <Button variant="on-solid" size="s" iconOnly onClick={actions.handleUnwrap} aria-label="Unwrap container">
                   <span className="material-symbols-rounded">disabled_by_default</span>
@@ -93,7 +83,7 @@ export const CanvasSelectionToolbar = ({
             </Tooltip>
           )}
           {capabilities.canWrap && !capabilities.canUnwrap && (
-            <Tooltip content="Wrap in Container" side="top">
+            <Tooltip content="Wrap in Group" side="top">
               <Toolbar.Button asChild>
                 <Button variant="on-solid" size="s" iconOnly onClick={actions.handleWrap} aria-label="Wrap in container">
                   <span className="material-symbols-rounded">add_box</span>
@@ -101,7 +91,6 @@ export const CanvasSelectionToolbar = ({
               </Toolbar.Button>
             </Tooltip>
           )}
-          {/* FIX: Add a dedicated delete button for quick access. */}
           <Tooltip content="Delete" side="top">
             <Toolbar.Button asChild>
               <Button variant="on-solid" size="s" iconOnly onClick={actions.handleDelete} aria-label="Delete component" disabled={!capabilities.canDelete}>

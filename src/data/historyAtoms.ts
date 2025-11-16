@@ -1,7 +1,7 @@
 // src/data/historyAtoms.ts
 import { atom } from 'jotai';
 import { produce, Draft } from 'immer';
-import { LayoutComponent, FormComponent, CanvasComponent, AppearanceProperties, NormalizedCanvasComponents } from '../types';
+import { LayoutComponent, FormComponent, CanvasComponent, NormalizedCanvasComponents } from '../types';
 import { 
   canvasInteractionAtom, 
   CanvasInteractionState, 
@@ -49,25 +49,16 @@ export type HistoryAction =
   | { type: 'COMPONENT_REORDER'; payload: { componentId: string; parentId: string; oldIndex: number; newIndex: number; } }
   | { type: 'COMPONENTS_WRAP'; payload: { componentIds: string[]; parentId: string; } }
   | { type: 'COMPONENT_UNWRAP'; payload: { componentId: string; } } // NEW
-  | { type: 'COMPONENT_CONVERT'; payload: { componentId: string; targetType: 'heading' | 'paragraph' | 'link' } }
-  | { type: 'COMPONENT_UPDATE_PROPERTIES'; payload: { componentId: string; newProperties: Partial<Omit<LayoutComponent['properties'], 'appearance'>>; } }
-  | { type: 'COMPONENT_UPDATE_APPEARANCE'; payload: { componentId: string; newAppearance: Partial<AppearanceProperties>; } }
-  | { type: 'COMPONENT_UPDATE_CONTEXTUAL_LAYOUT'; payload: { componentId: string; newLayout: Partial<FormComponent['contextualLayout']> } }
+  | { type: 'COMPONENT_UPDATE_PROPERTIES'; payload: { componentId: string; newProperties: Partial<LayoutComponent['properties']>; } }
   | { type: 'COMPONENT_UPDATE_FORM_PROPERTIES'; payload: { componentId: string; newProperties: Partial<FormComponent['properties']> } } // NEW
   | { type: 'FORM_RENAME'; payload: { newName: string } };
-
-const defaultAppearance: AppearanceProperties = {
-  type: 'transparent',
-  bordered: false,
-  padding: 'md',
-};
 
 // 3. CREATE THE CORE ATOMS
 const historyAtom = atom<HistoryData>({
   past: [],
   present: {
-    // Change the default screen name to 'My Screen'
-    formName: "My Screen",
+    // Change the default screen name
+    formName: "New AI Flow",
     rootComponentId: 'root',
     components: {
       'root': {
@@ -77,12 +68,7 @@ const historyAtom = atom<HistoryData>({
         componentType: 'layout',
         children: [],
         properties: { 
-          arrangement: 'stack', 
-          gap: 'md', 
-          distribution: 'start', 
-          verticalAlign: 'stretch', 
-          columnLayout: 'auto',
-          appearance: { ...defaultAppearance }
+          arrangement: 'stack',
         },
       }
     },
@@ -226,55 +212,11 @@ export const commitActionAtom = atom(
             delete presentState.components[componentId];
             break;
           }
-          case 'COMPONENT_CONVERT': {
-            const { componentId, targetType } = action.action.payload;
-            const component = presentState.components[componentId];
-            if (!component || component.componentType === 'layout') break;
-
-            if (targetType === 'heading') {
-              component.properties.controlType = 'plain-text';
-              component.properties.textElement = 'h2'; // Default to H2 when converting
-              component.properties.href = undefined;
-              component.properties.target = undefined;
-            } else if (targetType === 'paragraph') {
-              component.properties.controlType = 'plain-text';
-              component.properties.textElement = 'p';
-              component.properties.href = undefined;
-              component.properties.target = undefined;
-            } else if (targetType === 'link') {
-              component.properties.controlType = 'link';
-              component.properties.href = '#';
-              component.properties.target = '_self';
-              component.properties.textElement = undefined; // Clean up unused prop
-            }
-            break;
-          }
           case 'COMPONENT_UPDATE_PROPERTIES': {
             const { componentId, newProperties } = action.action.payload;
             const component = presentState.components[componentId];
             if (component && component.componentType === 'layout') {
-              // This ensures we don't accidentally wipe out the appearance object
-              const { appearance, ...rest } = component.properties;
-              component.properties = { ...rest, ...newProperties, appearance };
-            }
-            break;
-          }
-          case 'COMPONENT_UPDATE_APPEARANCE': {
-            const { componentId, newAppearance } = action.action.payload;
-            const component = presentState.components[componentId];
-            if (component && component.componentType === 'layout') {
-              component.properties.appearance = { 
-                ...(component.properties.appearance || defaultAppearance), 
-                ...newAppearance 
-              };
-            }
-            break;
-          }
-          case 'COMPONENT_UPDATE_CONTEXTUAL_LAYOUT': {
-            const { componentId, newLayout } = action.action.payload;
-            const component = presentState.components[componentId];
-            if (component) {
-              component.contextualLayout = { ...component.contextualLayout, ...newLayout };
+              component.properties = { ...component.properties, ...newProperties };
             }
             break;
           }

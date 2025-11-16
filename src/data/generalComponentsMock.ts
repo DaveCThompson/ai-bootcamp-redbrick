@@ -5,7 +5,7 @@ export const generalComponents: ComponentGroup[] = [
   {
     title: 'Layout',
     components: [
-      { id: 'layout-container', name: 'Layout Container', type: 'layout', icon: 'view_quilt' },
+      { id: 'group-container', name: 'Group', type: 'layout', icon: 'view_quilt' },
     ],
   },
   {
@@ -13,7 +13,6 @@ export const generalComponents: ComponentGroup[] = [
     components: [
       { id: 'heading', name: 'Heading', type: 'widget', icon: 'title' },
       { id: 'paragraph', name: 'Paragraph', type: 'widget', icon: 'notes' },
-      { id: 'link', name: 'Link', type: 'widget', icon: 'link' },
     ],
   },
   {

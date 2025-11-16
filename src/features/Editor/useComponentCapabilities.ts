@@ -1,4 +1,4 @@
-// src/features/Editor/useComponentCapabilities.ts
+// src/data/useComponentCapabilities.ts
 import { useAtomValue } from 'jotai';
 import { canvasComponentsByIdAtom, rootComponentIdAtom } from '../../data/historyAtoms';
 import { LayoutComponent } from '../../types';
@@ -15,7 +15,6 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
   const defaultState = {
     canRename: false, canDelete: false, canWrap: false, canUnwrap: false,
     canNudgeUp: false, canNudgeDown: false, canSelectParent: false,
-    canConvertToHeading: false, canConvertToParagraph: false, canConvertToLink: false,
   };
 
   if (selectedIds.length === 0) {
@@ -51,18 +50,6 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
     canNudgeDown = index < parent.children.length - 1;
   }
 
-  // Conversion capabilities
-  const isFormComponent = primaryComponent.componentType === 'widget' || primaryComponent.componentType === 'field';
-  const formComponent = isFormComponent ? primaryComponent : null;
-  const isPlainText = formComponent?.properties.controlType === 'plain-text';
-  const isLink = formComponent?.properties.controlType === 'link';
-  const isHeading = isPlainText && formComponent?.properties.textElement?.startsWith('h');
-  const isParagraph = isPlainText && !isHeading;
-
-  const canConvertToHeading = isSingleSelection && (isParagraph || isLink);
-  const canConvertToParagraph = isSingleSelection && (isHeading || isLink);
-  const canConvertToLink = isSingleSelection && (isHeading || isParagraph);
-
   return {
     canRename,
     canDelete,
@@ -71,8 +58,5 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
     canNudgeUp,
     canNudgeDown,
     canSelectParent,
-    canConvertToHeading,
-    canConvertToParagraph,
-    canConvertToLink,
   };
 };

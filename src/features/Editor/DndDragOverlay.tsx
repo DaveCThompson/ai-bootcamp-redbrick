@@ -9,10 +9,7 @@ import { TextInputRenderer } from './renderers/TextInputRenderer';
 import { DropdownRenderer } from './renderers/DropdownRenderer';
 import { RadioButtonsRenderer } from './renderers/RadioButtonsRenderer';
 import { PlainTextRenderer } from './renderers/PlainTextRenderer';
-import { LinkRenderer } from './renderers/LinkRenderer';
 import { CheckboxRenderer } from './renderers/CheckboxRenderer';
-// FIX: Removed unused import of LayoutRenderer.
-// import { LayoutRenderer } from './renderers/LayoutRenderer';
 
 // --- REPLACEMENTS FOR DELETED PREVIEW COMPONENTS ---
 const BrowserItemPreview = ({ name, icon }: { name: string; icon: string }) => (
@@ -85,9 +82,6 @@ export const DndDragOverlay = ({ activeItem }: DndDragOverlayProps) => {
             return <RadioButtonsRenderer component={comp} mode="preview" />;
           case 'plain-text':
             return <PlainTextRenderer component={comp} mode="preview" />;
-          case 'link':
-            return <LinkRenderer component={comp} mode="preview" />;
-          // FIX: Add case for the new checkbox control type.
           case 'checkbox':
             return <CheckboxRenderer component={comp} mode="preview" />;
           default:

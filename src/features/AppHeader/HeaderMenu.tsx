@@ -1,13 +1,12 @@
 // src/features/AppHeader/HeaderMenu.tsx
 import { useAtom } from 'jotai';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { isToolbarCompactAtom, isShowBreadcrumbAtom, settingsLayoutModeAtom } from '../../data/atoms';
+import { isToolbarCompactAtom, settingsLayoutModeAtom } from '../../data/atoms';
 import { useUndoRedo } from '../../data/useUndoRedo';
 import { useIsMac } from '../../data/useIsMac';
 
 export const HeaderMenu = () => {
     const [isCompact, setIsCompact] = useAtom(isToolbarCompactAtom);
-    const [isShowBreadcrumb, setIsShowBreadcrumb] = useAtom(isShowBreadcrumbAtom);
     const [layoutMode, setLayoutMode] = useAtom(settingsLayoutModeAtom);
 
     const { undo, redo, canUndo, canRedo } = useUndoRedo();
@@ -49,19 +48,6 @@ export const HeaderMenu = () => {
                         </DropdownMenu.ItemIndicator>
                     </span>
                     <span>Compact left menu</span>
-                </DropdownMenu.CheckboxItem>
-
-                <DropdownMenu.CheckboxItem
-                    className="menu-item"
-                    checked={isShowBreadcrumb}
-                    onCheckedChange={setIsShowBreadcrumb}
-                >
-                    <span className="checkmark-container">
-                        <DropdownMenu.ItemIndicator>
-                            <span className="material-symbols-rounded">check</span>
-                        </DropdownMenu.ItemIndicator>
-                    </span>
-                    <span>Show data navigator full path</span>
                 </DropdownMenu.CheckboxItem>
 
                 <DropdownMenu.CheckboxItem

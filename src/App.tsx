@@ -8,7 +8,7 @@ import { GeneralComponentsBrowser } from './features/ComponentBrowser/GeneralCom
 import { PlaceholderPanel } from './features/ComponentBrowser/PlaceholderPanel';
 import { EditorCanvas } from './features/Editor/EditorCanvas';
 import { MainToolbar } from './features/Editor/MainToolbar';
-import { PropertiesPanel } from './features/Editor/PropertiesPanel/PropertiesPanel';
+import PropertiesPanel from './features/Editor/PropertiesPanel/PropertiesPanel';
 import { DndDragOverlay } from './features/Editor/DndDragOverlay';
 import { SettingsPage } from './features/Settings/SettingsPage';
 

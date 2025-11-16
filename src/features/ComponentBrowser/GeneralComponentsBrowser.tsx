@@ -19,12 +19,11 @@ const DraggableListItem = ({ component }: { component: DraggableComponent }) => 
       origin: 'general',
       controlType: 
         (component.id === 'heading' || component.id === 'paragraph') ? 'plain-text' : 
-        (component.id === 'layout-container') ? undefined : component.id as FormComponent['properties']['controlType'],
+        (component.id === 'group-container') ? undefined : component.id as FormComponent['properties']['controlType'],
       controlTypeProps: 
         component.id === 'heading' ? { textElement: 'h2', content: 'Heading' } :
         component.id === 'paragraph' ? { textElement: 'p', content: 'This is a paragraph of text.' } :
         undefined,
-      data: undefined,
     } satisfies DndData,
   });
 

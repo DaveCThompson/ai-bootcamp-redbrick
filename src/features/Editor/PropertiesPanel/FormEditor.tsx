@@ -5,10 +5,8 @@ import { FormComponent, CanvasComponent } from '../../../types';
 import { registerPropertyEditor, PropertyEditorProps } from './propertyEditorRegistry';
 import { Switch } from '../../../components/Switch';
 import { IconToggleGroup } from '../../../components/IconToggleGroup';
-import { Select, SelectItem } from '../../../components/Select';
 import { Accordion, AccordionItem } from '../../../components/Accordion';
 import { getComponentName } from '../canvasUtils';
-import { ContextualLayoutProperties } from './ContextualLayoutEditor';
 import styles from './PropertiesPanel.module.css';
 
 const sanitizeLabelToFieldName = (label: string): string => {
@@ -64,7 +62,7 @@ const FormEditor = ({ component }: PropertyEditorProps<CanvasComponent>) => {
   if (controlType === 'plain-text') {
     const isHeading = component.properties.textElement?.startsWith('h');
     return (
-      <Accordion defaultValue={['text-settings', 'contextual-layout']}>
+      <Accordion defaultValue={['text-settings']}>
         <AccordionItem value="text-settings" trigger="Text Settings">
           {isHeading && (
             <div className={styles.propItem}>
@@ -87,52 +85,12 @@ const FormEditor = ({ component }: PropertyEditorProps<CanvasComponent>) => {
             />
           </div>
         </AccordionItem>
-        <ContextualLayoutProperties component={component} />
       </Accordion>
     );
   }
 
-  if (controlType === 'link') {
-    return (
-        <Accordion defaultValue={['link-settings', 'contextual-layout']}>
-            <AccordionItem value="link-settings" trigger="Link Settings">
-                <div className={styles.propItem}>
-                    <label htmlFor={`content-${component.id}`}>Text</label>
-                    <input
-                        id={`content-${component.id}`}
-                        type="text"
-                        value={component.properties.content || ''}
-                        onChange={(e) => handlePropertyChange({ content: e.target.value })}
-                    />
-                </div>
-                <div className={styles.propItem}>
-                    <label htmlFor={`href-${component.id}`}>URL</label>
-                    <input
-                        id={`href-${component.id}`}
-                        type="text"
-                        placeholder="https://example.com"
-                        value={component.properties.href || ''}
-                        onChange={(e) => handlePropertyChange({ href: e.target.value })}
-                    />
-                </div>
-                <div className={styles.propItem}>
-                    <label>Target</label>
-                    <Select
-                        value={component.properties.target || '_self'}
-                        onValueChange={value => handlePropertyChange({ target: value as '_self' | '_blank' })}
-                    >
-                        <SelectItem value="_self">Open in same tab</SelectItem>
-                        <SelectItem value="_blank">Open in new tab</SelectItem>
-                    </Select>
-                </div>
-            </AccordionItem>
-            <ContextualLayoutProperties component={component} />
-        </Accordion>
-    );
-  }
-
   return (
-    <Accordion defaultValue={['display', 'field-settings', 'validation', 'contextual-layout']}>
+    <Accordion defaultValue={['display', 'field-settings', 'validation']}>
       <AccordionItem value="display" trigger="Display">
         <div className={styles.propItem}>
           <label htmlFor="display-as-toggle">Display as</label>
@@ -187,8 +145,6 @@ const FormEditor = ({ component }: PropertyEditorProps<CanvasComponent>) => {
           />
         </div>
       </AccordionItem>
-
-      <ContextualLayoutProperties component={component} />
     </Accordion>
   );
 };

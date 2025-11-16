@@ -3,15 +3,8 @@ import { nanoid } from 'nanoid';
 import { 
   LayoutComponent, 
   FormComponent, 
-  AppearanceProperties,
   BoundData
 } from '../types';
-
-const defaultAppearance: AppearanceProperties = {
-  type: 'transparent',
-  bordered: false,
-  padding: 'md',
-};
 
 const sanitizeLabelToFieldName = (label: string): string => {
   if (!label) return '';
@@ -24,7 +17,7 @@ const sanitizeLabelToFieldName = (label: string): string => {
     .replace(/[^a-zA-Z0-9]/g, '');
 };
 
-export const createLayoutComponent = (parentId: string, name: string = 'Layout Container'): LayoutComponent => {
+export const createLayoutComponent = (parentId: string, name: string = 'Group'): LayoutComponent => {
   return {
     id: nanoid(8),
     parentId,
@@ -32,12 +25,7 @@ export const createLayoutComponent = (parentId: string, name: string = 'Layout C
     componentType: 'layout',
     children: [],
     properties: {
-      arrangement: 'stack',
-      gap: 'md',
-      distribution: 'start',
-      verticalAlign: 'stretch',
-      columnLayout: 'auto',
-      appearance: { ...defaultAppearance },
+      arrangement: 'stack', // Simplified: always a vertical stack
     },
   };
 };
@@ -71,7 +59,7 @@ export const createFormComponent = (options: FormComponentOptions): FormComponen
       }
     : null;
 
-  const isTextual = controlType === 'plain-text' || controlType === 'link';
+  const isTextual = controlType === 'plain-text';
 
   return {
     id: nanoid(8),
@@ -86,8 +74,6 @@ export const createFormComponent = (options: FormComponentOptions): FormComponen
       required: false,
       placeholder: origin === 'data' ? `Enter ${name}` : '',
       controlType: controlType,
-      href: controlType === 'link' ? '#' : undefined,
-      target: controlType === 'link' ? '_self' : undefined,
       ...controlTypeProps,
     },
   };

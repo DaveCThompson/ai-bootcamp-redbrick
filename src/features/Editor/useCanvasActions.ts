@@ -1,4 +1,4 @@
-// src/features/Editor/useCanvasActions.ts
+// src/data/useCanvasActions.ts
 import { useSetAtom, useAtomValue } from 'jotai';
 import {
   canvasInteractionAtom,
@@ -8,7 +8,7 @@ import {
   commitActionAtom,
   canvasComponentsByIdAtom,
 } from '../../data/historyAtoms';
-import { getComponentName } from './canvasUtils';
+import { getComponentName } from '../Editor/canvasUtils';
 
 /**
  * A hook that provides all reusable mutation functions for the canvas.
@@ -24,6 +24,7 @@ export const useCanvasActions = (selectedIds: string[]) => {
     if (selectedIds.length === 0) return;
     if (selectedIds.length === 1) {
       const component = allComponents[selectedIds[0]];
+      if (!component) return;
       commitAction({
         action: {
           type: 'COMPONENT_DELETE',
@@ -79,6 +80,7 @@ export const useCanvasActions = (selectedIds: string[]) => {
     if (selectedIds.length !== 1) return;
     const componentId = selectedIds[0];
     const component = allComponents[componentId];
+    if (!component) return;
     const parent = allComponents[component.parentId];
     if (!parent || parent.componentType !== 'layout') return;
     const oldIndex = parent.children.indexOf(componentId);
@@ -93,14 +95,6 @@ export const useCanvasActions = (selectedIds: string[]) => {
       });
     }
   };
-  
-  const handleConvert = (targetType: 'heading' | 'paragraph' | 'link') => {
-    if (selectedIds.length !== 1) return;
-    commitAction({
-      action: { type: 'COMPONENT_CONVERT', payload: { componentId: selectedIds[0], targetType } },
-      message: `Convert component to ${targetType}`
-    });
-  };
 
   return {
     handleDelete,
@@ -108,6 +102,5 @@ export const useCanvasActions = (selectedIds: string[]) => {
     handleWrap,
     handleUnwrap,
     handleNudge,
-    handleConvert,
   };
 };
