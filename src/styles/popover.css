@@ -2,7 +2,7 @@
 
 .popover-content {
   background-color: var(--surface-bg-primary);
-  border-radius: var(--spacing-2);
+  border-radius: var(--radius-xl);
   box-shadow: var(--surface-shadow-xl);
   border: 1px solid var(--surface-border-primary);
   z-index: 1100; /* Above most UI, below modals */

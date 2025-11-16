@@ -19,7 +19,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: var(--surface-bg-primary);
-  border-radius: var(--spacing-3);
+  border-radius: var(--radius-2xl);
   box-shadow: var(--surface-shadow-2xl);
   display: flex;
   flex-direction: column;

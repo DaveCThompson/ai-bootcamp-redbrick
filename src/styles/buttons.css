@@ -30,18 +30,18 @@
 /* ======================================================================== */
 
 /* --- Medium (m) --- */
-.btn[data-size="m"] { height: 38px; padding: var(--spacing-2) var(--spacing-4); border-radius: var(--spacing-2); }
-.btn[data-size="m"][data-icon-only="true"] { width: 38px; padding: var(--spacing-2); border-radius: var(--radius-xl); }
+.btn[data-size="m"] { height: 38px; padding: var(--spacing-2) var(--spacing-4); border-radius: var(--radius-lg); }
+.btn[data-size="m"][data-icon-only="true"] { width: 38px; padding: var(--spacing-2); border-radius: var(--radius-2xl); }
 .btn[data-size="m"] .material-symbols-rounded { font-size: 20px; }
 
 /* --- Small (s) --- */
-.btn[data-size="s"] { height: 34px; padding: var(--spacing-1p5) var(--spacing-2); border-radius: var(--spacing-2); }
-.btn[data-size="s"][data-icon-only="true"] { width: 34px; padding: var(--spacing-1p5); border-radius: var(--radius-lg); }
+.btn[data-size="s"] { height: 34px; padding: var(--spacing-1p5) var(--spacing-2); border-radius: var(--radius-lg); }
+.btn[data-size="s"][data-icon-only="true"] { width: 34px; padding: var(--spacing-1p5); border-radius: var(--radius-xl); }
 .btn[data-size="s"] .material-symbols-rounded { font-size: 20px; }
 
 /* --- Extra Small (xs) --- */
-.btn[data-size="xs"] { height: 1.5rem; padding: 0.5rem 0.375rem; border-radius: var(--radius-md); font-size: 12px; }
-.btn[data-size="xs"][data-icon-only="true"] { width: 1.5rem; padding: 0.5rem; border-radius: var(--radius-md); }
+.btn[data-size="xs"] { height: 1.5rem; padding: 0.5rem 0.375rem; border-radius: var(--radius-lg); font-size: 12px; }
+.btn[data-size="xs"][data-icon-only="true"] { width: 1.5rem; padding: 0.5rem; border-radius: var(--radius-lg); }
 .btn[data-size="xs"] .material-symbols-rounded {
   font-size: 16px;
   /* UPDATED: Match opsz to font-size */
