@@ -4,14 +4,14 @@ import { useSetAtom } from 'jotai';
 import { canvasInteractionAtom } from '../../../data/atoms';
 import { commitActionAtom } from '../../../data/historyAtoms';
 import { useEditable } from '../../../data/useEditable';
-import { FormComponent } from '../../../types';
+import { WidgetComponent } from '../../../types';
 import { RendererProps } from './types';
 import { useEditorInteractions } from '../useEditorInteractions';
 import { CanvasSelectionToolbar } from '../CanvasSelectionToolbar';
 import styles from '../EditorCanvas.module.css';
 
 // --- Pure View Component ---
-const PlainTextView = memo(({ content, textElement = 'p' }: { content?: string, textElement?: FormComponent['properties']['textElement'] }) => {
+const PlainTextView = memo(({ content, textElement = 'p' }: { content?: string, textElement?: WidgetComponent['properties']['textElement'] }) => {
   const Tag = textElement || 'p';
   if (Tag === 'p') {
     return <p style={{ whiteSpace: 'pre-wrap' }}>{content || 'Plain Text'}</p>;
@@ -20,7 +20,7 @@ const PlainTextView = memo(({ content, textElement = 'p' }: { content?: string, 
 });
 
 // --- Unified Renderer ---
-export const PlainTextRenderer = ({ component, mode }: RendererProps<FormComponent>) => {
+export const PlainTextRenderer = ({ component, mode }: RendererProps<WidgetComponent>) => {
   const { isSelected, isEditing, isDragging, isOnlySelection, sortableProps, selectionProps, dndListeners } = useEditorInteractions(component);
   const setInteractionState = useSetAtom(canvasInteractionAtom);
   const commitAction = useSetAtom(commitActionAtom);
@@ -33,7 +33,7 @@ export const PlainTextRenderer = ({ component, mode }: RendererProps<FormCompone
 
   const handleCommit = (newValue: string) => {
     commitAction({
-      action: { type: 'COMPONENT_UPDATE_FORM_PROPERTIES', payload: { componentId: component.id, newProperties: { content: newValue } } },
+      action: { type: 'COMPONENT_UPDATE_WIDGET_PROPERTIES', payload: { componentId: component.id, newProperties: { content: newValue } } },
       message: `Update text content`
     });
     setInteractionState({ mode: 'selecting', ids: [component.id] });
@@ -63,7 +63,7 @@ export const PlainTextRenderer = ({ component, mode }: RendererProps<FormCompone
     <div className={wrapperClasses} {...sortableProps} data-id={component.id} ref={setMergedRefs}>
       <div className={selectionClasses} {...selectionProps} {...dndListeners}>
         {isOnlySelection && <CanvasSelectionToolbar componentId={component.id} referenceElement={wrapperRef.current} dndListeners={dndListeners} />}
-        <div className={styles.formItemContent}>
+        <div className={styles.promptElementContent}>
           {isEditing ? (
             isHeading ? (
               <input

@@ -11,7 +11,7 @@
   justify-content: center;
 }
 
-.formCard {
+.promptCard {
   background-color: var(--surface-bg-primary);
   border-radius: var(--radius-3xl);
   padding: var(--spacing-6);
@@ -26,17 +26,17 @@
   user-select: none;
 }
 
-.formCard.isBackgroundTarget {
+.promptCard.isBackgroundTarget {
   border-color: var(--control-border-selected);
   box-shadow: var(--surface-shadow-lg), 0 0 0 2px var(--control-focus-ring-standard);
 }
 
-.formCard.isRootSelected {
+.promptCard.isRootSelected {
   border-color: var(--control-border-selected);
   box-shadow: var(--surface-shadow-lg), 0 0 0 1px var(--control-border-selected);
 }
 
-.formCardHeader {
+.promptCardHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -44,7 +44,7 @@
   margin-bottom: var(--spacing-6);
 }
 
-.formCardHeader h2 {
+.promptCardHeader h2 {
   font-size: 1.5em;
   font-weight: 600;
   margin: 0;
@@ -68,7 +68,7 @@
 }
 
 /* --- HOVER & SELECTION STYLES --- */
-.formItemContent, .layoutContainer, .roleContainer {
+.promptElementContent, .layoutContainer, .roleContainer {
   border: 1px solid transparent;
   padding: var(--spacing-1);
   margin: 0;
@@ -76,14 +76,14 @@
   transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
-.selectableWrapper:not(.selected):hover > .formItemContent,
+.selectableWrapper:not(.selected):hover > .promptElementContent,
 .selectableWrapper:not(.selected):hover > .layoutContainer,
 .selectableWrapper:not(.selected):hover > .roleContainer {
   background-color: var(--surface-bg-primary_hover);
   border-color: var(--control-border-tertiary-hover);
 }
 
-.selectableWrapper.selected > .formItemContent,
+.selectableWrapper.selected > .promptElementContent,
 .selectableWrapper.selected > .layoutContainer,
 .selectableWrapper.selected > .roleContainer {
   border-color: var(--control-border-selected);
@@ -172,14 +172,14 @@
 }
 
 /* --- FORM ITEM & INLINE EDITING --- */
-.formItemContent {
+.promptElementContent {
   position: relative;
   padding: var(--spacing-2);
   background-color: transparent;
   border-radius: 6px;
 }
 
-.formItemLabel {
+.promptElementLabel {
   font-size: 0.8em;
   color: var(--surface-fg-secondary);
   margin-bottom: var(--spacing-1);
@@ -235,23 +235,23 @@
   margin-bottom: var(--spacing-1) !important;
 }
 
-.formItemContent > p,
-.formItemContent > h1,
-.formItemContent > h2,
-.formItemContent > h3,
-.formItemContent > h4,
-.formItemContent > h5,
-.formItemContent > h6 {
+.promptElementContent > p,
+.promptElementContent > h1,
+.promptElementContent > h2,
+.promptElementContent > h3,
+.promptElementContent > h4,
+.promptElementContent > h5,
+.promptElementContent > h6 {
   color: var(--surface-fg-primary);
   padding: 1px 0;
   margin: 0;
 }
 
-.formItemContent > h1, .inlineInput.is-h1 { font-size: 2em; font-weight: 800; }
-.formItemContent > h2, .inlineInput.is-h2 { font-size: 1.5em; font-weight: 700; }
-.formItemContent > h3, .inlineInput.is-h3 { font-size: 1.17em; font-weight: 600; }
-.formItemContent > h4, .inlineInput.is-h4 { font-size: 1em; font-weight: 600; }
-.formItemContent > h5, .inlineInput.is-h5 { font-size: .83em; font-weight: 600; }
-.formItemContent > h6, .inlineInput.is-h6 { font-size: .67em; font-weight: 600; }
-.formItemContent > p, .inlineInput.is-p { font-size: 1em; font-weight: 400; line-height: 1.5; }
+.promptElementContent > h1, .inlineInput.is-h1 { font-size: 2em; font-weight: 800; }
+.promptElementContent > h2, .inlineInput.is-h2 { font-size: 1.5em; font-weight: 700; }
+.promptElementContent > h3, .inlineInput.is-h3 { font-size: 1.17em; font-weight: 600; }
+.promptElementContent > h4, .inlineInput.is-h4 { font-size: 1em; font-weight: 600; }
+.promptElementContent > h5, .inlineInput.is-h5 { font-size: .83em; font-weight: 600; }
+.promptElementContent > h6, .inlineInput.is-h6 { font-size: .67em; font-weight: 600; }
+.promptElementContent > p, .inlineInput.is-p { font-size: 1em; font-weight: 400; line-height: 1.5; }
 .inlineInput.is-p { resize: vertical; min-height: 2em; }

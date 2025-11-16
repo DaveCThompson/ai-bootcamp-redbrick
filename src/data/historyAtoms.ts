@@ -1,7 +1,7 @@
 // src/data/historyAtoms.ts
 import { atom } from 'jotai';
 import { produce, Draft } from 'immer';
-import { LayoutComponent, FormComponent, DynamicComponent, CanvasComponent, NormalizedCanvasComponents } from '../types';
+import { LayoutComponent, WidgetComponent, DynamicComponent, CanvasComponent, NormalizedCanvasComponents } from '../types';
 import { 
   canvasInteractionAtom, 
   CanvasInteractionState, 
@@ -10,11 +10,11 @@ import {
   activeToolbarTabAtom,
   isComponentBrowserVisibleAtom,
 } from './atoms';
-import { createFormComponent, createLayoutComponent, createDynamicComponent } from './componentFactory';
+import { createWidgetComponent, createLayoutComponent, createDynamicComponent } from './componentFactory';
 
 // 1. DEFINE THE CORE SHAPES
 export interface UndoableState {
-  formName: string;
+  promptName: string;
   rootComponentId: string;
   components: NormalizedCanvasComponents;
 }
@@ -37,8 +37,8 @@ export type HistoryAction =
       name: string;
       parentId: string; 
       index: number; 
-      controlType?: FormComponent['properties']['controlType'];
-      controlTypeProps?: Partial<FormComponent['properties']>;
+      controlType?: WidgetComponent['properties']['controlType'];
+      controlTypeProps?: Partial<WidgetComponent['properties']>;
       dynamicType?: DynamicComponent['dynamicType'];
     } }
   | { type: 'COMPONENT_DELETE'; payload: { componentId: string } }
@@ -48,15 +48,15 @@ export type HistoryAction =
   | { type: 'COMPONENTS_WRAP'; payload: { componentIds: string[]; parentId: string; } }
   | { type: 'COMPONENT_UNWRAP'; payload: { componentId: string; } }
   | { type: 'COMPONENT_UPDATE_PROPERTIES'; payload: { componentId: string; newProperties: Partial<LayoutComponent['properties']>; } }
-  | { type: 'COMPONENT_UPDATE_FORM_PROPERTIES'; payload: { componentId: string; newProperties: Partial<FormComponent['properties']> } }
+  | { type: 'COMPONENT_UPDATE_WIDGET_PROPERTIES'; payload: { componentId: string; newProperties: Partial<WidgetComponent['properties']> } }
   | { type: 'COMPONENT_UPDATE_DYNAMIC_PROPERTIES'; payload: { componentId: string; newProperties: Partial<DynamicComponent['properties']> } }
-  | { type: 'FORM_RENAME'; payload: { newName: string } };
+  | { type: 'PROMPT_RENAME'; payload: { newName: string } };
 
 // 3. CREATE THE CORE ATOMS
 const historyAtom = atom<HistoryData>({
   past: [],
   present: {
-    formName: "New Prompt",
+    promptName: "New Prompt",
     rootComponentId: 'root',
     components: {
       'root': {
@@ -117,7 +117,7 @@ export const commitActionAtom = atom(
             } else if (componentType === 'dynamic' && rest.dynamicType) {
               newComponent = createDynamicComponent(parentId, rest.dynamicType);
             } else {
-              newComponent = createFormComponent({ parentId, ...rest });
+              newComponent = createWidgetComponent({ parentId, ...rest });
             }
             
             presentState.components[newComponent.id] = newComponent;
@@ -215,7 +215,7 @@ export const commitActionAtom = atom(
             }
             break;
           }
-          case 'COMPONENT_UPDATE_FORM_PROPERTIES': {
+          case 'COMPONENT_UPDATE_WIDGET_PROPERTIES': {
             const { componentId, newProperties } = action.action.payload;
             const component = presentState.components[componentId];
             if (component && (component.componentType === 'field' || component.componentType === 'widget')) {
@@ -231,8 +231,8 @@ export const commitActionAtom = atom(
             }
             break;
           }
-          case 'FORM_RENAME': {
-            presentState.formName = action.action.payload.newName;
+          case 'PROMPT_RENAME': {
+            presentState.promptName = action.action.payload.newName;
             break;
           }
         }
@@ -298,7 +298,7 @@ export const redoAtom = atom(null, (_get, set) => {
 
 // 5. CREATE DERIVED, READ-ONLY ATOMS FOR UI
 export const undoableStateAtom = atom<UndoableState>((get) => get(historyAtom).present);
-export const formNameAtom = atom<string>((get) => get(undoableStateAtom).formName);
+export const promptNameAtom = atom<string>((get) => get(undoableStateAtom).promptName);
 export const canvasComponentsByIdAtom = atom<NormalizedCanvasComponents>((get) => get(undoableStateAtom).components);
 export const rootComponentIdAtom = atom<string>((get) => get(undoableStateAtom).rootComponentId);
 export const canUndoAtom = atom<boolean>((get) => get(historyAtom).past.length > 0);

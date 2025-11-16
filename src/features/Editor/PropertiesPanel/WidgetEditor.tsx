@@ -1,7 +1,7 @@
-// src/features/Editor/PropertiesPanel/FormEditor.tsx
+// src/features/Editor/PropertiesPanel/WidgetEditor.tsx
 import { useSetAtom } from 'jotai';
 import { commitActionAtom } from '../../../data/historyAtoms';
-import { FormComponent, CanvasComponent } from '../../../types';
+import { WidgetComponent, CanvasComponent } from '../../../types';
 import { registerPropertyEditor, PropertyEditorProps } from './propertyEditorRegistry';
 import { Switch } from '../../../components/Switch';
 import { IconToggleGroup } from '../../../components/IconToggleGroup';
@@ -19,13 +19,13 @@ const sanitizeLabelToFieldName = (label: string): string => {
     .replace(/[^a-zA-Z0-9]/g, '');
 };
 
-const displayOptions: { value: FormComponent['properties']['controlType']; label: string; icon: string; }[] = [
+const displayOptions: { value: WidgetComponent['properties']['controlType']; label: string; icon: string; }[] = [
     { value: 'text-input', label: 'Text Input', icon: 'text_fields' },
     { value: 'dropdown', label: 'Dropdown', icon: 'arrow_drop_down_circle' },
     { value: 'radio-buttons', label: 'Radio Buttons', icon: 'radio_button_checked' },
 ];
 
-const textElementOptions: { value: NonNullable<FormComponent['properties']['textElement']>; label: string; icon: string }[] = [
+const textElementOptions: { value: NonNullable<WidgetComponent['properties']['textElement']>; label: string; icon: string }[] = [
     { value: 'h1', label: 'H1', icon: 'looks_one' },
     { value: 'h2', label: 'H2', icon: 'looks_two' },
     { value: 'h3', label: 'H3', icon: 'looks_3' },
@@ -34,7 +34,7 @@ const textElementOptions: { value: NonNullable<FormComponent['properties']['text
     { value: 'h6', label: 'H6', icon: 'looks_6' },
 ];
 
-const FormEditor = ({ component }: PropertyEditorProps<CanvasComponent>) => {
+const WidgetEditor = ({ component }: PropertyEditorProps<CanvasComponent>) => {
   const commitAction = useSetAtom(commitActionAtom);
 
   if (component.componentType !== 'field' && component.componentType !== 'widget') {
@@ -43,10 +43,10 @@ const FormEditor = ({ component }: PropertyEditorProps<CanvasComponent>) => {
 
   const { controlType } = component.properties;
 
-  const handlePropertyChange = (newProperties: Partial<FormComponent['properties']>) => {
+  const handlePropertyChange = (newProperties: Partial<WidgetComponent['properties']>) => {
     commitAction({
       action: {
-        type: 'COMPONENT_UPDATE_FORM_PROPERTIES',
+        type: 'COMPONENT_UPDATE_WIDGET_PROPERTIES',
         payload: { componentId: component.id, newProperties }
       },
       message: `Update properties for '${getComponentName(component)}'`
@@ -70,7 +70,7 @@ const FormEditor = ({ component }: PropertyEditorProps<CanvasComponent>) => {
               <IconToggleGroup
                   options={textElementOptions}
                   value={component.properties.textElement || 'p'}
-                  onValueChange={value => handlePropertyChange({ textElement: value as FormComponent['properties']['textElement'] })}
+                  onValueChange={value => handlePropertyChange({ textElement: value as WidgetComponent['properties']['textElement'] })}
               />
             </div>
           )}
@@ -149,7 +149,7 @@ const FormEditor = ({ component }: PropertyEditorProps<CanvasComponent>) => {
   );
 };
 
-registerPropertyEditor('widget', FormEditor);
-registerPropertyEditor('field', FormEditor);
+registerPropertyEditor('widget', WidgetEditor);
+registerPropertyEditor('field', WidgetEditor);
 
-export default FormEditor;
+export default WidgetEditor;

@@ -16,12 +16,12 @@ export const getComponentName = (component: CanvasComponent): string => {
     return component.name;
   }
   
-  // Handle form components
+  // Handle widget components
   if (component.componentType === 'widget' || component.componentType === 'field') {
     if (component.properties.controlType === 'plain-text') {
       return component.properties.textElement === 'p' ? 'Text Block' : 'Section Header';
     }
-    return component.properties.label || 'Form Field';
+    return component.properties.label || 'Input Field';
   }
 
   return 'Unnamed Component';

@@ -1,0 +1,56 @@
+/* src/features/ComponentBrowser/ComponentBrowser.module.css */
+.browserContainer {
+  padding: var(--spacing-4);
+  height: 100%;
+  overflow-y: auto;
+  user-select: none;
+  background-color: var(--surface-bg-primary);
+}
+
+.browserGroup {
+  margin-bottom: var(--spacing-6);
+}
+
+.browserGroup h4 {
+  font-size: 0.8em;
+  font-weight: 600;
+  color: var(--surface-fg-secondary);
+  margin: 0 0 var(--spacing-3) 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-left: var(--spacing-2);
+}
+
+.itemsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-2);
+}
+
+.browserItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3);
+  background-color: var(--surface-bg-secondary_subtle);
+  border: 1px solid var(--surface-border-secondary);
+  border-radius: var(--radius-lg);
+  cursor: grab;
+  transition: background-color 0.2s, border-color 0.2s;
+  font-size: 0.85em;
+  color: var(--surface-fg-primary);
+  min-height: 90px;
+}
+
+.browserItem:hover {
+  background-color: var(--surface-bg-secondary_subtle-hover);
+  border-color: var(--surface-border-primary);
+}
+
+.browserItem .material-symbols-rounded {
+  font-size: 28px;
+  color: var(--surface-fg-secondary);
+}

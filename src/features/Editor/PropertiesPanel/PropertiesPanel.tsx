@@ -16,7 +16,7 @@ import styles from './PropertiesPanel.module.css';
 import './EmptyStatePanel';
 import './MultiSelectEditor';
 import './LayoutEditor';
-import './FormEditor';
+import './WidgetEditor';
 import './RootEditor';
 import './RoleEditor';
 

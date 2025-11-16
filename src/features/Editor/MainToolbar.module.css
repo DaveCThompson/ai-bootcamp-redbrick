@@ -29,7 +29,7 @@
 
 .toolbarButton {
   background-color: transparent;
-  border-radius: var(--spacing-2);
+  border-radius: var(--radius-xl);
   cursor: pointer;
   display: flex;
   align-items: center;

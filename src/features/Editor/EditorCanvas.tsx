@@ -12,7 +12,7 @@ import {
   isContextMenuOpenAtom,
   contextMenuInstanceKeyAtom,
 } from '../../data/atoms';
-import { rootComponentIdAtom, formNameAtom } from '../../data/historyAtoms';
+import { rootComponentIdAtom, promptNameAtom } from '../../data/historyAtoms';
 import { useEditorHotkeys } from '../../data/useEditorHotkeys';
 import { useAutoScroller } from '../../data/useAutoScroller';
 
@@ -26,7 +26,7 @@ const CANVAS_BACKGROUND_ID = '--canvas-background--';
 
 export const EditorCanvas = () => {
   const rootId = useAtomValue(rootComponentIdAtom);
-  const screenName = useAtomValue(formNameAtom);
+  const promptName = useAtomValue(promptNameAtom);
   const [interactionState, setInteractionState] = useAtom(canvasInteractionAtom);
   const setIsPropertiesPanelVisible = useSetAtom(isPropertiesPanelVisibleAtom);
   const setAnchorId = useSetAtom(selectionAnchorIdAtom);
@@ -80,8 +80,8 @@ export const EditorCanvas = () => {
   const isOverBackground = overId === CANVAS_BACKGROUND_ID;
   const isRootSelected = selectedIds.length === 1 && selectedIds[0] === rootId;
 
-  const formCardClasses = [
-    styles.formCard,
+  const promptCardClasses = [
+    styles.promptCard,
     isOverBackground ? styles.isBackgroundTarget : '',
     isRootSelected ? styles.isRootSelected : '',
   ].filter(Boolean).join(' ');
@@ -94,9 +94,9 @@ export const EditorCanvas = () => {
         onClick={handleBackgroundClick}
         onContextMenu={handleCanvasContextMenu}
       >
-        <div className={formCardClasses} onClick={handleCanvasClick}>
-          <div className={styles.formCardHeader}>
-            <h2>{screenName}</h2>
+        <div className={promptCardClasses} onClick={handleCanvasClick}>
+          <div className={styles.promptCardHeader}>
+            <h2>{promptName}</h2>
           </div>
           <div className={styles.canvasDroppableArea}>
             {rootId && <CanvasNode componentId={rootId} />}

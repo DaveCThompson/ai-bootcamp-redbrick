@@ -4,7 +4,7 @@ import { useSetAtom } from 'jotai';
 import { canvasInteractionAtom } from '../../../data/atoms';
 import { commitActionAtom } from '../../../data/historyAtoms';
 import { useEditable } from '../../../data/useEditable';
-import { FormComponent } from '../../../types';
+import { WidgetComponent } from '../../../types';
 import { RendererProps } from './types';
 import { useEditorInteractions } from '../useEditorInteractions';
 import { CanvasSelectionToolbar } from '../CanvasSelectionToolbar';
@@ -13,8 +13,8 @@ import styles from '../EditorCanvas.module.css';
 // --- Pure View Component ---
 const RadioButtonsView = memo(({ label, required }: { label: string, required: boolean }) => {
   return (
-    <div className={styles.formItemContent}>
-      <label className={styles.formItemLabel}>
+    <div className={styles.promptElementContent}>
+      <label className={styles.promptElementLabel}>
         {label}
         {required && <span className="required-indicator">*</span>}
       </label>
@@ -33,7 +33,7 @@ const RadioButtonsView = memo(({ label, required }: { label: string, required: b
 });
 
 // --- Unified Renderer ---
-export const RadioButtonsRenderer = ({ component, mode }: RendererProps<FormComponent>) => {
+export const RadioButtonsRenderer = ({ component, mode }: RendererProps<WidgetComponent>) => {
   const { isSelected, isEditing, isDragging, isOnlySelection, sortableProps, selectionProps, dndListeners } = useEditorInteractions(component);
   const setInteractionState = useSetAtom(canvasInteractionAtom);
   const commitAction = useSetAtom(commitActionAtom);
@@ -46,7 +46,7 @@ export const RadioButtonsRenderer = ({ component, mode }: RendererProps<FormComp
 
   const handleCommit = (newValue: string) => {
     commitAction({
-      action: { type: 'COMPONENT_UPDATE_FORM_PROPERTIES', payload: { componentId: component.id, newProperties: { label: newValue } } },
+      action: { type: 'COMPONENT_UPDATE_WIDGET_PROPERTIES', payload: { componentId: component.id, newProperties: { label: newValue } } },
       message: `Rename to '${newValue}'`
     });
     setInteractionState({ mode: 'selecting', ids: [component.id] });
@@ -66,7 +66,7 @@ export const RadioButtonsRenderer = ({ component, mode }: RendererProps<FormComp
       <div className={selectionClasses} {...selectionProps} {...dndListeners}>
         {isOnlySelection && <CanvasSelectionToolbar componentId={component.id} referenceElement={wrapperRef.current} dndListeners={dndListeners} />}
         {isEditing ? (
-          <div className={styles.formItemContent}>
+          <div className={styles.promptElementContent}>
             <input {...editableProps} ref={ref} className={`${styles.inlineInput} ${styles.inlineInputForLabel}`} onClick={(e) => e.stopPropagation()} />
             <div className={styles.radioGroupExample}>
               <div className={styles.radioOptionExample}>

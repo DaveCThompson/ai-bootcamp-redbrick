@@ -2,7 +2,7 @@
 import { nanoid } from 'nanoid';
 import { 
   LayoutComponent, 
-  FormComponent, 
+  WidgetComponent, 
   DynamicComponent,
 } from '../types';
 
@@ -19,14 +19,14 @@ export const createLayoutComponent = (parentId: string, name: string = 'Group'):
   };
 };
 
-interface FormComponentOptions {
+interface WidgetComponentOptions {
   parentId: string;
   name: string; // This is the initial label or content
-  controlType?: FormComponent['properties']['controlType'];
-  controlTypeProps?: Partial<FormComponent['properties']>;
+  controlType?: WidgetComponent['properties']['controlType'];
+  controlTypeProps?: Partial<WidgetComponent['properties']>;
 }
 
-export const createFormComponent = (options: FormComponentOptions): FormComponent => {
+export const createWidgetComponent = (options: WidgetComponentOptions): WidgetComponent => {
   const { 
     parentId, 
     name, 

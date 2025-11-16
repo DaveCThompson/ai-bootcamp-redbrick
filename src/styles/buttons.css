@@ -137,6 +137,7 @@
   background-color: var(--control-bg-on-solid-hover);
   border-color: var(--control-border-tertiary-hover); /* Re-using tertiary border seems appropriate here */
   box-shadow: none;
+
 }
 .btn[data-variant="on-solid"]:active:not(:disabled) {
   background-color: var(--control-bg-on-solid-pressed);

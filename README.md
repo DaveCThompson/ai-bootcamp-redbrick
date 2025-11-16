@@ -51,7 +51,7 @@ The canvas is built for intuitive drag-and-drop interaction with a small, focuse
 -   **Context Container:** A purely structural container for organizing other components. It defaults to a simple vertical stack and has no configurable visual properties (no padding, background, etc.). It is the primary tool for creating hierarchy.
 -   **Section Header:** A simple text element for creating titles and subtitles within the prompt structure.
 -   **Text Block:** A simple multi-line text element for descriptive content.
--   **Form Fields (Text Input, etc.):** Simple input placeholders that represent data collection points (variables) in a prompt or workflow.
+-   **Variables (Text Input, etc.):** Simple input placeholders that represent data collection points (variables) in a prompt or workflow.
 
 ### Unified Rendering Pattern
 All canvas components are rendered through a single, unified set of renderer components located in `src/features/Editor/renderers/`. Each renderer accepts a `mode: 'canvas' | 'preview'` prop to separate its interactive editor appearance from its clean "final" appearance.

@@ -21,7 +21,7 @@ export interface LayoutComponent extends BaseCanvasComponent {
 }
 
 // A component that represents a form field or a static widget
-export interface FormComponent extends BaseCanvasComponent {
+export interface WidgetComponent extends BaseCanvasComponent {
   componentType: 'field' | 'widget';
   properties: {
     // Common
@@ -49,7 +49,7 @@ export interface DynamicComponent extends BaseCanvasComponent {
   };
 }
 
-export type CanvasComponent = LayoutComponent | FormComponent | DynamicComponent;
+export type CanvasComponent = LayoutComponent | WidgetComponent | DynamicComponent;
 
 // A map of component IDs to their data, for efficient lookups
 export type NormalizedCanvasComponents = Record<string, CanvasComponent>;
@@ -80,8 +80,8 @@ export interface DndData {
   type: 'layout' | 'widget' | 'field' | 'dynamic';
   icon: string;
   isNew: boolean;
-  controlType?: FormComponent['properties']['controlType'];
-  controlTypeProps?: Partial<FormComponent['properties']>;
+  controlType?: WidgetComponent['properties']['controlType'];
+  controlTypeProps?: Partial<WidgetComponent['properties']>;
   dynamicType?: DynamicComponent['dynamicType'];
   childrenCount?: number;
   // FIX: 'origin' property removed to match strict type definition.
