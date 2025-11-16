@@ -41,7 +41,7 @@ const WidgetEditor = ({ component }: PropertyEditorProps<CanvasComponent>) => {
     return null;
   }
 
-  const { controlType } = component.properties;
+  const { controlType, isLabelHidden } = component.properties;
 
   const handlePropertyChange = (newProperties: Partial<WidgetComponent['properties']>) => {
     commitAction({
@@ -104,15 +104,17 @@ const WidgetEditor = ({ component }: PropertyEditorProps<CanvasComponent>) => {
       </AccordionItem>
 
       <AccordionItem value="field-settings" trigger="Field Settings">
-        <div className={styles.propItem}>
-          <label htmlFor={`label-${component.id}`}>Label</label>
-          <input
-            id={`label-${component.id}`}
-            type="text"
-            value={component.properties.label}
-            onChange={(e) => handleLabelChange(e.target.value)}
-          />
-        </div>
+        {!isLabelHidden && (
+          <div className={styles.propItem}>
+            <label htmlFor={`label-${component.id}`}>Label</label>
+            <input
+              id={`label-${component.id}`}
+              type="text"
+              value={component.properties.label}
+              onChange={(e) => handleLabelChange(e.target.value)}
+            />
+          </div>
+        )}
         {controlType !== 'radio-buttons' && (
           <div className={styles.propItem}>
             <label htmlFor={`placeholder-${component.id}`}>Placeholder</label>

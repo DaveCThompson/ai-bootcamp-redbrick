@@ -11,6 +11,7 @@ import {
   isComponentBrowserVisibleAtom,
 } from './atoms';
 import { createWidgetComponent, createLayoutComponent, createDynamicComponent } from './componentFactory';
+import { templates, TemplateItem } from './templatesMock';
 
 // 1. DEFINE THE CORE SHAPES
 export interface UndoableState {
@@ -41,6 +42,7 @@ export type HistoryAction =
       controlTypeProps?: Partial<WidgetComponent['properties']>;
       dynamicType?: DynamicComponent['dynamicType'];
     } }
+  | { type: 'TEMPLATE_ADD'; payload: { templateId: string; parentId: string; index: number; } }
   | { type: 'COMPONENT_DELETE'; payload: { componentId: string } }
   | { type: 'COMPONENTS_DELETE_BULK'; payload: { componentIds: string[] } }
   | { type: 'COMPONENT_MOVE'; payload: { componentId: string; newParentId: string; oldParentId: string; newIndex: number; } }
@@ -128,6 +130,58 @@ export const commitActionAtom = atom(
               if (parentId === presentState.rootComponentId && index === childrenCountBefore) {
                 set(scrollRequestAtom, { componentId: newComponent.id });
               }
+            }
+            break;
+          }
+          case 'TEMPLATE_ADD': {
+            const { templateId, parentId, index } = action.action.payload;
+            const template = templates[templateId];
+            if (!template) break;
+
+            const createdComponentIds: string[] = [];
+
+            // Recursive function to create components from the template blueprint
+            const createFromTemplate = (item: TemplateItem, currentParentId: string): string => {
+              let newComponent: CanvasComponent;
+              if (item.type === 'group') {
+                newComponent = createLayoutComponent(currentParentId, 'Group');
+                newComponent.isLocked = item.isLocked;
+                presentState.components[newComponent.id] = newComponent;
+                newComponent.children = item.children.map((child) => createFromTemplate(child, newComponent.id));
+              } else {
+                let controlType: WidgetComponent['properties']['controlType'];
+                let controlTypeProps: Partial<WidgetComponent['properties']> = {};
+
+                if (item.type === 'Section Header') {
+                  controlType = 'plain-text';
+                  controlTypeProps = { textElement: 'h2', content: item.content };
+                } else if (item.type === 'Text Block') {
+                  controlType = 'plain-text';
+                  controlTypeProps = { textElement: 'p', content: item.content };
+                } else { // Text Input
+                  controlType = 'text-input';
+                  controlTypeProps = item.props;
+                }
+
+                newComponent = createWidgetComponent({
+                  parentId: currentParentId,
+                  name: item.type,
+                  controlType: controlType,
+                  controlTypeProps: controlTypeProps,
+                });
+                newComponent.isLocked = item.isLocked;
+                presentState.components[newComponent.id] = newComponent;
+              }
+              return newComponent.id;
+            };
+
+            template.components.forEach(item => {
+              createdComponentIds.push(createFromTemplate(item, parentId));
+            });
+
+            const parent = presentState.components[parentId];
+            if (parent && (parent.componentType === 'layout' || parent.componentType === 'dynamic')) {
+              parent.children.splice(index, 0, ...createdComponentIds);
             }
             break;
           }

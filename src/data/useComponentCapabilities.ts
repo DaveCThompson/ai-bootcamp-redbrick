@@ -1,7 +1,7 @@
 // src/data/useComponentCapabilities.ts
 import { useAtomValue } from 'jotai';
-import { canvasComponentsByIdAtom, rootComponentIdAtom } from '../../data/historyAtoms';
-import { LayoutComponent } from '../../types';
+import { canvasComponentsByIdAtom, rootComponentIdAtom } from './historyAtoms';
+import { LayoutComponent } from '../types';
 
 /**
  * A hook that computes the possible actions for a given set of component IDs.
@@ -26,19 +26,34 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
   if (!primaryComponent) {
       return defaultState;
   }
+  
   const isRootSelected = selectedIds.includes(rootId);
   const parent = allComponents[primaryComponent.parentId] as LayoutComponent | undefined;
 
-  const canDelete = !isRootSelected;
-  const canWrap = !isRootSelected;
+  // Universal lock check for single-selected items
+  if (isSingleSelection && primaryComponent.isLocked) {
+    // A locked component can only be nudged up/down. It cannot be renamed, deleted, or structurally changed.
+    let canNudgeUp = false;
+    let canNudgeDown = false;
+    if (parent) {
+      const index = parent.children.indexOf(primaryComponent.id);
+      canNudgeUp = index > 0;
+      canNudgeDown = index < parent.children.length - 1;
+    }
+    return { ...defaultState, canNudgeUp, canNudgeDown };
+  }
+
+  const canDelete = !isRootSelected && selectedIds.every(id => !allComponents[id]?.isLocked);
+  const canWrap = !isRootSelected && selectedIds.every(id => !allComponents[id]?.isLocked);
   
   const canUnwrap = isSingleSelection &&
     primaryComponent.componentType === 'layout' &&
     !isRootSelected &&
     primaryComponent.children.length > 0 &&
-    !!parent;
+    !!parent &&
+    !primaryComponent.isLocked;
 
-  const canRename = isSingleSelection && !isRootSelected;
+  const canRename = isSingleSelection && !isRootSelected && !primaryComponent.isLocked;
 
   const canSelectParent = isSingleSelection && !!parent && parent.id !== rootId;
 

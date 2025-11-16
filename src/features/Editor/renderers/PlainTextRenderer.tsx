@@ -1,6 +1,7 @@
 // src/features/Editor/renderers/PlainTextRenderer.tsx
 import { memo, useRef } from 'react';
 import { useSetAtom } from 'jotai';
+import TextareaAutosize from 'react-textarea-autosize';
 import { canvasInteractionAtom } from '../../../data/atoms';
 import { commitActionAtom } from '../../../data/historyAtoms';
 import { useEditable } from '../../../data/useEditable';
@@ -73,11 +74,12 @@ export const PlainTextRenderer = ({ component, mode }: RendererProps<WidgetCompo
                 onClick={(e) => e.stopPropagation()}
               />
             ) : (
-              <textarea
+              <TextareaAutosize
                 {...editableProps}
                 ref={ref as React.Ref<HTMLTextAreaElement>}
                 className={inlineInputClasses}
                 onClick={(e) => e.stopPropagation()}
+                minRows={1}
               />
             )
           ) : (

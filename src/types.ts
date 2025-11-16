@@ -8,12 +8,13 @@
 interface BaseCanvasComponent {
   id: string;
   parentId: string;
+  isLocked?: boolean; // NEW: To prevent editing/deleting template items
 }
 
 // A structural component for organizing other components
 export interface LayoutComponent extends BaseCanvasComponent {
   componentType: 'layout';
-  name: string;
+  name:string;
   children: string[];
   properties: {
     arrangement: 'stack' | 'row';
@@ -26,6 +27,7 @@ export interface WidgetComponent extends BaseCanvasComponent {
   properties: {
     // Common
     label: string;
+    isLabelHidden?: boolean; // NEW: To hide labels for template inputs
     required: boolean;
     placeholder?: string;
     hintText?: string;
@@ -63,9 +65,8 @@ export type NormalizedCanvasComponents = Record<string, CanvasComponent>;
 export interface DraggableComponent {
   id: string;
   name: string;
-  type: 'layout' | 'widget' | 'dynamic';
+  type: 'layout' | 'widget' | 'dynamic' | 'template'; // Added 'template'
   icon: string;
-  // FIX: iconColor removed as it's no longer part of the design system.
 }
 
 export interface ComponentGroup {
@@ -77,12 +78,12 @@ export interface ComponentGroup {
 export interface DndData {
   id: string;
   name: string;
-  type: 'layout' | 'widget' | 'field' | 'dynamic';
+  type: 'layout' | 'widget' | 'field' | 'dynamic' | 'template'; // Added 'template'
   icon: string;
   isNew: boolean;
+  isTemplate?: boolean; // NEW: To identify template drags
   controlType?: WidgetComponent['properties']['controlType'];
   controlTypeProps?: Partial<WidgetComponent['properties']>;
   dynamicType?: DynamicComponent['dynamicType'];
   childrenCount?: number;
-  // FIX: 'origin' property removed to match strict type definition.
 }

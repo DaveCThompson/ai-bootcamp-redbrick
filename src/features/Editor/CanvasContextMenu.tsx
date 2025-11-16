@@ -8,7 +8,7 @@ import {
   isContextMenuOpenAtom,
   contextMenuInstanceKeyAtom,
 } from '../../data/atoms';
-import { useComponentCapabilities } from './useComponentCapabilities';
+import { useComponentCapabilities } from '../../data/useComponentCapabilities';
 import { useCanvasActions } from './useCanvasActions';
 import { ActionMenu, ActionMenuItem } from '../../components/ActionMenu';
 import { useIsMac } from '../../data/useIsMac';

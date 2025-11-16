@@ -6,7 +6,6 @@ interface UseEditableOptions {
 }
 
 export interface EditableProps<T extends HTMLElement> {
-  // MODIFIED: The ref can be null initially.
   ref: React.RefObject<T | null>;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
@@ -22,15 +21,12 @@ export const useEditable = <T extends HTMLInputElement | HTMLTextAreaElement>(
   initialValue: string,
   onCommit: (newValue: string) => void,
   onCancel: () => void,
-  isEditing: boolean, // <-- NEW: Explicitly pass the editing state
+  isEditing: boolean,
   options: UseEditableOptions = {}
 ): EditableProps<T> => {
   const [value, setValue] = useState(initialValue);
   const ref = useRef<T>(null);
 
-  // NEW: Centralized effect to handle focus and selection.
-  // This ensures that whenever the component enters editing mode,
-  // the text is focused and selected, regardless of how it was triggered.
   useEffect(() => {
     if (isEditing) {
       const timer = setTimeout(() => {
@@ -44,14 +40,25 @@ export const useEditable = <T extends HTMLInputElement | HTMLTextAreaElement>(
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     const isEnter = e.key === 'Enter';
-    const allowNewline = options.multiline && e.shiftKey;
+    const isCmdOrCtrl = e.metaKey || e.ctrlKey;
 
-    if (isEnter && !allowNewline) {
+    // For multiline, commit on Cmd/Ctrl+Enter, otherwise just add a newline
+    if (options.multiline) {
+      if (isEnter && isCmdOrCtrl) {
+        e.preventDefault();
+        onCommit(value);
+      }
+    } else {
+      // For single line, commit on Enter
+      if (isEnter) {
+        e.preventDefault();
+        onCommit(value);
+      }
+    }
+
+    if (e.key === 'Escape') {
       e.preventDefault();
-      onCommit(value);
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      onCancel();
+      onCancel(); // Revert to previous state/value
     }
   };
 

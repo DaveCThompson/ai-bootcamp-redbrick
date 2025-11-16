@@ -3,21 +3,22 @@ import { useSetAtom } from 'jotai';
 import { useDraggable } from '@dnd-kit/core';
 import { isComponentBrowserVisibleAtom } from '../../data/atoms';
 import { promptElements } from '../../data/promptElementsMock';
-// FIX: Removed unused 'DynamicComponent' import.
+import { templates } from '../../data/templatesMock';
 import { DraggableComponent, DndData, WidgetComponent } from '../../types';
 import { PanelHeader } from '../../components/PanelHeader';
 import panelStyles from '../../components/panel.module.css';
 
-const DraggableListItem = ({ component }: { component: DraggableComponent }) => {
+const DraggableListItem = ({ component, isTemplate = false }: { component: DraggableComponent, isTemplate?: boolean }) => {
+  const idPrefix = isTemplate ? `new-template-` : `new-`;
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: `new-${component.id}`,
+    id: `${idPrefix}${component.id}`,
     data: {
       id: component.id,
       name: component.name,
       type: component.type,
       icon: component.icon,
       isNew: true,
-      // FIX: 'origin' property removed to match DndData type.
+      isTemplate,
       controlType: 
         (component.id === 'heading' || component.id === 'paragraph') ? 'plain-text' : 
         (component.type === 'widget') ? component.id as WidgetComponent['properties']['controlType'] : undefined,
@@ -29,7 +30,6 @@ const DraggableListItem = ({ component }: { component: DraggableComponent }) => 
     } satisfies DndData,
   });
 
-  // FIX: Removed iconColor logic as it's no longer in the type definition.
   const iconStyle = {};
 
   return (
@@ -53,11 +53,28 @@ export const GeneralComponentsBrowser = () => {
     setIsPanelVisible(false);
   }
 
+  const templateComponents: DraggableComponent[] = Object.entries(templates).map(([id, template]) => ({
+    id,
+    name: template.name,
+    icon: template.icon,
+    type: 'template'
+  }));
+
   return (
     <div className={panelStyles.componentBrowserContainer}>
       <PanelHeader title="Prompt Elements" onClose={handleClosePanel} />
       <div className={panelStyles.componentListContainer}>
         <ul className={panelStyles.componentList}>
+          {templateComponents.length > 0 && (
+            <li className={panelStyles.componentListGroup}>
+              <h5 className={panelStyles.listGroupTitle}>Templates</h5>
+              <ul className={panelStyles.componentListGroupItems}>
+                {templateComponents.map((component) => (
+                  <DraggableListItem key={component.id} component={component} isTemplate={true} />
+                ))}
+              </ul>
+            </li>
+          )}
           {promptElements.map((group) => (
             <li key={group.title} className={panelStyles.componentListGroup}>
               <h5 className={panelStyles.listGroupTitle}>{group.title}</h5>

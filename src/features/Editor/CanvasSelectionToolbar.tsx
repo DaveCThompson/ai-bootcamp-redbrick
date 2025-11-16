@@ -9,7 +9,7 @@ import { Tooltip } from '../../components/Tooltip';
 import { Button } from '../../components/Button';
 import { useIsMac } from '../../data/useIsMac';
 import { useCanvasActions } from './useCanvasActions';
-import { useComponentCapabilities } from './useComponentCapabilities';
+import { useComponentCapabilities } from '../../data/useComponentCapabilities';
 import styles from './SelectionToolbar.module.css';
 
 interface CanvasSelectionToolbarProps {
