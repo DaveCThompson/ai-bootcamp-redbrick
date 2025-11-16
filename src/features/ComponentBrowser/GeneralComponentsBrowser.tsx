@@ -4,7 +4,7 @@ import { useDraggable } from '@dnd-kit/core';
 import { isComponentBrowserVisibleAtom } from '../../data/atoms';
 import { promptElements } from '../../data/promptElementsMock';
 // FIX: Removed unused 'DynamicComponent' import.
-import { DraggableComponent, DndData, FormComponent } from '../../types';
+import { DraggableComponent, DndData, WidgetComponent } from '../../types';
 import { PanelHeader } from '../../components/PanelHeader';
 import panelStyles from '../../components/panel.module.css';
 
@@ -20,7 +20,7 @@ const DraggableListItem = ({ component }: { component: DraggableComponent }) => 
       // FIX: 'origin' property removed to match DndData type.
       controlType: 
         (component.id === 'heading' || component.id === 'paragraph') ? 'plain-text' : 
-        (component.type === 'widget') ? component.id as FormComponent['properties']['controlType'] : undefined,
+        (component.type === 'widget') ? component.id as WidgetComponent['properties']['controlType'] : undefined,
       controlTypeProps: 
         component.id === 'heading' ? { textElement: 'h2', content: 'Section Header' } :
         component.id === 'paragraph' ? { textElement: 'p', content: 'This is a block of text.' } :

@@ -20,7 +20,7 @@
 .welcomeIcon {
   font-size: 64px !important;
   margin-bottom: var(--spacing-4);
-  color: var(--surface-fg-brand-primary);
+  color: var(--surface-fg-theme-primary);
   font-variation-settings:
     'FILL' 1,
     'wght' 400,

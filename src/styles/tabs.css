@@ -43,7 +43,7 @@
   cursor: pointer;
   transition: color 0.2s;
   color: var(--surface-fg-quaternary);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family-sans);
   font-size: 14px;
   font-weight: 600;
   line-height: 20px;

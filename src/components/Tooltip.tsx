@@ -1,29 +1,25 @@
-// src/components/Tooltip.tsx
-import React from 'react';
 import * as RadixTooltip from '@radix-ui/react-tooltip';
+import '../styles/tooltip.css';
 
 interface TooltipProps {
-  children: React.ReactElement;
+  children: React.ReactNode;
   content: React.ReactNode;
-  delay?: number;
   side?: 'top' | 'right' | 'bottom' | 'left';
+  delayDuration?: number;
 }
 
-/**
- * A reusable, accessible, and high-craft tooltip component
- * built on top of Radix UI.
- */
-export const Tooltip = ({ children, content, delay = 300, side = 'top' }: TooltipProps) => {
-  if (!content) {
-    return children;
-  }
-
+export const Tooltip = ({
+  children,
+  content,
+  side = 'top',
+  delayDuration = 300,
+}: TooltipProps) => {
   return (
-    <RadixTooltip.Provider>
-      <RadixTooltip.Root delayDuration={delay}>
+    <RadixTooltip.Provider delayDuration={delayDuration}>
+      <RadixTooltip.Root>
         <RadixTooltip.Trigger asChild>{children}</RadixTooltip.Trigger>
         <RadixTooltip.Portal>
-          <RadixTooltip.Content className="tooltip-content" side={side} sideOffset={5}>
+          <RadixTooltip.Content className="tooltip-content" sideOffset={5} side={side}>
             {content}
             <RadixTooltip.Arrow className="tooltip-arrow" />
           </RadixTooltip.Content>

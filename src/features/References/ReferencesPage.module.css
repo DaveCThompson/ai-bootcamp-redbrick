@@ -68,9 +68,9 @@
 }
 
 .header h1 {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family-sans);
   font-size: 3em;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--surface-fg-primary);
   margin: 0 0 var(--spacing-2) 0;
 }
@@ -95,9 +95,9 @@
 
 /* --- Typography within Content --- */
 .pageSection h2 {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family-sans);
   font-size: 2.25em;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--surface-fg-primary);
   margin-bottom: var(--spacing-4);
   padding-bottom: var(--spacing-2);
@@ -111,7 +111,7 @@
   margin: var(--spacing-6) 0 var(--spacing-2) 0;
 }
 
-.pageSection p {
+.pageSection p, .paragraph {
   font-size: 1em;
   line-height: 1.7;
   color: var(--surface-fg-secondary);
@@ -128,4 +128,61 @@
   border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
   font-style: italic;
   font-weight: 500;
+}
+
+/* --- New Rich Content Styles --- */
+.list {
+  list-style: none;
+  padding-left: var(--spacing-4);
+  margin-bottom: var(--spacing-4);
+  max-width: 75ch;
+}
+
+.list li {
+  position: relative;
+  padding-left: var(--spacing-6);
+  margin-bottom: var(--spacing-3);
+  font-size: 1em;
+  line-height: 1.7;
+  color: var(--surface-fg-secondary);
+}
+
+.list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--surface-fg-theme-primary);
+  font-size: 1.2em;
+  line-height: 1.5;
+}
+
+.wordTip {
+  font-weight: 600;
+  color: var(--surface-fg-theme-strong);
+  border-bottom: 2px dotted var(--surface-fg-theme-secondary);
+  cursor: help;
+  transition: background-color 0.2s;
+}
+
+.wordTip:hover {
+  background-color: var(--surface-bg-brand-primary);
+}
+
+.iconTip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: var(--surface-bg-info);
+  color: var(--surface-fg-info-primary);
+  border-radius: 50%;
+  margin: 0 var(--spacing-1);
+  cursor: help;
+  vertical-align: sub;
+}
+.iconTip .material-symbols-rounded {
+  font-size: 16px;
+  font-variation-settings: 'opsz' 16;
 }
