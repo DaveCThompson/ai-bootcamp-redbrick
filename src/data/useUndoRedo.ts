@@ -1,6 +1,6 @@
 // src/data/useUndoRedo.ts
 import { useSetAtom, useAtomValue } from 'jotai';
-import { undoAtom, redoAtom, canUndoAtom, canRedoAtom, actionMetaHistoryAtom } from './historyAtoms';
+import { undoAtom, redoAtom, canUndoAtom, canRedoAtom, actionMetaHistoryAtom } from './promptStateAtoms';
 import { addToastAtom } from './toastAtoms';
 
 export const useUndoRedo = () => {

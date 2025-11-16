@@ -1,0 +1,41 @@
+/* src/features/EditorCanvas/SelectionToolbar.module.css */
+.toolbarWrapper {
+  position: absolute;
+  top: -44px; /* Adjusted to give more breathing room above selection */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.selectionToolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  background-color: var(--surface-bg-brand-solid);
+  border-radius: var(--spacing-4);
+  padding: var(--spacing-1);
+  color: var(--control-fg-on-solid);
+  box-shadow: var(--surface-shadow-lg);
+  animation: fadeIn 0.1s ease-out;
+}
+
+.dragHandle {
+  cursor: grab;
+}
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+/* FIX: Update divider to new 2px theme-colored style. */
+.divider {
+  width: 2px;
+  height: 24px;
+  background-color: var(--surface-border-theme);
+  margin: 0 var(--spacing-1);
+}
+
+.menuDivider {
+  height: 1px;
+  background-color: var(--surface-border-secondary);
+  margin: var(--spacing-1) 0;
+}

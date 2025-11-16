@@ -7,9 +7,9 @@ import {
   appViewModeAtom,
   editorLayoutModeAtom, // Import the new layout mode atom
 } from './atoms';
-import { canvasComponentsByIdAtom } from './historyAtoms';
+import { canvasComponentsByIdAtom } from './promptStateAtoms';
 import { useUndoRedo } from './useUndoRedo';
-import { useCanvasActions } from '../features/Editor/useCanvasActions';
+import { useCanvasActions } from '../features/EditorCanvas/useCanvasActions';
 
 export const useEditorHotkeys = () => {
   const interactionState = useAtomValue(canvasInteractionAtom);

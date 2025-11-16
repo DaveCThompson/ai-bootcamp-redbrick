@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { useSetAtom, useAtomValue } from 'jotai';
 import { Active, DragEndEvent, DragOverEvent, DragStartEvent, Over, ClientRect } from '@dnd-kit/core';
 import { activeDndIdAtom, overDndIdAtom, dropPlaceholderAtom, canvasInteractionAtom } from './atoms';
-import { canvasComponentsByIdAtom, commitActionAtom, rootComponentIdAtom } from './historyAtoms';
+import { canvasComponentsByIdAtom, commitActionAtom, rootComponentIdAtom } from './promptStateAtoms';
 import { DndData, CanvasComponent } from '../types';
-import { getComponentName } from '../features/Editor/canvasUtils';
+import { getComponentName } from '../features/EditorCanvas/canvasUtils';
 import { templates } from './templatesMock';
 
 const CANVAS_BACKGROUND_ID = '--canvas-background--';

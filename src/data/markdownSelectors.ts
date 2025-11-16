@@ -1,6 +1,6 @@
 // src/data/markdownSelectors.ts
 import { atom } from 'jotai';
-import { canvasComponentsByIdAtom, rootComponentIdAtom } from './historyAtoms';
+import { canvasComponentsByIdAtom, rootComponentIdAtom } from './promptStateAtoms';
 import { NormalizedCanvasComponents, WidgetComponent } from '../types';
 import { roles } from './rolesMock';
 import { templates } from './templatesMock';
@@ -109,4 +109,4 @@ export const componentSnippetSelectorAtom = atom((get) => {
     if (!component) return null;
     return generateMarkdownRecursive(componentId, allComponents).trim();
   };
-});
+})

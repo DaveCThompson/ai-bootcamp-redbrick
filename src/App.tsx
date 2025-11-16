@@ -6,10 +6,10 @@ import { DndContext, DragOverlay, DropAnimation, defaultDropAnimationSideEffects
 import { AppHeader } from './features/AppHeader/AppHeader';
 import { GeneralComponentsBrowser } from './features/ComponentBrowser/GeneralComponentsBrowser';
 import { PlaceholderPanel } from './features/ComponentBrowser/PlaceholderPanel';
-import { EditorCanvas } from './features/Editor/EditorCanvas';
-import { MainToolbar } from './features/Editor/MainToolbar';
-import { PropertiesPanel } from './features/Editor/PropertiesPanel/PropertiesPanel';
-import { DndDragOverlay } from './features/Editor/DndDragOverlay';
+import { EditorCanvas } from './features/EditorCanvas/EditorCanvas';
+import { MainToolbar } from './features/MainToolbar/MainToolbar';
+import { PropertiesPanel } from './features/PropertiesPanel/PropertiesPanel';
+import { DndDragOverlay } from './features/EditorCanvas/DndDragOverlay';
 import { ReferencesPage } from './features/References/ReferencesPage';
 import { WelcomePage } from './features/Welcome/WelcomePage';
 

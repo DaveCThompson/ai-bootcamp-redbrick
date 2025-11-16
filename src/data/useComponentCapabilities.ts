@@ -1,7 +1,7 @@
 // src/data/useComponentCapabilities.ts
 import { useAtomValue } from 'jotai';
-import { canvasComponentsByIdAtom, rootComponentIdAtom } from './historyAtoms';
-import { LayoutComponent } from '../types';
+import { canvasComponentsByIdAtom, rootComponentIdAtom } from './promptStateAtoms';
+import { ContainerComponent } from '../types';
 
 /**
  * A hook that computes the possible actions for a given set of component IDs.
@@ -28,7 +28,7 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
   }
   
   const isRootSelected = selectedIds.includes(rootId);
-  const parent = allComponents[primaryComponent.parentId] as LayoutComponent | undefined;
+  const parent = allComponents[primaryComponent.parentId] as ContainerComponent | undefined;
 
   // CRITICAL CHANGE: A locked component (like Template Container) can be deleted and moved,
   // but not renamed or structurally changed.

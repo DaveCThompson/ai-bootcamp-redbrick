@@ -42,7 +42,7 @@ This project uses a **feature-based architecture**. The goal is to group files b
 The project uses **Jotai** for its minimal, atomic state management model.
 
 -   **UI State (`src/data/atoms.ts`):** Manages panel visibility, active tabs, and the current interaction mode of the canvas (idle, selecting, editing).
--   **Core Application State (`src/data/historyAtoms.ts`):** The most critical state file. It manages the actual structure of the prompt being built and implements the entire undo/redo system using a **reducer pattern**. All mutations to the prompt structure **must** go through the `commitActionAtom`.
+-   **Core Application State (`src/data/promptStateAtoms.ts`):** The most critical state file. It manages the actual structure of the prompt being built and implements the entire undo/redo system using a **reducer pattern**. All mutations to the prompt structure **must** go through the `commitActionAtom`.
 
 ## 4. Canvas & Component Architecture
 
@@ -55,7 +55,7 @@ The canvas is built for intuitive interaction with a small, focused set of compo
 -   **Variables (Text Input, Role, etc.):** Simple input placeholders that represent data collection points (variables) in a prompt or workflow.
 
 ### Unified Rendering Pattern
-All canvas components are rendered through a unified set of renderer components located in `src/features/Editor/renderers/`. Each renderer accepts a `mode: 'canvas' | 'preview'` prop to separate its interactive editor appearance from its clean "final" appearance.
+All canvas components are rendered through a unified set of renderer components located in `src/features/EditorCanvas/renderers/`. Each renderer accepts a `mode: 'canvas' | 'preview'` prop to separate its interactive editor appearance from its clean "final" appearance.
 
 ### Interaction Model
 The editor uses an industry-standard selection model:
@@ -69,16 +69,16 @@ The editor uses an industry-standard selection model:
 
 ### Data & State Management (`src/data/`)
 *   **`atoms.ts`**: Defines all global **UI state** using Jotai atoms.
-*   **`historyAtoms.ts`**: Implements the undo/redo system and manages the core canvas state.
+*   **`promptStateAtoms.ts`**: Implements the undo/redo system and manages the core canvas state.
 *   **`useCanvasDnd.ts`**: Encapsulates all drag-and-drop logic for the canvas.
 *   **`useEditorHotkeys.ts`**: Centralizes all global keyboard shortcut logic.
 
 ### Features (`src/features/`)
-*   **`Editor/`**: The main prompt-building feature.
+*   **`EditorCanvas/`**: The main prompt-building feature.
     *   `EditorCanvas.tsx`: The main container component with core event handlers.
     *   `CanvasNode.tsx`: The orchestrator that routes component data to the correct renderer.
     *   `renderers/`: The directory containing the single source of truth for component rendering.
         *   `TemplateContainerRenderer.tsx`: A specialized renderer for the form-like template block.
-    *   `PropertiesPanel/`: The right-hand panel for editing component properties.
-        *   `RoleEditor.tsx`: A custom properties editor for the "Role" component.
+*   **`PropertiesPanel/`**: The right-hand panel for editing component properties.
+    *   `RoleEditor.tsx`: A custom properties editor for the "Role" component.
 *   **`ComponentBrowser/`**: The left-hand panel for adding new components.

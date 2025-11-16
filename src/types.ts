@@ -12,7 +12,7 @@ interface BaseCanvasComponent {
 }
 
 // A structural component for organizing other components
-export interface LayoutComponent extends BaseCanvasComponent {
+export interface ContainerComponent extends BaseCanvasComponent {
   componentType: 'layout';
   name:string;
   children: string[];
@@ -52,7 +52,7 @@ export interface DynamicComponent extends BaseCanvasComponent {
   };
 }
 
-export type CanvasComponent = LayoutComponent | WidgetComponent | DynamicComponent;
+export type CanvasComponent = ContainerComponent | WidgetComponent | DynamicComponent;
 
 // A map of component IDs to their data, for efficient lookups
 export type NormalizedCanvasComponents = Record<string, CanvasComponent>;

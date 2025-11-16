@@ -1,12 +1,12 @@
 // src/data/componentFactory.ts
 import { nanoid } from 'nanoid';
 import { 
-  LayoutComponent, 
+  ContainerComponent, 
   WidgetComponent, 
   DynamicComponent,
 } from '../types';
 
-export const createLayoutComponent = (parentId: string, name: string = 'Group'): LayoutComponent => {
+export const createLayoutComponent = (parentId: string, name: string = 'Group'): ContainerComponent => {
   return {
     id: nanoid(8),
     parentId,
