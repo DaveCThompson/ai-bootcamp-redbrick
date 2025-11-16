@@ -25,7 +25,6 @@ const useAnimatedLogo = (svgRef: React.RefObject<SVGSVGElement | null>) => {
     const mainLogoParts = gsap.utils.toArray<SVGPathElement>('.main-logo-part', svgElement)
     const stars = gsap.utils.toArray<SVGPathElement>('.star', svgElement)
     
-    // FIX: Use the exact brand colors from the reference files.
     const brandPink = '#F33457'
     const darkGrey = '#333440'
     const basePinkHSL = 'hsl(349, 87%, 58%)'
@@ -75,9 +74,10 @@ const useAnimatedLogo = (svgRef: React.RefObject<SVGSVGElement | null>) => {
     }
 
     const handleMouseEnter = () => {
-      exitTweensRef.current.forEach((t) => t.kill())
+      // FIX: Apply `void` inside the forEach callback.
+      exitTweensRef.current.forEach((t) => void t.kill())
       exitTweensRef.current = []
-      gsap.killTweensOf(motionProxy)
+      void gsap.killTweensOf(motionProxy)
       void tweensRef.current.colorRampIn?.kill()
 
       tweensRef.current.colorRampIn = gsap
@@ -101,8 +101,9 @@ const useAnimatedLogo = (svgRef: React.RefObject<SVGSVGElement | null>) => {
 
     const handleMouseLeave = () => {
       void tweensRef.current.colorRampIn?.kill()
-      gsap.killTweensOf(motionProxy)
+      void gsap.killTweensOf(motionProxy)
       void tweensRef.current.color?.pause()
+      // FIX: Apply `void` inside the forEach callback.
       tweensRef.current.starRotation.forEach((tween) => void tween.pause())
 
       const partExitTween = gsap.to(mainLogoParts, { fill: darkGrey, duration: ANIM_PARAMS.rampDuration, ease: 'power2.out' })
@@ -128,8 +129,7 @@ const useAnimatedLogo = (svgRef: React.RefObject<SVGSVGElement | null>) => {
       })
     }
 
-    // FIX: Only set transform properties with GSAP. Colors are now handled by JSX `fill` attributes.
-    gsap.set(stars, { y: 0, rotation: 0, transformOrigin: '50% 50%' })
+    void gsap.set(stars, { y: 0, rotation: 0, transformOrigin: '50% 50%' })
     buildAnimations()
 
     svgElement.addEventListener('mouseenter', handleMouseEnter)
@@ -141,8 +141,7 @@ const useAnimatedLogo = (svgRef: React.RefObject<SVGSVGElement | null>) => {
     return () => {
       svgElement.removeEventListener('mouseenter', handleMouseEnter)
       svgElement.removeEventListener('mouseleave', handleMouseLeave)
-      gsap.killTweensOf([svgElement, ...mainLogoParts, ...stars, motionProxy])
-      // FIX: Use `void` to satisfy linter for all cleanup calls.
+      void gsap.killTweensOf([svgElement, ...mainLogoParts, ...stars, motionProxy])
       currentTweens.starRotation.forEach((t) => void t.kill())
       void currentTweens.color?.kill()
       void currentTweens.colorRampIn?.kill()
@@ -168,7 +167,6 @@ export const AnimatedLogo = ({ size, className }: AnimatedLogoProps) => {
       aria-labelledby="besthuman-logo-title"
     >
       <title id="besthuman-logo-title">Besthuman Animated Logo</title>
-      {/* FIX: Restore the default `fill` attributes to every path for a stable initial state. */}
       <path className="main-logo-part" d="M123.731 131.89C123.731 127.674 122.919 123.498 121.342 119.603C119.765 115.707 117.454 112.167 114.54 109.185C111.626 106.204 108.166 103.839 104.359 102.225C100.551 100.611 96.4708 99.7808 92.3498 99.7808C88.2288 99.7808 84.1481 100.611 80.3408 102.225C76.5335 103.839 73.074 106.204 70.16 109.185C67.246 112.167 64.9345 115.707 63.3575 119.603C61.7804 123.498 60.9687 127.674 60.9688 131.89H71.6383C71.6383 129.107 72.174 126.352 73.2149 123.78C74.2557 121.209 75.7813 118.873 77.7045 116.905C79.6278 114.937 81.911 113.376 84.4238 112.311C86.9367 111.246 89.6299 110.698 92.3498 110.698C95.0696 110.698 97.7629 111.246 100.276 112.311C102.789 113.376 105.072 114.937 106.995 116.905C108.918 118.873 110.444 121.209 111.485 123.78C112.526 126.352 113.061 129.107 113.061 131.89H123.731Z" fill="#333440"/>
       <path className="main-logo-part" d="M106.695 78.9778C106.695 86.9704 100.273 93.4497 92.3498 93.4497C84.4269 93.4497 78.0042 86.9704 78.0042 78.9778C78.0042 70.9852 84.4269 64.5059 92.3498 64.5059C100.273 64.5059 106.695 70.9852 106.695 78.9778Z" fill="#333440"/>
       <path className="main-logo-part" d="M195.772 113.826C195.772 117.357 194.825 120.309 192.931 122.682C191.095 124.998 188.599 126.734 185.443 127.892C182.287 129.05 178.815 129.629 175.028 129.629H145.247V67.9785H179.246C182.115 67.9785 184.582 68.76 186.648 70.323C188.771 71.828 190.378 73.7962 191.468 76.2275C192.616 78.6588 193.19 81.1769 193.19 83.7818C193.19 86.6762 192.444 89.4548 190.952 92.1177C189.46 94.7226 187.279 96.6908 184.41 98.0222C187.91 99.0642 190.665 100.917 192.673 103.579C194.739 106.242 195.772 109.658 195.772 113.826ZM181.398 110.96C181.398 109.629 181.139 108.471 180.623 107.487C180.106 106.445 179.418 105.634 178.557 105.056C177.754 104.419 176.778 104.1 175.631 104.1H159.363V117.559H175.028C176.233 117.559 177.295 117.27 178.213 116.691C179.188 116.112 179.963 115.331 180.537 114.347C181.111 113.362 181.398 112.234 181.398 110.96ZM159.363 80.1349V92.8991H173.221C174.253 92.8991 175.2 92.6676 176.061 92.2045C176.979 91.7414 177.725 91.0467 178.299 90.1205C178.873 89.1365 179.16 87.9208 179.16 86.4736C179.16 85.0843 178.901 83.9266 178.385 83.0004C177.926 82.0742 177.295 81.3795 176.491 80.9164C175.688 80.3954 174.77 80.1349 173.737 80.1349H159.363Z" fill="#333440"/>
