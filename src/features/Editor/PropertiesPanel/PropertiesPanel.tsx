@@ -54,8 +54,15 @@ export const PropertiesPanel = () => {
         return <RootEditor component={component as LayoutComponent} />;
     }
 
-    const Editor = getPropertyEditor(component.componentType);
-    if (!Editor) return null;
+    const editorType = component.componentType === 'dynamic' ? component.dynamicType : component.componentType;
+    const Editor = getPropertyEditor(editorType);
+    if (!Editor) {
+        // Fallback for field/widget if a specific dynamic editor isn't found
+        const FallbackEditor = getPropertyEditor('widget');
+        if (!FallbackEditor) return <div>No editor found for this component type.</div>;
+        const ComponentEditor = FallbackEditor as React.ComponentType<PropertyEditorProps<CanvasComponent>>;
+        return <ComponentEditor component={component} />;
+    }
     const ComponentEditor = Editor as React.ComponentType<PropertyEditorProps<CanvasComponent>>;
     return <ComponentEditor component={component} />;
   };

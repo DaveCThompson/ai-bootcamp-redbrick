@@ -8,7 +8,7 @@
 interface BaseCanvasComponent {
   id: string;
   parentId: string;
-  isLocked?: boolean; // NEW: To prevent editing/deleting template items
+  isLocked?: boolean; // To prevent editing/deleting template items
 }
 
 // A structural component for organizing other components
@@ -27,11 +27,13 @@ export interface WidgetComponent extends BaseCanvasComponent {
   properties: {
     // Common
     label: string;
-    isLabelHidden?: boolean; // NEW: To hide labels for template inputs
+    isLabelHidden?: boolean; // To hide labels for template inputs
     required: boolean;
     placeholder?: string;
     hintText?: string;
     fieldName?: string;
+    // NEW: For structured template inputs
+    staticLabel?: string; 
     // Widget-specific
     content?: string;
     textElement?: 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
@@ -81,7 +83,7 @@ export interface DndData {
   type: 'layout' | 'widget' | 'field' | 'dynamic' | 'template'; // Added 'template'
   icon: string;
   isNew: boolean;
-  isTemplate?: boolean; // NEW: To identify template drags
+  isTemplate?: boolean; // To identify template drags
   controlType?: WidgetComponent['properties']['controlType'];
   controlTypeProps?: Partial<WidgetComponent['properties']>;
   dynamicType?: DynamicComponent['dynamicType'];

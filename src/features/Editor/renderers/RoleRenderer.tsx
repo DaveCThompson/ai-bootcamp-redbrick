@@ -1,5 +1,4 @@
 // src/features/Editor/renderers/RoleRenderer.tsx
-// FIX: Removed unused 'React' import. 'useRef' is imported directly.
 import { useRef } from 'react';
 import { useAtomValue } from 'jotai';
 import { useDroppable } from '@dnd-kit/core';
@@ -57,6 +56,7 @@ export const RoleRenderer = ({ component, mode }: RendererProps<DynamicComponent
   const selectionClasses = `${styles.selectableWrapper} ${isSelected ? styles.selected : ''}`;
   const containerClasses = [
     styles.roleContainer,
+    isEmpty ? styles.roleContainerEmpty : '',
     isOverContainer ? styles['is-over-container'] : '',
     isDragActive ? styles['drag-active'] : '',
   ].filter(Boolean).join(' ');

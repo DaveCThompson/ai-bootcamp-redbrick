@@ -20,7 +20,8 @@ const DraggableListItem = ({ component, isTemplate = false }: { component: Dragg
       isNew: true,
       isTemplate,
       controlType: 
-        (component.id === 'heading' || component.id === 'paragraph') ? 'plain-text' : 
+        (component.id === 'heading') ? 'plain-text' : 
+        (component.id === 'paragraph') ? 'plain-text' :
         (component.type === 'widget') ? component.id as WidgetComponent['properties']['controlType'] : undefined,
       controlTypeProps: 
         component.id === 'heading' ? { textElement: 'h2', content: 'Section Header' } :
@@ -53,11 +54,13 @@ export const GeneralComponentsBrowser = () => {
     setIsPanelVisible(false);
   }
 
-  const templateComponents: DraggableComponent[] = Object.entries(templates).map(([id, template]) => ({
-    id,
-    name: template.name,
-    icon: template.icon,
-    type: 'template'
+  const templateComponents: DraggableComponent[] = Object.entries(templates)
+    .filter(([, template]) => template.components.length > 0)
+    .map(([id, template]) => ({
+      id,
+      name: template.name,
+      icon: template.icon,
+      type: 'template'
   }));
 
   return (

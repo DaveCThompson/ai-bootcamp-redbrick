@@ -7,7 +7,6 @@ export const WelcomePage = () => {
     <div className={styles.welcomeContainer}>
       <div className={styles.welcomeContent}>
         <div className={styles.logoStack}>
-          <div className={styles.logoLabel}>BestHuman</div>
           <AnimatedLogo size="welcome" />
           <span className="material-symbols-rounded">close</span>
           <PartnerLogo size="welcome" />

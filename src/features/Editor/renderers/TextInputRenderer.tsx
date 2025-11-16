@@ -12,26 +12,35 @@ import { CanvasSelectionToolbar } from '../CanvasSelectionToolbar';
 import styles from '../EditorCanvas.module.css';
 
 // --- Pure View Component ---
-const TextInputView = memo(({ label, required, placeholder, isLabelHidden, content }: { label: string, required: boolean, placeholder?: string, isLabelHidden?: boolean, content?: string }) => {
-  const displayContent = content || placeholder || 'Enter your response...';
-  
-  // For template inputs, we render the content directly in a placeholder-like div
-  if (isLabelHidden) {
+const TextInputView = memo(({ label, required, placeholder, isLabelHidden, content, staticLabel }: WidgetComponent['properties']) => {
+  // Render the new structured template input
+  if (staticLabel) {
+    const displayContent = content || 'Enter your response...';
     return (
-       <div className={styles.promptElementContent}>
-         <div className={styles.controlPlaceholder} style={{ whiteSpace: 'pre-wrap', minHeight: '36px', height: 'auto', color: content ? 'var(--surface-fg-primary)' : 'var(--surface-fg-tertiary)' }}>
-            {displayContent}
-          </div>
-       </div>
+      <div className={styles.templateInputWrapper}>
+        <h3 className={styles.templateStaticLabel}>{staticLabel}</h3>
+        <div className={styles.controlPlaceholder} style={{ 
+          whiteSpace: 'pre-wrap', 
+          minHeight: '36px', 
+          height: 'auto', 
+          color: content ? 'var(--surface-fg-primary)' : 'var(--surface-fg-tertiary)',
+          padding: 'var(--spacing-2) var(--spacing-3)',
+        }}>
+          {displayContent}
+        </div>
+      </div>
     );
   }
 
+  // Render the standard text input
   return (
     <div className={styles.promptElementContent}>
-      <label className={styles.promptElementLabel}>
-        {label}
-        {required && <span className="required-indicator">*</span>}
-      </label>
+      {!isLabelHidden && (
+        <label className={styles.promptElementLabel}>
+          {label}
+          {required && <span className="required-indicator">*</span>}
+        </label>
+      )}
       <div className={styles.controlPlaceholder}>{placeholder}</div>
     </div>
   );
@@ -49,7 +58,8 @@ export const TextInputRenderer = ({ component, mode }: RendererProps<WidgetCompo
     sortableProps.ref(node);
   };
 
-  // Hooks are called unconditionally at the top level
+  const handleCancel = () => setInteractionState({ mode: 'selecting', ids: [component.id] });
+
   const handleLabelCommit = (newValue: string) => {
     commitAction({
       action: { type: 'COMPONENT_UPDATE_WIDGET_PROPERTIES', payload: { componentId: component.id, newProperties: { label: newValue } } },
@@ -57,7 +67,6 @@ export const TextInputRenderer = ({ component, mode }: RendererProps<WidgetCompo
     });
     setInteractionState({ mode: 'selecting', ids: [component.id] });
   };
-  const handleCancel = () => setInteractionState({ mode: 'selecting', ids: [component.id] });
   const { ref: labelRef, ...labelEditableProps } = useEditable<HTMLInputElement>(component.properties.label, handleLabelCommit, handleCancel, isEditing);
 
   const handleContentCommit = (newValue: string) => {
@@ -81,32 +90,44 @@ export const TextInputRenderer = ({ component, mode }: RendererProps<WidgetCompo
 
   const wrapperClasses = `${styles.sortableItem} ${isDragging ? styles.isDragging : ''}`;
   const selectionClasses = `${styles.selectableWrapper} ${isSelected ? styles.selected : ''}`;
-  const isTemplateInput = !!component.properties.isLabelHidden;
+  const isTemplateInput = !!component.properties.staticLabel;
+
+  const renderEditingState = () => {
+    if (!isEditing) return null;
+
+    if (isTemplateInput) {
+      return (
+        <div className={styles.templateInputWrapper}>
+          <h3 className={styles.templateStaticLabel}>{component.properties.staticLabel}</h3>
+          <TextareaAutosize
+            {...contentEditableProps}
+            ref={contentRef}
+            className={`${styles.inlineInput} ${styles['is-p']}`}
+            onClick={(e) => e.stopPropagation()}
+            placeholder={'Enter your response...'}
+            minRows={1}
+            style={{
+              padding: 'var(--spacing-2) var(--spacing-3)',
+              backgroundColor: 'var(--surface-bg-secondary_subtle)',
+            }}
+          />
+        </div>
+      );
+    }
+    
+    return (
+      <div className={styles.promptElementContent}>
+        <input {...labelEditableProps} ref={labelRef} className={`${styles.inlineInput} ${styles.inlineInputForLabel}`} onClick={(e) => e.stopPropagation()} />
+        <div className={styles.controlPlaceholder}>{component.properties.placeholder}</div>
+      </div>
+    );
+  };
 
   return (
     <div className={wrapperClasses} {...sortableProps} data-id={component.id} ref={setMergedRefs}>
       <div className={selectionClasses} {...selectionProps} {...dndListeners}>
         {isOnlySelection && <CanvasSelectionToolbar componentId={component.id} referenceElement={wrapperRef.current} dndListeners={dndListeners} />}
-        
-        {isEditing && isTemplateInput ? (
-          <div className={styles.promptElementContent}>
-            <TextareaAutosize
-              {...contentEditableProps}
-              ref={contentRef}
-              className={`${styles.inlineInput} ${styles['is-p']}`}
-              onClick={(e) => e.stopPropagation()}
-              placeholder={component.properties.placeholder || 'Enter your response...'}
-              minRows={1}
-            />
-          </div>
-        ) : isEditing && !isTemplateInput ? (
-          <div className={styles.promptElementContent}>
-            <input {...labelEditableProps} ref={labelRef} className={`${styles.inlineInput} ${styles.inlineInputForLabel}`} onClick={(e) => e.stopPropagation()} />
-            <div className={styles.controlPlaceholder}>{component.properties.placeholder}</div>
-          </div>
-        ) : (
-          <TextInputView {...component.properties} />
-        )}
+        {isEditing ? renderEditingState() : <TextInputView {...component.properties} />}
       </div>
     </div>
   );

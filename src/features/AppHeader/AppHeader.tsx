@@ -66,7 +66,6 @@ export const AppHeader = () => {
         </DropdownMenu.Root>
         <div className={styles.divider} />
         <div className={styles.logoGroup}>
-          <span>BestHuman</span>
           <AnimatedLogo size="header" />
           <span className="material-symbols-rounded">close</span>
           <PartnerLogo size="header" />
