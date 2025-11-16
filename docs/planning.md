@@ -1,56 +1,176 @@
-Of course. I have reviewed the audio prompt and analyzed the project's architecture, including the `README.md`, `CSS-PRINCIPLES.md`, and the overall file structure. The "Screen Studio" project is well-architected, which provides a strong foundation for this adaptation.
+Of course. I have reviewed and synthesized all audio notes and contextual project files.
 
-My goal is to ask targeted questions that will help us form a clear, strategic plan to transform this project into the "AI Bootcamp" application efficiently. Answering these will ensure we have a solid base before we begin deleting, renaming, and modifying files.
-
-### High-Level Understanding
-
-First, let me confirm my understanding of the core request.
-
-We are transforming a form-building application ("Screen Studio") into a new tool ("AI Bootcamp"). The new tool's primary function will be to allow users to select, arrange, and combine pre-defined "prompt pieces" or "prompt templates" on a canvas, ultimately to construct a final, copyable prompt. We will keep the core drag-and-drop mechanics but will remove or significantly alter the UI, including the header, left-side component browser, and the data model for what can be placed on the canvas.
+Here is the high-level Product Requirements Document (PRD) for the transformation of "Screen Studio" into the "AI Bootcamp" prompt builder.
 
 ---
 
-### Strategic Questions
+## **PRD: AI Bootcamp - Visual Prompt Builder**
 
-Here are some questions to clarify the vision and scope of the refactor.
+### 1. Overview
 
-#### **1. Core Concept & Data Model**
+This document outlines the requirements for refactoring the existing "Screen Studio" application into a new, single-purpose tool called "AI Bootcamp." The new application will be a visual prompt builder designed to help participants in an AI bootcamp learn, construct, and experiment with structured prompts. It will leverage the core drag-and-drop canvas from the original project but replace the form-building data model and UI with a system for creating modular, copyable prompts.
 
-The biggest change is moving from `CanvasComponent` objects (form fields, layouts) to "prompts". This will impact the core state in `src/data/historyAtoms.ts`.
+### 2. Problem & Goals
 
-*   **What defines a "prompt piece"?** Is it simply a block of text? Or does a prompt have distinct properties we need to model, such as:
-    *   A `title` or `name`?
-    *   A `type` (e.g., "System Instruction", "User Query", "Example")?
-    *   Placeholders or `variables` (e.g., `{{user_input}}`) that could be configured?
-*   **How should prompts be organized on the canvas?** The current system supports complex, nested layouts. Should the new canvas be a simple vertical list of prompts, or do we still need the ability to group them in containers?
+**Problem:** Learning effective prompt engineering requires understanding structure and modularity (e.g., the CRAFT framework). A raw text editor is an intimidating and unforgiving environment for beginners. Bootcamp participants need a guided, visual tool to compose prompts from pre-defined and custom pieces, helping them internalize best practices.
 
-#### **2. Header & Top-Level Navigation**
+**Goals:**
 
-You mentioned removing the screen name, save/close buttons, and adding tabs.
+*   **Provide an Intuitive Visual Interface:** Enable users to build complex prompts via drag-and-drop, making the structure of a good prompt tangible and easy to manipulate.
+*   **Refactor the Core Data Model:** Replace the form-centric `CanvasComponent` architecture with a new, simpler `PromptPiece` model tailored for text, headings, and simple inputs.
+*   **Establish a Clear, Single-Purpose UX:** Remove all extraneous features from the original application (e.g., Preview/Settings modes, complex data navigation, component wrapping) to create a focused prompt-building experience.
+*   **Rebrand the Application:** Update the application's identity to reflect its new purpose and the "redbrick" brand.
 
-*   **What is the purpose of the new header tabs ("Main Tab", "Tab 2", "Tab 3")?** Do these represent different major sections of the application (e.g., a "Prompt Editor", a "Testing Playground", a "Version History" view)?
-*   The current header has tabs for "Edit", "Preview", and "Settings". Should the new tabs replace this functionality, or will this concept coexist?
+### 3. Scope & Key Initiatives
 
-#### **3. Left Panel: The Prompt Library**
+**In Scope:**
 
-You've requested the removal of the complex "Data Navigator" and a simplification of the left menu.
+*   **Header Refactor:** Implement a new top-level header with tabs for different bootcamp topics.
+*   **Prompt Library (Left Panel):** A context-aware panel displaying draggable prompt pieces relevant to the selected topic.
+*   **Prompt Builder (Center Canvas):** A vertical canvas where users can arrange, reorder, edit, and delete prompt pieces.
+*   **Prompt Preview (Right Panel):** A read-only panel that displays a live, raw Markdown preview of the composed prompt.
+*   **Core Interactions:**
+    *   Drag-and-drop prompt pieces from the library to the canvas.
+    *   Reorder pieces on the canvas.
+    *   Edit text content and labels inline.
+    *   Duplicate and delete individual pieces.
+    *   Copy the complete, formatted prompt to the clipboard.
+    *   Clear the entire canvas.
 
-*   **What should the new left panel contain?** My assumption is a library of the available "prompt pieces" that users can drag onto the canvas. Is that correct?
-*   **How should this library be organized?** The current panel has groups and search functionality. Would we want to keep a similar structure, perhaps grouping prompts by category (e.g., "Creative Writing", "Code Generation")?
-*   You mentioned simplifying the left bar menu to "Tab 1, Tab 2, Tab 3". Does this mean the left panel itself should have tabs to switch between different sets of prompts?
+**Out of Scope:**
 
-#### **4. Canvas Interaction & Functionality**
+*   User accounts, saving/loading prompts.
+*   Backend integration.
+*   The original "Preview" and "Settings" modes and pages.
+*   The "wrap in container" functionality and any nested layout capabilities.
+*   Advanced logic (e.g., conditional display of prompt pieces).
 
-We are keeping the drag-and-drop interaction, which is great.
+### 4. UX/UI Specification & Wireframes
 
-*   **What happens after a prompt is on the canvas?** Can the user edit its text inline? Will there be a properties panel on the right to configure it (e.g., fill in variables)?
-*   You mentioned the final prompt should be "copyable". How do you envision this working? Should there be a single "Copy All" button that concatenates the text from all prompts on the canvas in order?
+The application will use a three-column layout: Prompt Library (left), Prompt Builder Canvas (center), and Prompt Preview (right).
 
-#### **5. File Cleanup & Renaming Strategy**
+**Header:**
+The header is simplified to contain the app identity and the main topic navigation.
 
-To establish a "good base," we should be clear about what to remove and what to rename.
+```plaintext
++--------------------------------------------------------------------------------------+
+| [menu] | AI Bootcamp [redbrick]   |  <Prompting 101>  <Vibe Coding>  <Image Gen>     |
++--------------------------------------------------------------------------------------+
+// [redbrick] is a static, non-clickable badge.
+// <Topic> tabs use the existing AnimatedTabs component for style and interaction.
+```
 
-*   **Confirmation on Deletion:** Based on your goals, it seems we can completely delete the `DataNavigator` feature (`src/features/DataNavigator/` and `src/data/navigator.js`). We will also be removing `FormNameEditor`, `ScreenTypeBadge`, and heavily modifying `AppHeader`. Does this align with your expectations?
-*   **Project Identity:** What should we use as the official project name for renaming files and updating titles? "AI Bootcamp", "redbrick", or something else? This will guide changes in `package.json`, `index.html`, etc.
+**Main Application Layout:**
 
-Answering these questions will give us a very clear blueprint for the refactor.
+```plaintext
++--------------------------------------------------------------------------------------+
+| [ App Header                                                                       ] |
++----------------------+-------------------------------------+-------------------------+
+| [ Prompt Library   ] | [ Prompt Builder Canvas           ] | [ Prompt Preview      ] |
+|                      |                                     |                         |
+|  - Draggable Item  | | +-------------------------------+ | | ## Context            |
+|  - Draggable Item  | | | [drag] ## Context             | | |                       |
+|  ...               | | | [ Enter context here...     ] | | | This is the context   |
+|                      | | +-------------------------------+ | | the user entered.     |
+|                      | |                                     | |                       |
+|                      | | +-------------------------------+ | | ## Role               |
+|                      | | | [drag] ## Role                | | |                       |
+|                      | | | [ Dropdown: Expert Coder  v ] | | | You are an expert...  |
+|                      | +-------------------------------+ | |                         |
+|                      |                                     | | [ Copy ]              |
++----------------------+-------------------------------------+-------------------------+
+// Layout uses var(--surface-bg-tertiary) for the background.
+// Panels are separated by a 1px var(--surface-border-secondary) border.
+```
+
+**Prompt Piece on Canvas (Selected State):**
+
+```plaintext
++------------------------------------------------------------------+
+| [drag] ## Context                                                |
+|                                                                  |
+| [ This is the user-editable text area for the context.         ] |
+|                                                                  |
++------------------------------------------------------------------+
+// Wrapper uses a 1px border of var(--control-border-selected).
+// Wrapper background is var(--control-bg-selected).
+// Spacing between pieces uses a gap of var(--spacing-4).
+```
+
+### 5. Architecture & Implementation Plan
+
+*   **State Management:** The core change will be in `src/data/historyAtoms.ts`. The normalized `canvasComponentsByIdAtom` will be replaced by a single atom representing the canvas state: `promptPiecesAtom = atom<PromptPiece[]>`. This simplifies the data structure to a flat array, which is ideal for a vertical list. The undo/redo `commitActionAtom` will be refactored to operate on this new array with actions like `PIECE_ADD`, `PIECE_UPDATE`, `PIECE_REORDER`.
+*   **Data Flow:**
+    1.  The `AppHeader` tabs will update a new global atom, `activeBootcampTopicAtom`.
+    2.  The `PromptLibrary` component will read this atom and display the corresponding list of draggable `PromptPiece` templates.
+    3.  Dragging a piece to the canvas will add it to the `promptPiecesAtom` array.
+    4.  The `EditorCanvas` will map over `promptPiecesAtom` and render each piece using a new set of renderer components.
+    5.  The `PromptPreview` panel will also subscribe to `promptPiecesAtom` and use a new hook, `useGeneratedPrompt()`, to compute and display the final Markdown string in real-time.
+*   **Component Architecture:** The existing renderer pattern will be adapted. New, simplified renderers will be created for each `PromptPiece` type (e.g., `HeadingRenderer`, `TextContentRenderer`). The `useEditorInteractions` hook will be simplified to remove logic related to wrapping and nesting.
+
+### 6. File Manifest
+
+*   **`/` (Root)**
+    *   `package.json` `[MODIFIED]`
+    *   `index.html` `[MODIFIED]`
+*   **`/src`**
+    *   `App.tsx` `[MODIFIED]`
+    *   `types.ts` `[MODIFIED]`
+*   **`/src/data`**
+    *   `atoms.ts` `[MODIFIED]` (Remove view modes, add `activeBootcampTopicAtom`)
+    *   `historyAtoms.ts` `[MODIFIED]` (Complete overhaul of core state)
+    *   `useCanvasDnd.ts` `[MODIFIED]` (Simplify drop logic for a flat list)
+    *   `useEditorHotkeys.ts` `[MODIFIED]` (Remove old hotkeys like wrap/unwrap)
+    *   `navigator.js` `[DELETED]`
+*   **`/src/features/AppHeader`**
+    *   `AppHeader.tsx` `[MODIFIED]`
+    *   `FormNameEditor.tsx` / `.module.css` `[DELETED]`
+    *   `FormNameMenu.tsx` `[DELETED]`
+    *   `ScreenTypeBadge.tsx` / `.module.css` `[DELETED]`
+*   **`/src/features/ComponentBrowser`** (To be renamed to `/src/features/PromptLibrary`)
+    *   `ComponentBrowser.tsx` -> `PromptLibrary.tsx` `[MODIFIED]`
+    *   `DraggableListItem.tsx` `[MODIFIED]`
+    *   `dataNavigatorAtoms.ts` `[DELETED]`
+    *   ... (other files in this directory will be deleted or heavily refactored)
+*   **`/src/features/DataNavigator`**
+    *   (Entire Directory) `[DELETED]`
+*   **`/src/features/Editor`**
+    *   `EditorCanvas.tsx` `[MODIFIED]`
+    *   `CanvasNode.tsx` -> `PromptPieceNode.tsx` `[MODIFIED]`
+    *   `useCanvasActions.ts` `[MODIFIED]` (Remove wrap/unwrap actions)
+    *   `useComponentCapabilities.ts` `[MODIFIED]` (Remove wrap/unwrap capabilities)
+    *   `useEditorInteractions.ts` `[MODIFIED]`
+    *   `MainToolbar.tsx` / `.module.css` `[DELETED]`
+*   **`/src/features/Editor/PropertiesPanel`** (To be renamed to `/src/features/PromptPreview`)
+    *   `PropertiesPanel.tsx` -> `PromptPreview.tsx` `[NEW]`
+    *   (All other files in this directory) `[DELETED]`
+*   **`/src/features/Settings`**
+    *   (Entire Directory) `[DELETED]`
+*   **`/src/features/Preview`**
+    *   (Entire Directory) `[DELETED]`
+
+### 7. Unintended Consequences Check
+
+*   **`useEditorHotkeys.ts`:** This is a global hook. It must be carefully audited to remove any hotkeys that are no longer valid (e.g., `Cmd+G` for Wrap).
+*   **`types.ts`:** The removal of `LayoutComponent` and modification of `FormComponent` will have cascading effects. A full project-wide type-check will be necessary after the changes.
+*   **Global CSS (`index.css`, `semantics.css`, etc.):** While no direct changes are planned, a review is needed to ensure that styles previously targeting form elements don't unintentionally affect the new prompt piece components.
+
+### 8. Risks & Mitigations
+
+*   **Risk:** The refactor of `historyAtoms.ts` is significant and could break the undo/redo functionality.
+    *   **Mitigation:** This should be the first major technical task. The new `PromptPiece[]` state model and its associated reducer logic must be fully functional and tested before building the new UI components that depend on it.
+*   **Risk:** Drag-and-drop logic in `useCanvasDnd.ts` was designed for a nested tree structure and may be complex to adapt to a simple list.
+    *   **Mitigation:** Simplify aggressively. The new logic only needs to handle reordering within a single flat list. All logic related to dropping *into* containers can be removed, which should significantly reduce complexity.
+
+### 9. Definition of Done
+
+*   [ ] All files and directories marked for deletion are removed from the project.
+*   [ ] The application is rebranded to "AI Bootcamp" and "redbrick" in all user-facing areas.
+*   [ ] The new header with topic tabs is implemented and functional.
+*   [ ] The left panel correctly displays a list of draggable prompt pieces based on the selected topic.
+*   [ ] Users can drag pieces to the canvas to build a prompt.
+*   [ ] Users can reorder, edit, duplicate, and delete pieces on the canvas.
+*   [ ] The right panel correctly displays a live Markdown preview of the canvas content.
+*   [ ] The "Copy Prompt" and "Clear" buttons are fully functional.
+*   [ ] Undo/Redo functionality works correctly with all new canvas actions.
+*   [ ] The `README.md` is updated to reflect the new project's purpose and architecture.

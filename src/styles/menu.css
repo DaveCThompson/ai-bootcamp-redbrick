@@ -75,8 +75,6 @@
     outline: none;
     background-color: var(--control-bg-tertiary-hover);
     color: var(--control-fg-tertiary-hover);
-    border-color: var(--control-border-tertiary-hover);
-    box-shadow: inset 0 -2px 0 0 var(--control-border-tertiary-hover);
 }
 .menu-item:hover:not(:disabled):not([data-disabled]):not([data-state='checked']) .material-symbols-rounded,
 .menu-item[data-highlighted]:not([data-disabled]):not([data-state='checked']) .material-symbols-rounded,
@@ -89,7 +87,7 @@
 
 /* Keyboard focus state for UNCHECKED items */
 .menu-item[data-highlighted]:focus-visible:not([data-disabled]):not([data-state='checked']) {
-    box-shadow: inset 0 0 0 2px var(--control-focus-ring-standard), inset 0 -2px 0 0 var(--control-border-tertiary-hover);
+    box-shadow: inset 0 0 0 2px var(--control-focus-ring-standard);
 }
 
 
@@ -139,12 +137,10 @@
 .menu-item[data-state='checked'][data-highlighted]:not([data-disabled]) {
     background-color: var(--control-bg-selected-hover);
     color: var(--control-fg-selected-hover);
-    border-color: var(--control-border-selected-hover);
-    box-shadow: inset 0 -2px 0 0 var(--control-border-selected-hover);
 }
 /* NEW: Keyboard focus state for CHECKED items */
 .menu-item[data-state='checked'][data-highlighted]:focus-visible:not([data-disabled]) {
-    box-shadow: inset 0 0 0 2px var(--control-focus-ring-standard), inset 0 -2px 0 0 var(--control-border-selected-hover);
+    box-shadow: inset 0 0 0 2px var(--control-focus-ring-standard);
 }
 
 
