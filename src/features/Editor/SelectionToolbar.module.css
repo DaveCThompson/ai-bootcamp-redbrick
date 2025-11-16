@@ -12,7 +12,7 @@
   align-items: center;
   gap: var(--spacing-1);
   background-color: var(--surface-bg-brand-solid);
-  border-radius: var(--spacing-2);
+  border-radius: var(--spacing-4);
   padding: var(--spacing-1);
   color: var(--control-fg-on-solid);
   box-shadow: var(--surface-shadow-lg);

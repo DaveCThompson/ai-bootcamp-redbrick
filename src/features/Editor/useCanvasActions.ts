@@ -1,4 +1,4 @@
-// src/data/useCanvasActions.ts
+// src/features/Editor/useCanvasActions.ts
 import { useSetAtom, useAtomValue } from 'jotai';
 import {
   canvasInteractionAtom,
@@ -62,7 +62,7 @@ export const useCanvasActions = (selectedIds: string[]) => {
           parentId: firstComponent.parentId,
         },
       },
-      message: `Wrap ${selectedIds.length} component(s)`,
+      message: `Wrap ${selectedIds.length} component(s) in Group`,
     });
   };
 
@@ -82,7 +82,7 @@ export const useCanvasActions = (selectedIds: string[]) => {
     const component = allComponents[componentId];
     if (!component) return;
     const parent = allComponents[component.parentId];
-    if (!parent || parent.componentType !== 'layout') return;
+    if (!parent || (parent.componentType !== 'layout' && parent.componentType !== 'dynamic')) return;
     const oldIndex = parent.children.indexOf(componentId);
     const newIndex = direction === 'up' ? oldIndex - 1 : oldIndex + 1;
     if (newIndex >= 0 && newIndex < parent.children.length) {

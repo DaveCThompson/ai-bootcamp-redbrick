@@ -6,7 +6,7 @@ import {
   DynamicComponent,
 } from '../types';
 
-export const createLayoutComponent = (parentId: string, name: string = 'Context Container'): LayoutComponent => {
+export const createLayoutComponent = (parentId: string, name: string = 'Group'): LayoutComponent => {
   return {
     id: nanoid(8),
     parentId,

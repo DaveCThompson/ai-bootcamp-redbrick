@@ -5,6 +5,6 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   // Configure the base path for GitHub Pages deployment.
-  // This should be the name of your repository.
-  base: '/screen-builder-poc/',
+  // This should match the name of your repository.
+  base: '/ai-bootcamp/',
 })

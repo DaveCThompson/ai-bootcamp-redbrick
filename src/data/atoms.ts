@@ -8,7 +8,6 @@ import { UniqueIdentifier, ClientRect } from '@dnd-kit/core';
 export type AppViewMode = 'welcome' | 'editor' | 'references';
 export type ToolbarTabId = 'lab-1' | 'lab-2' | 'lab-3' | 'lab-4';
 export type SettingsLayoutMode = 'single-column' | 'two-column';
-export type ScreenType = 'case-init' | 'insert' | 'update' | 'search' | 'folder-view' | 'header-screen';
 
 export const appViewModeAtom = atom<AppViewMode>('editor');
 export const isSettingsMenuOpenAtom = atom(false);
@@ -24,14 +23,8 @@ export const isToolbarCompactAtom = atom(false);
 // =================================================================
 //                         Settings State
 // =================================================================
-export const isFormNameEditingAtom = atom(false);
-export const isFormNameMenuOpenAtom = atom(false);
 export const settingsLayoutModeAtom = atom<SettingsLayoutMode>('single-column');
 export const focusIntentAtom = atom<string | null>(null);
-export const screenTypeAtom = atom<ScreenType>('case-init');
-export const isScreenTypePopoverOpenAtom = atom(false);
-export const isApiEnabledAtom = atom(true);
-export const isReadOnlyAtom = atom(true);
 
 
 // =================================================================

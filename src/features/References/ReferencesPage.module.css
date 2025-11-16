@@ -37,7 +37,7 @@
   text-decoration: none;
   color: var(--surface-fg-secondary);
   font-weight: 500;
-  border-radius: 6px;
+  border-radius: var(--radius-lg);
   margin-right: var(--spacing-4);
   transition: background-color 0.2s, color 0.2s;
   position: relative;
@@ -83,7 +83,7 @@
 
 .pageSection {
   background-color: var(--surface-bg-primary);
-  border-radius: 12px;
+  border-radius: var(--radius-2xl);
   padding: var(--spacing-8);
   margin-bottom: var(--spacing-8);
   box-shadow: var(--surface-shadow-md);
@@ -125,7 +125,7 @@
   border-left: 4px solid var(--surface-border-theme);
   background-color: var(--control-bg-selected);
   color: var(--control-fg-selected);
-  border-radius: 0 6px 6px 0;
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
   font-style: italic;
   font-weight: 500;
 }
