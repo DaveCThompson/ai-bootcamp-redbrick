@@ -10,6 +10,7 @@ import { DropdownRenderer } from './renderers/DropdownRenderer';
 import { RadioButtonsRenderer } from './renderers/RadioButtonsRenderer';
 import { PlainTextRenderer } from './renderers/PlainTextRenderer';
 import { CheckboxRenderer } from './renderers/CheckboxRenderer';
+import { RoleRenderer } from './renderers/RoleRenderer';
 
 // --- REPLACEMENTS FOR DELETED PREVIEW COMPONENTS ---
 const BrowserItemPreview = ({ name, icon }: { name: string; icon: string }) => (
@@ -71,6 +72,8 @@ export const DndDragOverlay = ({ activeItem }: DndDragOverlayProps) => {
     switch (comp.componentType) {
       case 'layout':
         return <ContainerPreview component={comp} />;
+      case 'dynamic':
+        return <RoleRenderer component={comp} mode="preview" />;
       case 'widget':
       case 'field':
         switch (comp.properties.controlType) {

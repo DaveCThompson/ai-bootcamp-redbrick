@@ -1,7 +1,7 @@
 // src/data/historyAtoms.ts
 import { atom } from 'jotai';
 import { produce, Draft } from 'immer';
-import { LayoutComponent, FormComponent, CanvasComponent, NormalizedCanvasComponents } from '../types';
+import { LayoutComponent, FormComponent, DynamicComponent, CanvasComponent, NormalizedCanvasComponents } from '../types';
 import { 
   canvasInteractionAtom, 
   CanvasInteractionState, 
@@ -10,11 +10,9 @@ import {
   activeToolbarTabAtom,
   isComponentBrowserVisibleAtom,
 } from './atoms';
-import { createFormComponent, createLayoutComponent } from './componentFactory';
+import { createFormComponent, createLayoutComponent, createDynamicComponent } from './componentFactory';
 
 // 1. DEFINE THE CORE SHAPES
-// NormalizedCanvasComponents is now imported from ../types
-
 export interface UndoableState {
   formName: string;
   rootComponentId: string;
@@ -35,21 +33,23 @@ type HistoryData = {
 // 2. DEFINE THE ACTION CONTRACT (REDUCER PATTERN)
 export type HistoryAction =
   | { type: 'COMPONENT_ADD'; payload: { 
-      componentType: 'layout' | 'widget' | 'field'; 
-      name: string; // For layouts, this is the name. For form components, it's the initial label.
+      componentType: 'layout' | 'widget' | 'field' | 'dynamic'; 
+      name: string;
       parentId: string; 
       index: number; 
-      controlType?: FormComponent['properties']['controlType']; // NEW: Allow specifying control type
+      controlType?: FormComponent['properties']['controlType'];
       controlTypeProps?: Partial<FormComponent['properties']>;
+      dynamicType?: DynamicComponent['dynamicType'];
     } }
   | { type: 'COMPONENT_DELETE'; payload: { componentId: string } }
   | { type: 'COMPONENTS_DELETE_BULK'; payload: { componentIds: string[] } }
   | { type: 'COMPONENT_MOVE'; payload: { componentId: string; newParentId: string; oldParentId: string; newIndex: number; } }
   | { type: 'COMPONENT_REORDER'; payload: { componentId: string; parentId: string; oldIndex: number; newIndex: number; } }
   | { type: 'COMPONENTS_WRAP'; payload: { componentIds: string[]; parentId: string; } }
-  | { type: 'COMPONENT_UNWRAP'; payload: { componentId: string; } } // NEW
+  | { type: 'COMPONENT_UNWRAP'; payload: { componentId: string; } }
   | { type: 'COMPONENT_UPDATE_PROPERTIES'; payload: { componentId: string; newProperties: Partial<LayoutComponent['properties']>; } }
-  | { type: 'COMPONENT_UPDATE_FORM_PROPERTIES'; payload: { componentId: string; newProperties: Partial<FormComponent['properties']> } } // NEW
+  | { type: 'COMPONENT_UPDATE_FORM_PROPERTIES'; payload: { componentId: string; newProperties: Partial<FormComponent['properties']> } }
+  | { type: 'COMPONENT_UPDATE_DYNAMIC_PROPERTIES'; payload: { componentId: string; newProperties: Partial<DynamicComponent['properties']> } }
   | { type: 'FORM_RENAME'; payload: { newName: string } };
 
 // 3. CREATE THE CORE ATOMS
@@ -85,13 +85,15 @@ const deleteComponentAndChildren = (
 ) => {
   const componentToDelete = components[componentId];
   if (!componentToDelete) return;
-  if (componentToDelete.componentType === 'layout' && componentToDelete.children) {
+
+  if ((componentToDelete.componentType === 'layout' || componentToDelete.componentType === 'dynamic') && componentToDelete.children) {
     [...componentToDelete.children].forEach(childId => {
       deleteComponentAndChildren(components, childId);
     });
   }
+
   const parent = components[componentToDelete.parentId];
-  if (parent && parent.componentType === 'layout') {
+  if (parent && (parent.componentType === 'layout' || parent.componentType === 'dynamic')) {
     parent.children = parent.children.filter(id => id !== componentId);
   }
   delete components[componentId];
@@ -112,16 +114,17 @@ export const commitActionAtom = atom(
 
             if (componentType === 'layout') {
               newComponent = createLayoutComponent(parentId, rest.name);
+            } else if (componentType === 'dynamic' && rest.dynamicType) {
+              newComponent = createDynamicComponent(parentId, rest.dynamicType);
             } else {
               newComponent = createFormComponent({ parentId, ...rest });
             }
             
             presentState.components[newComponent.id] = newComponent;
             const parent = presentState.components[parentId];
-            if (parent && parent.componentType === 'layout') {
+            if (parent && (parent.componentType === 'layout' || parent.componentType === 'dynamic')) {
               const childrenCountBefore = parent.children.length;
               parent.children.splice(index, 0, newComponent.id);
-              // Check if component was added to the end of the root container to trigger auto-scroll
               if (parentId === presentState.rootComponentId && index === childrenCountBefore) {
                 set(scrollRequestAtom, { componentId: newComponent.id });
               }
@@ -143,7 +146,7 @@ export const commitActionAtom = atom(
           case 'COMPONENT_REORDER': {
             const { parentId, oldIndex, newIndex } = action.action.payload;
             const parent = presentState.components[parentId];
-            if (parent && parent.componentType === 'layout') {
+            if (parent && (parent.componentType === 'layout' || parent.componentType === 'dynamic')) {
               const [moved] = parent.children.splice(oldIndex, 1);
               parent.children.splice(newIndex, 0, moved);
             }
@@ -152,11 +155,11 @@ export const commitActionAtom = atom(
           case 'COMPONENT_MOVE': {
             const { componentId, oldParentId, newParentId, newIndex } = action.action.payload;
             const oldParent = presentState.components[oldParentId];
-            if (oldParent && oldParent.componentType === 'layout') {
+            if (oldParent && (oldParent.componentType === 'layout' || oldParent.componentType === 'dynamic')) {
               oldParent.children = oldParent.children.filter(id => id !== componentId);
             }
             const newParent = presentState.components[newParentId];
-            if (newParent && newParent.componentType === 'layout') {
+            if (newParent && (newParent.componentType === 'layout' || newParent.componentType === 'dynamic')) {
               newParent.children.splice(newIndex, 0, componentId);
             }
             const component = presentState.components[componentId];
@@ -168,7 +171,7 @@ export const commitActionAtom = atom(
           case 'COMPONENTS_WRAP': {
             const { componentIds, parentId } = action.action.payload;
             const parent = presentState.components[parentId];
-            if (!parent || parent.componentType !== 'layout') break;
+            if (!parent || (parent.componentType !== 'layout' && parent.componentType !== 'dynamic')) break;
             
             const newContainer = createLayoutComponent(parentId);
             newContainer.children = componentIds;
@@ -184,29 +187,23 @@ export const commitActionAtom = atom(
             parent.children = remainingChildren;
             break;
           }
-          case 'COMPONENT_UNWRAP': { // NEW
+          case 'COMPONENT_UNWRAP': {
             const { componentId } = action.action.payload;
             const container = presentState.components[componentId];
             if (!container || container.componentType !== 'layout') break;
             
             const parent = presentState.components[container.parentId];
-            if (!parent || parent.componentType !== 'layout') break;
+            if (!parent || (parent.componentType !== 'layout' && parent.componentType !== 'dynamic')) break;
 
             const containerIndex = parent.children.indexOf(componentId);
             if (containerIndex === -1) break;
 
-            // Re-parent children
             container.children.forEach(childId => {
               const child = presentState.components[childId];
-              if (child) {
-                child.parentId = parent.id;
-              }
+              if (child) child.parentId = parent.id;
             });
 
-            // Splice children into parent's children array
             parent.children.splice(containerIndex, 1, ...container.children);
-
-            // Delete the container
             delete presentState.components[componentId];
             break;
           }
@@ -218,10 +215,18 @@ export const commitActionAtom = atom(
             }
             break;
           }
-          case 'COMPONENT_UPDATE_FORM_PROPERTIES': { // NEW
+          case 'COMPONENT_UPDATE_FORM_PROPERTIES': {
             const { componentId, newProperties } = action.action.payload;
             const component = presentState.components[componentId];
             if (component && (component.componentType === 'field' || component.componentType === 'widget')) {
+              component.properties = { ...component.properties, ...newProperties };
+            }
+            break;
+          }
+          case 'COMPONENT_UPDATE_DYNAMIC_PROPERTIES': {
+            const { componentId, newProperties } = action.action.payload;
+            const component = presentState.components[componentId];
+            if (component && component.componentType === 'dynamic') {
               component.properties = { ...component.properties, ...newProperties };
             }
             break;

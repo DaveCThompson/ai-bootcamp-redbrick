@@ -1,14 +1,14 @@
 // src/features/Editor/renderers/types.ts
-import { FormComponent, LayoutComponent } from '../../../types';
-import { EditableProps } from '../../../data/useEditable';
+import type { CanvasComponent } from '../../../types'; // FIX: Widened constraint to include all component types
+import type { EditableProps } from '../../../data/useEditable';
 
 export type RendererMode = 'canvas' | 'preview';
 
-export interface RendererProps<T extends FormComponent | LayoutComponent> {
+export interface RendererProps<T extends CanvasComponent> {
   component: T;
   mode: RendererMode;
 }
 
-export interface FormRendererProps<T extends FormComponent> extends RendererProps<T> {
+export interface FormRendererProps<T extends CanvasComponent> extends RendererProps<T> {
   editableProps?: EditableProps<HTMLInputElement | HTMLTextAreaElement>;
 }

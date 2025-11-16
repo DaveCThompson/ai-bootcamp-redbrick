@@ -3,33 +3,35 @@ import { useSetAtom } from 'jotai';
 import { useDraggable } from '@dnd-kit/core';
 import { isComponentBrowserVisibleAtom } from '../../data/atoms';
 import { promptElements } from '../../data/promptElementsMock';
+// FIX: Removed unused 'DynamicComponent' import.
 import { DraggableComponent, DndData, FormComponent } from '../../types';
 import { PanelHeader } from '../../components/PanelHeader';
 import panelStyles from '../../components/panel.module.css';
 
 const DraggableListItem = ({ component }: { component: DraggableComponent }) => {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: `new-${component.id}`, // Use a prefix to ensure it's unique from canvas items
+    id: `new-${component.id}`,
     data: {
       id: component.id,
       name: component.name,
       type: component.type,
       icon: component.icon,
       isNew: true,
-      origin: 'general',
+      // FIX: 'origin' property removed to match DndData type.
       controlType: 
         (component.id === 'heading' || component.id === 'paragraph') ? 'plain-text' : 
-        (component.id === 'group-container') ? undefined : component.id as FormComponent['properties']['controlType'],
+        (component.type === 'widget') ? component.id as FormComponent['properties']['controlType'] : undefined,
       controlTypeProps: 
         component.id === 'heading' ? { textElement: 'h2', content: 'Section Header' } :
         component.id === 'paragraph' ? { textElement: 'p', content: 'This is a block of text.' } :
         undefined,
+      dynamicType: component.type === 'dynamic' ? 'role' : undefined,
     } satisfies DndData,
   });
 
-  const iconStyle = component.iconColor ? { color: component.iconColor } : {};
+  // FIX: Removed iconColor logic as it's no longer in the type definition.
+  const iconStyle = {};
 
-  // Use the global .menu-item class for consistent styling
   return (
     <li
       ref={setNodeRef}

@@ -6,6 +6,7 @@ export const promptElements: ComponentGroup[] = [
     title: 'Structure',
     components: [
       { id: 'group-container', name: 'Context Container', type: 'layout', icon: 'view_quilt' },
+      { id: 'role-container', name: 'Role', type: 'dynamic', icon: 'person' },
     ],
   },
   {

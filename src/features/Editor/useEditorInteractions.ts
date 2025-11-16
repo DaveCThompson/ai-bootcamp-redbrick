@@ -9,7 +9,8 @@ import {
   CanvasInteractionState,
 } from '../../data/atoms';
 import { canvasComponentsByIdAtom, rootComponentIdAtom } from '../../data/historyAtoms';
-import { CanvasComponent, DndData, LayoutComponent } from '../../types';
+// FIX: Removed unused 'LayoutComponent' import.
+import { CanvasComponent, DndData } from '../../types';
 import { getComponentName } from './canvasUtils';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -37,9 +38,9 @@ export const useEditorInteractions = (component: CanvasComponent) => {
       id: component.id,
       name: getComponentName(component),
       type: component.componentType,
-      childrenCount: component.componentType === 'layout' ? component.children.length : undefined,
-      isNew: false, // This is an existing component on the canvas
-      icon: '', // Not needed for existing components, but satisfies type
+      childrenCount: (component.componentType === 'layout' || component.componentType === 'dynamic') ? component.children.length : undefined,
+      isNew: false,
+      icon: '',
     } satisfies DndData,
     disabled: isRoot || viewMode !== 'editor',
   });
@@ -52,7 +53,7 @@ export const useEditorInteractions = (component: CanvasComponent) => {
     setIsPropertiesPanelVisible(true);
 
     const isEditableOnCanvas =
-      component.componentType !== 'layout' &&
+      (component.componentType === 'widget' || component.componentType === 'field') &&
       (component.properties.controlType === 'text-input' ||
         component.properties.controlType === 'plain-text' ||
         component.properties.controlType === 'checkbox' ||
@@ -77,9 +78,9 @@ export const useEditorInteractions = (component: CanvasComponent) => {
       }
       setInteractionState(newInteractionState);
     } else if (e.shiftKey && anchorId) {
-      const parent = allComponents[component.parentId] as LayoutComponent | undefined;
+      const parent = allComponents[component.parentId];
       const anchorComponent = allComponents[anchorId];
-      if (parent && anchorComponent && anchorComponent.parentId === component.parentId) {
+      if (parent && (parent.componentType === 'layout' || parent.componentType === 'dynamic') && anchorComponent && anchorComponent.parentId === component.parentId) {
         const children = parent.children;
         const anchorIndex = children.indexOf(anchorId);
         const targetIndex = children.indexOf(component.id);
@@ -104,13 +105,11 @@ export const useEditorInteractions = (component: CanvasComponent) => {
   if (isRoot) sortableStyle.transform = 'none';
 
   return {
-    // State flags
     isSelected,
     isEditing,
     isDragging,
     isOnlySelection,
     isRoot,
-    // Props to spread
     sortableProps: {
       ref: setNodeRef,
       style: sortableStyle,

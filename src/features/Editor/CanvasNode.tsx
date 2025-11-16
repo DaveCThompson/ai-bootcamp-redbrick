@@ -10,6 +10,7 @@ import { RadioButtonsRenderer } from './renderers/RadioButtonsRenderer';
 import { PlainTextRenderer } from './renderers/PlainTextRenderer';
 import { LayoutRenderer } from './renderers/LayoutRenderer';
 import { CheckboxRenderer } from './renderers/CheckboxRenderer';
+import { RoleRenderer } from './renderers/RoleRenderer';
 
 // --- ORCHESTRATOR COMPONENT ---
 export const CanvasNode = ({ componentId }: { componentId: string }) => {
@@ -25,6 +26,11 @@ export const CanvasNode = ({ componentId }: { componentId: string }) => {
     switch (comp.componentType) {
       case 'layout':
         return <LayoutRenderer component={comp} mode="canvas" />;
+      case 'dynamic':
+        if (comp.dynamicType === 'role') {
+          return <RoleRenderer component={comp} mode="canvas" />;
+        }
+        return <div>Unknown dynamic type</div>;
       case 'widget':
       case 'field':
         switch (comp.properties.controlType) {

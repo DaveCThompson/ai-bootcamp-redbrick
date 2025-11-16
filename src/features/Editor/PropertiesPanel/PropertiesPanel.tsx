@@ -13,12 +13,12 @@ import { CanvasComponent, LayoutComponent } from '../../../types';
 import styles from './PropertiesPanel.module.css';
 
 // Import all editors to trigger their registration side-effects.
-// This is the single point of entry for all property panel UIs.
 import './EmptyStatePanel';
 import './MultiSelectEditor';
 import './LayoutEditor';
 import './FormEditor';
 import './RootEditor';
+import './RoleEditor';
 
 
 export const PropertiesPanel = () => {

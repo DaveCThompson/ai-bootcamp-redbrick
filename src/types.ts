@@ -8,10 +8,6 @@
 interface BaseCanvasComponent {
   id: string;
   parentId: string;
-  contextualLayout?: {
-    columnSpan?: number;
-    preventShrinking?: boolean;
-  };
 }
 
 // A structural component for organizing other components
@@ -20,8 +16,6 @@ export interface LayoutComponent extends BaseCanvasComponent {
   name: string;
   children: string[];
   properties: {
-    // NOTE: Simplified to a single, non-configurable arrangement.
-    // Other properties like gap, distribution, etc., have been removed.
     arrangement: 'stack' | 'row';
   };
 }
@@ -29,8 +23,6 @@ export interface LayoutComponent extends BaseCanvasComponent {
 // A component that represents a form field or a static widget
 export interface FormComponent extends BaseCanvasComponent {
   componentType: 'field' | 'widget';
-  origin?: 'data' | 'general';
-  binding?: BoundData | null;
   properties: {
     // Common
     label: string;
@@ -46,7 +38,18 @@ export interface FormComponent extends BaseCanvasComponent {
   };
 }
 
-export type CanvasComponent = LayoutComponent | FormComponent;
+// A component that derives its content from a selected type
+export interface DynamicComponent extends BaseCanvasComponent {
+  componentType: 'dynamic';
+  name: string;
+  dynamicType: 'role';
+  children: string[];
+  properties: {
+    roleType: string;
+  };
+}
+
+export type CanvasComponent = LayoutComponent | FormComponent | DynamicComponent;
 
 // A map of component IDs to their data, for efficient lookups
 export type NormalizedCanvasComponents = Record<string, CanvasComponent>;
@@ -56,21 +59,13 @@ export type NormalizedCanvasComponents = Record<string, CanvasComponent>;
 //                         Supporting Types
 // =================================================================
 
-export interface BoundData {
-  nodeId: string;
-  nodeName: string;
-  fieldId: string;
-  fieldName: string;
-  path: string;
-}
-
 // For items in the component browser
 export interface DraggableComponent {
   id: string;
   name: string;
-  type: 'layout' | 'widget';
+  type: 'layout' | 'widget' | 'dynamic';
   icon: string;
-  iconColor?: string;
+  // FIX: iconColor removed as it's no longer part of the design system.
 }
 
 export interface ComponentGroup {
@@ -82,11 +77,12 @@ export interface ComponentGroup {
 export interface DndData {
   id: string;
   name: string;
-  type: 'layout' | 'widget' | 'field';
+  type: 'layout' | 'widget' | 'field' | 'dynamic';
   icon: string;
   isNew: boolean;
-  origin?: 'data' | 'general';
   controlType?: FormComponent['properties']['controlType'];
   controlTypeProps?: Partial<FormComponent['properties']>;
+  dynamicType?: DynamicComponent['dynamicType'];
   childrenCount?: number;
+  // FIX: 'origin' property removed to match strict type definition.
 }

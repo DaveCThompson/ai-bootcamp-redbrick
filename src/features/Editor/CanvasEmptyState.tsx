@@ -15,9 +15,9 @@ export const CanvasEmptyState = () => {
 
   return (
     <div className={styles.emptyStateContainer} onClick={handleClick}>
-      <h3 className={styles.title}>Add screen content</h3>
+      <h3 className={styles.title}>Add prompt elements</h3>
       <p className={styles.subtitle}>
-        Drag and drop content here to create your screen
+        Drag and drop elements here to create your prompt
       </p>
     </div>
   );
