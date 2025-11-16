@@ -1,16 +1,6 @@
-/* src/styles/index.css */
-
-/*
-  This file is the single source of truth for the CSS cascade layer order,
-  ensuring predictable styling. CSS Modules are not part of these layers,
-  giving them higher specificity than any global style by default.
-*/
-
-@layer tokens, base, themes, components, utilities;
-
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
 /* Layer 1: Design Tokens */
-/* DEFINITIVE FIX: Add terminating semicolons to all @import rules. */
 @import url('./primitives.css') layer(tokens);
 @import url('./utility.css') layer(tokens);
 @import url('./semantics.css') layer(tokens);
@@ -36,10 +26,18 @@
 /* Layer 5: Utility Classes */
 @import url('./animations.css') layer(utilities);
 
+/*
+  This file is the single source of truth for the CSS cascade layer order,
+  ensuring predictable styling. CSS Modules are not part of these layers,
+  giving them higher specificity than any global style by default.
+*/
+@layer tokens, base, themes, components, utilities;
+
 
 /* --- Global Root and Body Styles (defined outside layers) --- */
 :root {
-  --font-family-sans: 'Inter', sans-serif;
+  --font-family-sans: 'Raleway', sans-serif;
+  --font-family-mono: 'IBM Plex Mono', monospace;
 }
 
 *, *::before, *::after {
