@@ -8,29 +8,6 @@ Each step includes a check for unintended consequences and a definitive action p
 
 This plan outlines a series of changes to align the codebase with the project's new vision, improve maintainability, and remove architectural vestiges.
 
-### 1. Project Setup: Correct File Extensions
-
-This is the highest priority change to enable proper tooling support.
-
-*   **Change:** Rename all `.txt` files containing code to their correct `.ts`, `.tsx`, or `.d.ts` extensions.
-*   **Impact Analysis:**
-    *   **Files Affected:** All `.txt` files containing code, plus `tsconfig.app.json` and `tsconfig.node.json`.
-    *   **Unintended Consequences Check:**
-        *   **Check:** Will this break TypeScript's module resolution or project references?
-        *   **Result:** Yes. The plan must include updating the `include` array in `tsconfig.node.json` to correctly find the renamed `vite.config.ts`. The `include` in `tsconfig.app.json` is already configured with wildcards (`src/**/*.ts`) and will work correctly after renaming.
-        *   **Check:** Will this break ESLint?
-        *   **Result:** No. ESLint is configured to find `**/*.{ts,tsx}` files and will automatically pick up the changes.
-    *   **Conclusion:** This is a critical, low-risk fix. The TypeScript server will immediately highlight any missed import path updates.
-
-*   **Action Plan:**
-    1.  Rename `vite.config.txt` to `vite.config.ts`.
-    2.  In `tsconfig.node.json`, change `include: ["vite.config.ts"]`.
-    3.  Rename `types.txt` to `src/types.ts`.
-    4.  Rename `vite-env.d.txt` to `src/vite-env.d.ts`.
-    5.  Rename all files in `src/data/` from `.txt` to `.ts`.
-    6.  Rename `propertyEditorRegistry.txt` in `PropertiesPanel` to `propertyEditorRegistry.ts`.
-    7.  Rename `types.txt` in `renderers` to `types.ts`.
-    8.  Update all `import` statements across the project that reference these files to use the new `.ts` extension (or no extension, letting module resolution handle it).
 
 ### 2. Naming Conventions: Improve Clarity
 
@@ -109,15 +86,8 @@ These actions remove unused and legacy code.
 
 Final cleanup to consolidate documentation and reduce CSS bundle size.
 
-*   **Change A: Consolidate and Remove `AGENTS.md` and `CSS-PRINCIPLES.md`**
-    *   **Impact Analysis:**
-        *   **Files Affected:** `README.md`, `AGENTS.md`, `CSS-PRINCIPLES.md`.
-        *   **Unintended Consequences Check:**
-            *   **Check:** Is any critical, unique information lost?
-            *   **Result:** No. The core architectural principles from these files are already reflected in the `README.md`. Consolidating them strengthens the `README` as the single source of truth.
-    *   **Conclusion:** Safe, beneficial documentation cleanup.
 
-*   **Change B: Remove the Unused `appearance.css` System**
+*   **Change A: Remove the Unused `appearance.css` System**
     *   **Impact Analysis:**
         *   **Files Affected:** `src/styles/appearance.css` and `src/styles/index.css`.
         *   **Unintended Consequences Check:**
@@ -126,7 +96,5 @@ Final cleanup to consolidate documentation and reduce CSS bundle size.
     *   **Conclusion:** Very safe change that removes dead code.
 
 *   **Action Plan:**
-    1.  Review `AGENTS.md` and `CSS-PRINCIPLES.md` one last time and merge any valuable, non-redundant principles into `README.md`.
-    2.  Delete `AGENTS.md` and `CSS-PRINCIPLES.md`.
     3.  Delete `src/styles/appearance.css`.
     4.  In `src/styles/index.css`, remove the line `@import url('./appearance.css') layer(components);`.
