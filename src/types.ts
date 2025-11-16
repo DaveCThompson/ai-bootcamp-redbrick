@@ -45,7 +45,6 @@ export interface DynamicComponent extends BaseCanvasComponent {
   componentType: 'dynamic';
   name: string;
   dynamicType: 'role';
-  children: string[];
   properties: {
     roleType: string;
   };

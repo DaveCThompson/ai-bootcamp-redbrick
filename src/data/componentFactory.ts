@@ -57,7 +57,7 @@ export const createDynamicComponent = (parentId: string, dynamicType: 'role'): D
     name: 'Role',
     componentType: 'dynamic',
     dynamicType,
-    children: [],
+    // FIX: Removed `children` property as DynamicComponent is no longer a container.
     properties: {
       roleType: 'skeptical-engineer', // Default to the first role
     },

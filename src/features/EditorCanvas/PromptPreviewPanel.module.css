@@ -16,12 +16,13 @@
 }
 
 .previewCard {
-  background-color: var(--surface-bg-primary);
+  /* FIX: Use secondary background and remove shadow for de-emphasis */
+  background-color: var(--surface-bg-secondary);
+  box-shadow: none;
   border-radius: var(--radius-3xl);
   max-width: 800px;
   width: 100%;
   margin: var(--spacing-8) auto;
-  box-shadow: var(--surface-shadow-lg);
   border: 1px solid var(--surface-border-secondary);
   display: flex;
   flex-direction: column;
@@ -36,6 +37,7 @@
   flex-shrink: 0;
 }
 
+/* DEPRECATED: h3 styling is now handled by shared .panelTitle class */
 .previewHeader h3 {
   margin: 0;
   font-size: 1.1em;
@@ -52,7 +54,8 @@
 .markdownOutput {
   white-space: pre-wrap;
   word-wrap: break-word;
-  font-family: var(--font-family-sans);
+  /* FIX: Use monospace font family */
+  font-family: var(--font-family-mono);
   font-size: 1em;
   line-height: 1.7;
   color: var(--surface-fg-primary);

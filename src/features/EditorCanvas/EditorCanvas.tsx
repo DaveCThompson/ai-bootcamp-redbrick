@@ -14,8 +14,7 @@ import {
   editorLayoutModeAtom,
   EditorLayoutMode,
 } from '../../data/atoms';
-import { rootComponentIdAtom, promptNameAtom } from '../../data/promptStateAtoms';
-import { useEditorHotkeys } from '../../data/useEditorHotkeys';
+import { rootComponentIdAtom } from '../../data/promptStateAtoms';
 import { useAutoScroller } from '../../data/useAutoScroller';
 
 import { CanvasNode } from './CanvasNode';
@@ -30,7 +29,6 @@ const CANVAS_BACKGROUND_ID = '--canvas-background--';
 
 const CanvasView = () => {
   const rootId = useAtomValue(rootComponentIdAtom);
-  const promptName = useAtomValue(promptNameAtom);
   const [interactionState, setInteractionState] = useAtom(canvasInteractionAtom);
   const setIsPropertiesPanelVisible = useSetAtom(isPropertiesPanelVisibleAtom);
   const setAnchorId = useSetAtom(selectionAnchorIdAtom);
@@ -99,7 +97,8 @@ const CanvasView = () => {
       >
         <div className={promptCardClasses} onClick={handleCanvasClick}>
           <div className={styles.promptCardHeader}>
-            <h2>{promptName}</h2>
+            {/* FIX: Use static title and shared style */}
+            <h2 className={styles.panelTitle}>Prompt Builder</h2>
           </div>
           <div className={styles.canvasDroppableArea}>
             {rootId && <CanvasNode componentId={rootId} />}
@@ -125,8 +124,6 @@ export const EditorCanvas = () => {
     }
   }, [layoutMode, setIsPropertiesPanelVisible]);
   
-  useEditorHotkeys();
-
   const renderContent = () => {
     switch (layoutMode) {
       case 'builder':

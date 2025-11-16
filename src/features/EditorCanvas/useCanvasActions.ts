@@ -82,7 +82,8 @@ export const useCanvasActions = (selectedIds: string[]) => {
     const component = allComponents[componentId];
     if (!component) return;
     const parent = allComponents[component.parentId];
-    if (!parent || (parent.componentType !== 'layout' && parent.componentType !== 'dynamic')) return;
+    // FIX: Only layout components can be parents.
+    if (!parent || parent.componentType !== 'layout') return;
     const oldIndex = parent.children.indexOf(componentId);
     const newIndex = direction === 'up' ? oldIndex - 1 : oldIndex + 1;
     if (newIndex >= 0 && newIndex < parent.children.length) {

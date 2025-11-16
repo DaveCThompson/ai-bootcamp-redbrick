@@ -15,10 +15,11 @@ const findHoveredContainer = (overId: string, allComponents: Record<string, Canv
   if (overId === CANVAS_BACKGROUND_ID) return CANVAS_BACKGROUND_ID;
   const overComponent = allComponents[overId];
   if (!overComponent) return null;
-  if (overComponent.componentType === 'layout' || overComponent.componentType === 'dynamic') return overId;
+  // FIX: Only LayoutComponents can be containers for other items.
+  if (overComponent.componentType === 'layout') return overId;
   if (overComponent.parentId) {
       const parent = allComponents[overComponent.parentId];
-      if (parent && (parent.componentType === 'layout' || parent.componentType === 'dynamic')) {
+      if (parent && parent.componentType === 'layout') {
           return parent.id;
       }
   }
@@ -86,7 +87,7 @@ export const useCanvasDnd = () => {
   };
   
   const handleAddNewComponent = (activeData: DndData, dropTarget: { parentId: string, index: number }) => {
-    const { name, type, controlType, controlTypeProps, id } = activeData;
+    const { name, type, controlType, controlTypeProps, id, dynamicType } = activeData;
     const { parentId, index } = dropTarget;
 
     if (activeData.isTemplate) {
@@ -106,12 +107,13 @@ export const useCanvasDnd = () => {
       action: {
         type: 'COMPONENT_ADD',
         payload: {
-          componentType: type as 'layout' | 'widget',
+          componentType: type as 'layout' | 'widget' | 'dynamic', 
           name, 
           parentId,
           index,
           controlType,
           controlTypeProps,
+          dynamicType,
         }
       },
       message: `Add '${name}'`
@@ -127,7 +129,8 @@ export const useCanvasDnd = () => {
     const oldParentId = oldComponent.parentId;
     if (!oldParentId) return;
     const oldParent = allComponents[oldParentId];
-    if (!oldParent || (oldParent.componentType !== 'layout' && oldParent.componentType !== 'dynamic')) return;
+    // FIX: Only layout components can be parents.
+    if (!oldParent || oldParent.componentType !== 'layout') return;
 
     const oldIndex = oldParent.children.indexOf(activeId);
     if (oldParentId === newParentId) {
@@ -186,15 +189,17 @@ export const useCanvasDnd = () => {
 
     const overComponent = allComponents[overId];
     if (!overComponent) return null;
-
-    if ((overComponent.componentType === 'layout' || overComponent.componentType === 'dynamic') && overComponent.children.length === 0) {
+    
+    // FIX: Only layout components with no children are valid empty drop targets.
+    if (overComponent.componentType === 'layout' && overComponent.children.length === 0) {
       return { parentId: overId, index: 0, viewportRect: null, isGrid: false };
     }
 
-    const parentId = (overComponent.componentType === 'layout' || overComponent.componentType === 'dynamic') ? overId : overComponent.parentId;
+    const parentId = overComponent.componentType === 'layout' ? overId : overComponent.parentId;
     if (!parentId) return null;
     const parent = allComponents[parentId];
-    if (!parent || (parent.componentType !== 'layout' && parent.componentType !== 'dynamic')) return null;
+    // FIX: Only layout components can be parents.
+    if (!parent || parent.componentType !== 'layout') return null;
 
     const isGrid = false; // Grid layout is removed, always false.
     const children = parent.children;

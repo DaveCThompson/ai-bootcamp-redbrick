@@ -37,7 +37,8 @@ export const useEditorInteractions = (component: CanvasComponent) => {
       id: component.id,
       name: getComponentName(component),
       type: component.componentType,
-      childrenCount: (component.componentType === 'layout' || component.componentType === 'dynamic') ? component.children.length : undefined,
+      // FIX: Only layout components have children.
+      childrenCount: (component.componentType === 'layout') ? component.children.length : undefined,
       isNew: false,
       icon: '',
     } satisfies DndData,
@@ -76,7 +77,8 @@ export const useEditorInteractions = (component: CanvasComponent) => {
     } else if (e.shiftKey && anchorId) {
       const parent = allComponents[component.parentId];
       const anchorComponent = allComponents[anchorId];
-      if (parent && (parent.componentType === 'layout' || parent.componentType === 'dynamic') && anchorComponent && anchorComponent.parentId === component.parentId) {
+      // FIX: Only layout components can be parents for range selection.
+      if (parent && parent.componentType === 'layout' && anchorComponent && anchorComponent.parentId === component.parentId) {
         const children = parent.children;
         const anchorIndex = children.indexOf(anchorId);
         const targetIndex = children.indexOf(component.id);

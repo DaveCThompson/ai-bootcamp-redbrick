@@ -1,7 +1,6 @@
 // src/data/useComponentCapabilities.ts
 import { useAtomValue } from 'jotai';
 import { canvasComponentsByIdAtom, rootComponentIdAtom } from './promptStateAtoms';
-import { ContainerComponent } from '../types';
 
 /**
  * A hook that computes the possible actions for a given set of component IDs.
@@ -28,14 +27,14 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
   }
   
   const isRootSelected = selectedIds.includes(rootId);
-  const parent = allComponents[primaryComponent.parentId] as ContainerComponent | undefined;
+  const parent = allComponents[primaryComponent.parentId];
 
-  // CRITICAL CHANGE: A locked component (like Template Container) can be deleted and moved,
+  // A locked component (like Template Container) can be deleted and moved,
   // but not renamed or structurally changed.
   if (isSingleSelection && primaryComponent.isLocked) {
     let canNudgeUp = false;
     let canNudgeDown = false;
-    if (parent) {
+    if (parent && parent.componentType === 'layout') {
       const index = parent.children.indexOf(primaryComponent.id);
       canNudgeUp = index > 0;
       canNudgeDown = index < parent.children.length - 1;
@@ -65,7 +64,7 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
 
   let canNudgeUp = false;
   let canNudgeDown = false;
-  if (isSingleSelection && parent) {
+  if (isSingleSelection && parent && parent.componentType === 'layout') {
     const index = parent.children.indexOf(primaryComponent.id);
     canNudgeUp = index > 0;
     canNudgeDown = index < parent.children.length - 1;

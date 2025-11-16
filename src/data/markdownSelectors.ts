@@ -47,16 +47,8 @@ const generateMarkdownRecursive = (
       if (component.dynamicType === 'role') {
         const roleDef = roles[component.properties.roleType];
         if (roleDef) {
-          output += roleDef.promptSnippet;
-        }
-        if (component.children.length > 0) {
-          const childrenOutput = component.children
-            .map(childId => generateMarkdownRecursive(childId, allComponents))
-            .join('\n\n');
-          if (output && childrenOutput) {
-            output += '\n\n';
-          }
-          output += childrenOutput;
+          // NEW: Add the H2 "ROLE" header before the snippet.
+          output += `## ROLE\n\n${roleDef.promptSnippet}`;
         }
       }
       break;

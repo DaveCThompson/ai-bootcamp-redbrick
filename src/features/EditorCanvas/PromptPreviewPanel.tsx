@@ -3,6 +3,7 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { promptMarkdownAtom } from '../../data/markdownSelectors';
 import { addToastAtom } from '../../data/toastAtoms';
 import { Button } from '../../components/Button';
+import editorStyles from './EditorCanvas.module.css'; // Import shared styles
 import styles from './PromptPreviewPanel.module.css';
 
 interface PromptPreviewPanelProps {
@@ -24,7 +25,8 @@ export const PromptPreviewPanel = ({ isPrimaryView }: PromptPreviewPanelProps) =
     <div className={containerClasses}>
       <div className={styles.previewCard}>
         <div className={styles.previewHeader}>
-          <h3>Prompt Preview</h3>
+          {/* FIX: Use shared panelTitle class for symmetric styling */}
+          <h2 className={editorStyles.panelTitle}>Prompt Preview</h2>
           <Button variant="primary" size="m" onClick={handleCopy}>
             <span className="material-symbols-rounded">content_copy</span>
             Copy Prompt

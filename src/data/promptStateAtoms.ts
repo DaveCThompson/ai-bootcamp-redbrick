@@ -88,14 +88,16 @@ const deleteComponentAndChildren = (
   const componentToDelete = components[componentId];
   if (!componentToDelete) return;
 
-  if ((componentToDelete.componentType === 'layout' || componentToDelete.componentType === 'dynamic') && componentToDelete.children) {
+  // FIX: Only layout components have children to recurse through.
+  if (componentToDelete.componentType === 'layout' && componentToDelete.children) {
     [...componentToDelete.children].forEach(childId => {
       deleteComponentAndChildren(components, childId);
     });
   }
 
   const parent = components[componentToDelete.parentId];
-  if (parent && (parent.componentType === 'layout' || parent.componentType === 'dynamic')) {
+  // FIX: Only layout components can be parents.
+  if (parent && parent.componentType === 'layout') {
     parent.children = parent.children.filter(id => id !== componentId);
   }
   delete components[componentId];
@@ -124,7 +126,8 @@ export const commitActionAtom = atom(
             
             presentState.components[newComponent.id] = newComponent;
             const parent = presentState.components[parentId];
-            if (parent && (parent.componentType === 'layout' || parent.componentType === 'dynamic')) {
+            // FIX: Only layout components can have children added to them.
+            if (parent && parent.componentType === 'layout') {
               const childrenCountBefore = parent.children.length;
               parent.children.splice(index, 0, newComponent.id);
               if (parentId === presentState.rootComponentId && index === childrenCountBefore) {
@@ -187,7 +190,8 @@ export const commitActionAtom = atom(
             templateContainer.children = childrenIds;
 
             const parent = presentState.components[parentId];
-            if (parent && (parent.componentType === 'layout' || parent.componentType === 'dynamic')) {
+            // FIX: Only layout components can have children added to them.
+            if (parent && parent.componentType === 'layout') {
               parent.children.splice(index, 0, templateContainer.id);
             }
             break;
@@ -207,7 +211,8 @@ export const commitActionAtom = atom(
           case 'COMPONENT_REORDER': {
             const { parentId, oldIndex, newIndex } = action.action.payload;
             const parent = presentState.components[parentId];
-            if (parent && (parent.componentType === 'layout' || parent.componentType === 'dynamic')) {
+            // FIX: Only layout components can have their children reordered.
+            if (parent && parent.componentType === 'layout') {
               const [moved] = parent.children.splice(oldIndex, 1);
               parent.children.splice(newIndex, 0, moved);
             }
@@ -216,11 +221,13 @@ export const commitActionAtom = atom(
           case 'COMPONENT_MOVE': {
             const { componentId, oldParentId, newParentId, newIndex } = action.action.payload;
             const oldParent = presentState.components[oldParentId];
-            if (oldParent && (oldParent.componentType === 'layout' || oldParent.componentType === 'dynamic')) {
+            // FIX: Only layout components can be parents.
+            if (oldParent && oldParent.componentType === 'layout') {
               oldParent.children = oldParent.children.filter(id => id !== componentId);
             }
             const newParent = presentState.components[newParentId];
-            if (newParent && (newParent.componentType === 'layout' || newParent.componentType === 'dynamic')) {
+            // FIX: Only layout components can be parents.
+            if (newParent && newParent.componentType === 'layout') {
               newParent.children.splice(newIndex, 0, componentId);
             }
             const component = presentState.components[componentId];
@@ -232,7 +239,8 @@ export const commitActionAtom = atom(
           case 'COMPONENTS_WRAP': {
             const { componentIds, parentId } = action.action.payload;
             const parent = presentState.components[parentId];
-            if (!parent || (parent.componentType !== 'layout' && parent.componentType !== 'dynamic')) break;
+            // FIX: Only layout components can be parents.
+            if (!parent || parent.componentType !== 'layout') break;
             
             const newContainer = createLayoutComponent(parentId);
             newContainer.children = componentIds;
@@ -254,7 +262,8 @@ export const commitActionAtom = atom(
             if (!container || container.componentType !== 'layout') break;
             
             const parent = presentState.components[container.parentId];
-            if (!parent || (parent.componentType !== 'layout' && parent.componentType !== 'dynamic')) break;
+            // FIX: Only layout components can be parents.
+            if (!parent || parent.componentType !== 'layout') break;
 
             const containerIndex = parent.children.indexOf(componentId);
             if (containerIndex === -1) break;
