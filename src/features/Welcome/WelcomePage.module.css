@@ -25,10 +25,9 @@
   margin-bottom: var(--spacing-8);
 }
 
-.logoStack .logoLabel {
-  font-size: 1.5em;
-  font-weight: 700;
-  color: var(--surface-fg-primary);
+/* ADDED: Wrapper to apply corrective transform for optical centering. */
+.logoWrapper {
+  transform: translateX(-1rem);
 }
 
 .logoStack .material-symbols-rounded {

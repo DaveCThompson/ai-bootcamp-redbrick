@@ -7,7 +7,10 @@ export const WelcomePage = () => {
     <div className={styles.welcomeContainer}>
       <div className={styles.welcomeContent}>
         <div className={styles.logoStack}>
-          <AnimatedLogo size="welcome" />
+          {/* UPDATED: Added a wrapper div for centering adjustment */}
+          <div className={styles.logoWrapper}>
+            <AnimatedLogo size="welcome" />
+          </div>
           <span className="material-symbols-rounded">close</span>
           <PartnerLogo size="welcome" />
         </div>
