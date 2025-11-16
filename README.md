@@ -53,6 +53,7 @@ The canvas is built for intuitive interaction with a small, focused set of compo
 -   **Section Header:** A simple text element for creating titles and subtitles.
 -   **Text Block:** A simple multi-line text element for descriptive content.
 -   **Variables (Text Input, Role, etc.):** Simple input placeholders that represent data collection points (variables) in a prompt or workflow.
+    -   **Role:** A special variable that inserts a predefined persona and prompt snippet. Like the Template Container, it is treated as an **atomic, non-nestable block** on the canvas. It has a custom editor in the Properties Panel for selecting the desired role.
 
 ### Unified Rendering Pattern
 All canvas components are rendered through a unified set of renderer components located in `src/features/EditorCanvas/renderers/`. Each renderer accepts a `mode: 'canvas' | 'preview'` prop to separate its interactive editor appearance from its clean "final" appearance.
@@ -63,7 +64,7 @@ The editor uses an industry-standard selection model:
 -   **Ctrl/Cmd + Click:** Toggles selection.
 -   **Shift + Click:** Selects a range.
 -   **Alt/Option + Click or Double-Click:** Enters inline text editing mode.
--   **Note:** Some components, like the **Template Container**, are atomic and do not allow for the selection of their internal parts.
+-   **Note:** Some components, like the **Template Container** and **Role**, are atomic and do not allow for the selection or dropping of internal parts.
 
 ## 5. Key File Manifest
 

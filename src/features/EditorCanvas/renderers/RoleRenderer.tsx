@@ -7,9 +7,13 @@ import { CanvasSelectionToolbar } from '../CanvasSelectionToolbar';
 import { roles } from '../../../data/rolesMock';
 import styles from '../EditorCanvas.module.css';
 
-// --- Unified Renderer ---
+/**
+ * Renders the "Role" component, which is a non-nestable, atomic variable.
+ * This component is intentionally simple: it does not use `useDroppable` or
+ * `SortableContext` because it cannot accept child components. Its purpose
+ * is to display the selected role's information in a clear, top-down layout.
+ */
 export const RoleRenderer = ({ component, mode }: RendererProps<DynamicComponent>) => {
-  // FIX: Removed container-specific hooks (useDroppable, etc.)
   const { isSelected, isDragging, isOnlySelection, sortableProps, selectionProps, dndListeners } = useEditorInteractions(component);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -20,7 +24,7 @@ export const RoleRenderer = ({ component, mode }: RendererProps<DynamicComponent
     sortableProps.ref(node);
   };
 
-  // Common view logic for both canvas and preview
+  // The core view logic is shared between the interactive canvas and the static preview.
   const RoleView = () => (
     <div className={styles.roleContainer}>
       <div className={styles.roleHeader}>
@@ -35,6 +39,7 @@ export const RoleRenderer = ({ component, mode }: RendererProps<DynamicComponent
     return <RoleView />;
   }
 
+  // The interactive "canvas" mode adds selection, dragging, and toolbar capabilities.
   const wrapperClasses = `${styles.sortableItem} ${isDragging ? styles.isDragging : ''}`;
   const selectionClasses = `${styles.selectableWrapper} ${isSelected ? styles.selected : ''}`;
 

@@ -11,18 +11,19 @@ interface BaseCanvasComponent {
   isLocked?: boolean; // To prevent editing/deleting template items
 }
 
-// A structural component for organizing other components
+// A structural component for organizing other components.
+// This is the ONLY component type that can have children.
 export interface ContainerComponent extends BaseCanvasComponent {
   componentType: 'layout';
   name:string;
   children: string[];
   properties: {
     arrangement: 'stack' | 'row';
-    isTemplateContainer?: boolean; // NEW: To identify the special template form container
+    isTemplateContainer?: boolean; // A flag for the special, locked form-like template.
   };
 }
 
-// A component that represents a form field or a static widget
+// A component that represents a form field or a static widget.
 export interface WidgetComponent extends BaseCanvasComponent {
   componentType: 'field' | 'widget';
   properties: {
@@ -40,7 +41,8 @@ export interface WidgetComponent extends BaseCanvasComponent {
   };
 }
 
-// A component that derives its content from a selected type
+// A component that represents a non-nestable variable, like a persona/role.
+// It is an atomic block and CANNOT have children.
 export interface DynamicComponent extends BaseCanvasComponent {
   componentType: 'dynamic';
   name: string;
@@ -64,7 +66,7 @@ export type NormalizedCanvasComponents = Record<string, CanvasComponent>;
 export interface DraggableComponent {
   id: string;
   name: string;
-  type: 'layout' | 'widget' | 'dynamic' | 'template'; // Added 'template'
+  type: 'layout' | 'widget' | 'dynamic' | 'template';
   icon: string;
 }
 
@@ -77,10 +79,10 @@ export interface ComponentGroup {
 export interface DndData {
   id: string;
   name: string;
-  type: 'layout' | 'widget' | 'field' | 'dynamic' | 'template'; // Added 'template'
+  type: 'layout' | 'widget' | 'field' | 'dynamic' | 'template';
   icon: string;
   isNew: boolean;
-  isTemplate?: boolean; // To identify template drags
+  isTemplate?: boolean;
   controlType?: WidgetComponent['properties']['controlType'];
   controlTypeProps?: Partial<WidgetComponent['properties']>;
   dynamicType?: DynamicComponent['dynamicType'];

@@ -97,7 +97,7 @@ const CanvasView = () => {
       >
         <div className={promptCardClasses} onClick={handleCanvasClick}>
           <div className={styles.promptCardHeader}>
-            {/* FIX: Use static title and shared style */}
+            {/* The main builder title is static to provide a consistent, symmetric UI with the preview panel. */}
             <h2 className={styles.panelTitle}>Prompt Builder</h2>
           </div>
           <div className={styles.canvasDroppableArea}>
@@ -114,12 +114,12 @@ export const EditorCanvas = () => {
   const [layoutMode, setLayoutMode] = useAtom(editorLayoutModeAtom);
   const setIsPropertiesPanelVisible = useSetAtom(isPropertiesPanelVisibleAtom);
 
-  // Sync properties panel visibility with the layout mode
+  // Sync properties panel visibility with the layout mode.
   useEffect(() => {
     if (layoutMode === 'preview') {
       setIsPropertiesPanelVisible(false);
     } else {
-      // In split or builder mode, the properties panel is potentially visible
+      // In split or builder mode, the properties panel is potentially visible.
       setIsPropertiesPanelVisible(true);
     }
   }, [layoutMode, setIsPropertiesPanelVisible]);

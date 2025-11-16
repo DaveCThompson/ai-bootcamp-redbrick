@@ -44,19 +44,21 @@ Menu items (`.menu-item`) are the one justified exception to the outer focus rin
 
 #### The Shared Menu System (`menu.css`)
 
-To enforce the "Single Source of Truth" principle for our UI, we use a shared, global stylesheet for all list-based selection components. This system guarantees that primitives from multiple Radix UI packages (`DropdownMenu`, `ContextMenu`, `Select`) and custom components (like the **Data Navigator's item list in both the main panel and the data binding modal**) are visually indistinguishable.
+To enforce the "Single Source of Truth" principle for our UI, we use a shared, global stylesheet for all list-based selection components. This system guarantees that primitives from multiple Radix UI packages (`DropdownMenu`, `ContextMenu`, `Select`) and custom components are visually indistinguishable.
 
 It is built on two key patterns:
 
 1.  **Shared Container (`.menu-popover`):** All menu popovers use this class, which defines the container's shape, shadow, padding, and a **`gap: 2px`** to create consistent spacing between items.
 2.  **Shared Item (`.menu-item`):** All list items use this class. It defines a consistent height, internal padding, and a `1px solid transparent` border in its resting state. On hover or highlight, only the `background-color` and `border-color` are changed, preventing any layout shift. This creates a light, modern interaction style.
 
-By composing these two classes, we achieve a perfectly consistent and robust menu system across the entire application.
+#### Shared Typography & Layout Patterns
+
+The same "Single Source of Truth" principle applies to typography and layout. To ensure visual symmetry and consistency, we create and reuse shared classes for common elements like panel titles (`.panelTitle`). This guarantees that headers in different features (like the "Prompt Builder" and "Prompt Preview") are visually identical without duplicating CSS, leading to a more maintainable and coherent design.
 
 #### The Icon Badging Pattern for Visual Status
 
 To add secondary information to an icon without cluttering the UI, we use a CSS-only "badging" pattern.
 
--   **Problem:** A component or data field (e.g., a "transient" field) has a special status that needs to be communicated visually at a glance.
--   **Solution:** A wrapper `div` with `position: relative` is placed around the base icon. A second, smaller "badge" icon (e.g., the "T" for transient) is then absolutely positioned at the top-right corner of the wrapper.
+-   **Problem:** A component or data field has a special status that needs to be communicated visually at a glance.
+-   **Solution:** A wrapper `div` with `position: relative` is placed around the base icon. A second, smaller "badge" icon is then absolutely positioned at the top-right corner of the wrapper.
 -   **Implementation:** The badge icon is given a smaller `font-size` and a matching `opsz` (optical size) for clarity, and a `text-shadow` can be used to lift it visually from the base icon. This creates a clean, scalable, and high-craft way to badge icons with status indicators.
