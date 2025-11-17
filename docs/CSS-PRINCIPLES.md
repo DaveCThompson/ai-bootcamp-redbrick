@@ -1,3 +1,5 @@
+--- START OF FILE CSS-PRINCIPLES.md ---
+```markdown
 # High-Craft CSS Principles
 
 This document codifies the core principles and patterns for writing CSS in the Screen Studio project. Adhering to these guidelines is essential for maintaining a consistent, robust, and high-craft user interface.
@@ -31,6 +33,50 @@ React components, UI libraries (Radix), and animation libraries (Framer Motion) 
 
 ### Key Architectural Patterns
 
+#### The Material Symbols Variable Font System
+
+This project relies on a robust, three-layer system to control the appearance of Material Symbols icons. Understanding this system is critical for preventing bugs where icon styles (like weight or grade) are accidentally reset.
+
+**1. The Foundation (Font Loading)**
+The entire system depends on loading the **variable font** version of the icons, which makes the style axes (`FILL`, `wght`, `GRAD`, `opsz`) available to CSS. This is done in `index.html`:
+```html
+<link rel="stylesheet" href="...family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@...">
+```
+If this line is missing or does not specify the `FILL,GRAD` axes, no icon styling will work.
+
+**2. The Baseline (Global Defaults)**
+A single, authoritative rule in `src/styles/base.css` establishes the global default for all icons.
+```css
+/* from base.css */
+.material-symbols-rounded {
+  /* ... */
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 20;
+  transition: font-variation-settings 0.15s ease-in-out;
+}
+```
+This rule serves two purposes:
+-   It defines the default **REST** state for every icon (unfilled, normal weight, no grade).
+-   It applies a global `transition`, ensuring that any changes to these axes will animate smoothly.
+
+**3. The Control System (Global Interactions)**
+State changes are handled by a global system in `src/styles/toggles.css` that uses semantic `aria-*` attributes. This creates a predictable `REST -> HOVER -> SELECTED` state flow for any toggleable icon.
+```css
+/* HOVER state for an unselected icon */
+[aria-pressed]:not([aria-pressed='true']):hover .material-symbols-rounded {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 100, 'opsz' 20;
+}
+
+/* SELECTED state for an active icon */
+[aria-pressed='true'] .material-symbols-rounded {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 200, 'opsz' 20;
+}
+```
+**The Golden Rule:** The `font-variation-settings` property is **atomic**—it completely overwrites any previous value. To prevent bugs where axes are accidentally reset, **every rule that sets this property must define all four axes (`FILL`, `wght`, `GRAD`, `opsz`).**
+
 #### The "Safe Zone" Padding Contract for Focus Rings
 
 To ensure visual consistency and prevent UI bugs, we have standardized on a **`2px` outer focus ring** for all interactive components.
@@ -62,3 +108,5 @@ To add secondary information to an icon without cluttering the UI, we use a CSS-
 -   **Problem:** A component or data field has a special status that needs to be communicated visually at a glance.
 -   **Solution:** A wrapper `div` with `position: relative` is placed around the base icon. A second, smaller "badge" icon is then absolutely positioned at the top-right corner of the wrapper.
 -   **Implementation:** The badge icon is given a smaller `font-size` and a matching `opsz` (optical size) for clarity, and a `text-shadow` can be used to lift it visually from the base icon. This creates a clean, scalable, and high-craft way to badge icons with status indicators.
+```
+--- END OF FILE CSS-PRINCIPLES.md ---

@@ -73,30 +73,33 @@
 
 /* 
   ========================================================================
-  === DEFINITIVE IMPLEMENTATION OF THE NEW GLOBAL ICON INTERACTION SPEC ===
+  === GLOBAL ICON INTERACTION SYSTEM (REST -> HOVER -> SELECTED)       ===
   ========================================================================
+  This system uses semantic aria attributes to drive visual state changes
+  for any toggleable icon in the application, ensuring a consistent UX.
 */
 
 /* 
-  STATE 1: HOVER (on an unselected icon)
-  Spec: weight 400, grad 100, fill 0
+  INTERACTION STATE 1: HOVER (on an unselected icon)
+  Specification: weight 400, grad 100, fill 0.
+  Selector targets an element with a toggle attribute (`aria-pressed` or `aria-checked`)
+  that is NOT currently active (`:not([aria-pressed='true'])`) during a hover event.
 */
 [aria-pressed]:not([aria-pressed='true']):hover .material-symbols-rounded,
 [aria-checked]:not([aria-checked='true']):hover .material-symbols-rounded {
   font-weight: 400;
-  /* Set GRAD to 100 on hover, keeping FILL at 0 */
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 200, 'opsz' 20;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 100, 'opsz' 20;
 }
 
 
 /* 
-  STATE 2: SELECTED (active icon)
-  Spec: weight 400, grad 200, fill 0
+  INTERACTION STATE 2: SELECTED (active icon)
+  Specification: weight 400, grad 200, fill 0.
+  Selector targets an icon inside any element that is marked as active.
 */
 [aria-checked='true'] .material-symbols-rounded,
 [aria-pressed='true'] .material-symbols-rounded {
   font-weight: 400;
-  /* Set GRAD to 200 when selected, keeping FILL at 0 */
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 200, 'opsz' 20;
 }
 

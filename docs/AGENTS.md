@@ -58,3 +58,8 @@ These are non-negotiable rules learned from the project's history. Violating the
 9.  **"Ghost Errors" are Real.** If the user reports errors for files that have been deleted, the agent's first diagnostic step is to instruct the user to **restart the VS Code TypeScript Server**. This resolves stale cache issues.
 
 10. **Editor Systems Must Be View-Aware.** Any hook or system that provides editor-specific functionality (e.g., `useEditorHotkeys`, `useEditorInteractions`) **must** be conditionally disabled if the application's view mode is not `'editor'`. Failure to do so will cause editor logic to leak into read-only views like "Preview," breaking the user experience. Always check the `appViewModeAtom` as a guard clause.
+
+11. **`font-variation-settings` is Atomic and Requires Complete Definitions.** The `font-variation-settings` CSS property is a single, atomic unit. Setting it will **completely overwrite** any previous value; it does not merge. A common, hard-to-debug error is creating a high-specificity rule that only defines *some* of the variable font axes (e.g., only `opsz`). This will destructively reset all other axes (`FILL`, `wght`, `GRAD`) to their defaults, breaking animations and state-driven styles.
+    -   **INCORRECT (Destructive):** `font-variation-settings: 'opsz' 24;`
+    -   **CORRECT (Safe):** `font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;`
+    -   **The Rule:** Any rule that modifies this property should redefine all four primary axes to ensure a predictable and stable result.

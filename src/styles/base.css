@@ -29,15 +29,21 @@ body {
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
   font-size: 20px;
-  /* This sets the REST state: FILL 0, GRAD 0, WEIGHT 400 */
+  /* 
+    ARCHITECTURE: This is the global baseline for all icons.
+    It establishes the default "REST" state: unfilled, normal weight, and no grade.
+    Every axis ('FILL', 'wght', 'GRAD', 'opsz') MUST be defined here to create a
+    stable foundation for overrides.
+  */
   font-variation-settings:
   'FILL' 0,
   'wght' 400,
   'GRAD' 0,
   'opsz' 20;
-  /* 
-    DEFINITIVE FIX: Add a fast, global transition for font-variation-settings.
-    This makes all state changes (like hover and active) animate smoothly.
+  /*
+    ARCHITECTURE: This transition acts as a global animation hook.
+    Any rule that changes 'font-variation-settings' (e.g., on hover)
+    will now animate smoothly by default.
   */
-  transition: font-variation-settings 0.25s ease-out;
+  transition: font-variation-settings 0.15s ease-in-out;
 }
