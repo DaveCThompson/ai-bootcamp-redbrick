@@ -4,17 +4,16 @@
   font-family: var(--font-family-sans);
   border-radius: 0 var(--radius-2xl) var(--radius-2xl) 0;
   
-  /* CORRECTED: Padding is now defined here, fixing the regression. */
-  padding: var(--spacing-6) var(--spacing-8);
-  
   transition: 
     padding 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.2s ease-out,
     border-width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
     min-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 :global(.contentWrapper[data-preview-visible='false']) > .previewContainer {
   padding: 0;
+  opacity: 0;
   border-width: 0;
   pointer-events: none;
   min-height: 0;
@@ -29,23 +28,23 @@
   flex-direction: column;
   flex-grow: 1;
 
-  /* SOLUTION: Use opacity and visibility for a guaranteed flicker-free animation. */
-  transition: opacity 0.2s ease-out, visibility 0s;
+  /*
+    SOLUTION: Animate the opacity of the inner card.
+    - On close: Fades out quickly (0.1s) with no delay.
+    - On open: Fades in (0.2s) *after* a delay (0.15s), allowing the container to expand first.
+  */
+  transition: opacity 0.2s ease-out;
 }
 
-/* On Open: Make visible instantly, then fade in after a delay */
 :global(.contentWrapper[data-preview-visible='true']) .previewCard {
   opacity: 1;
-  visibility: visible;
-  transition-delay: 0.15s, 0s;
+  transition-delay: 0.15s;
 }
 
-/* On Close: Fade out quickly, then set to invisible to prevent rendering */
 :global(.contentWrapper[data-preview-visible='false']) .previewCard {
   opacity: 0;
-  visibility: hidden;
-  /* Delay the visibility change until after the opacity fade is complete */
-  transition-delay: 0s, 0.2s;
+  transition-duration: 0.1s; /* Make it disappear fast */
+  transition-delay: 0s;     /* With no delay */
 }
 
 
@@ -56,6 +55,7 @@
   padding: 0;
   margin-bottom: var(--spacing-6);
   flex-shrink: 0;
+  transition: margin-bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .panelTitle {
@@ -66,6 +66,14 @@
   flex-grow: 1;
   padding: 0;
   min-height: 200px;
+  transition: min-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:global(.contentWrapper[data-preview-visible='false']) .previewHeader {
+  margin-bottom: 0;
+}
+:global(.contentWrapper[data-preview-visible='false']) .previewContent {
+  min-height: 0;
 }
 
 .markdownOutput {

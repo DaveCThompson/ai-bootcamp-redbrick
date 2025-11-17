@@ -309,7 +309,7 @@
   background-color: var(--surface-bg-primary);
   color: var(--surface-fg-primary);
   outline: none;
-  resize: vertical;
+  resize: none;
   min-height: 40px;
   line-height: 1.5;
   transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
@@ -365,4 +365,4 @@
 .promptElementContent > h5, .inlineInput.is-h5 { font-size: .83em; font-weight: 600; }
 .promptElementContent > h6, .inlineInput.is-h6 { font-size: .67em; font-weight: 600; }
 .promptElementContent > p, .inlineInput.is-p { font-size: 1em; font-weight: 400; line-height: 1.5; }
-.inlineInput.is-p { resize: vertical; min-height: 2em; }
+.inlineInput.is-p { resize: none; min-height: 2em; }
