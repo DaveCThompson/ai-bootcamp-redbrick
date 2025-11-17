@@ -1,24 +1,24 @@
 /* src/features/EditorCanvas/PromptPreviewPanel.module.css */
 .previewContainer {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 0; /* Distribute space equally */
-  min-width: 0; /* Allow shrinking */
-  width: 600px; /* Define a base width */
-  max-width: 800px;
   background-color: var(--surface-bg-secondary);
   font-family: var(--font-family-sans);
-  border: 1px solid var(--surface-border-secondary);
   border-radius: 0 var(--radius-2xl) var(--radius-2xl) 0;
-  padding: var(--spacing-6) var(--spacing-8);
+  
   transition: 
-    flex-basis 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    min-width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
     padding 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    margin-left 0.4s cubic-bezier(0.16, 1, 0.3, 1),
     opacity 0.2s ease-out,
-    border-width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
+    border-width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    /* ADDED: Animate min-height for smooth collapse */
+    min-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:global(.contentWrapper[data-preview-visible='false']) > .previewContainer {
+  padding: 0;
+  opacity: 0;
+  border-width: 0;
+  pointer-events: none;
+  /* ADDED: Allow the container itself to shrink vertically */
+  min-height: 0;
 }
 
 .previewCard {
@@ -38,6 +38,7 @@
   padding: 0;
   margin-bottom: var(--spacing-6);
   flex-shrink: 0;
+  transition: margin-bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .panelTitle {
@@ -48,7 +49,18 @@
   flex-grow: 1;
   padding: 0;
   min-height: 200px;
+  /* ADDED: Add transition for smooth collapse */
+  transition: min-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+/* ADDED: This new rule ensures the content area collapses fully when hidden, preventing overflow */
+:global(.contentWrapper[data-preview-visible='false']) .previewHeader {
+  margin-bottom: 0;
+}
+:global(.contentWrapper[data-preview-visible='false']) .previewContent {
+  min-height: 0;
+}
+
 
 .markdownOutput {
   white-space: pre-wrap;

@@ -21,7 +21,7 @@
   overflow: auto;
   height: 100%;
   padding: var(--spacing-8);
-  gap: var(--spacing-6);
+  gap: var(--spacing-6); /* SPEC: 24px vertical gap */
   background: linear-gradient(0deg, var(--primitives-theme-200), var(--primitives-theme-25));
   background-size: 200% 200%;
   transition: background-position 0.5s ease-out;
@@ -37,48 +37,60 @@
 }
 
 .contentWrapper {
-  display: flex;
-  flex-direction: row;
-  width: auto; /* CRITICAL: Always let width be determined by children */
+  display: grid;
+  grid-template-columns: minmax(600px, 800px) minmax(0, 0fr);
+  width: auto;
   max-width: 100%;
   height: auto;
+  
   border-radius: var(--radius-4xl);
+  padding: var(--spacing-4);
+  gap: var(--spacing-4);
+
   background-color: var(--surface-bg-primary);
   border: 1px solid var(--surface-border-secondary);
   box-shadow: var(--surface-shadow-lg);
   position: relative;
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  padding: var(--spacing-4);
-  gap: var(--spacing-4);
-  margin-bottom: var(--spacing-8);
+  
+  /* CORRECTED: Add `gap` to the transition property for smooth animation */
+  transition: 
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    grid-template-columns 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    gap 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* REMOVED the conflicting width: 100% from this rule */
 .contentWrapper[data-preview-visible='true'] {
-  max-width: 1800px;
+  grid-template-columns: minmax(600px, 1fr) minmax(600px, 1fr);
 }
 
+/* ADDED: This rule ensures the gap collapses when the panel is hidden */
+.contentWrapper[data-preview-visible='false'] {
+  gap: 0;
+}
 
 .editorViewContainer[data-copy-animation-state='running'] .contentWrapper {
   transform: scale(1.01);
 }
 
-.canvasContainer {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 0;
-  min-width: 0;
-  width: 600px;
-  max-width: 800px;
-  background-color: var(--surface-bg-primary);
+.canvasContainer,
+:global(.previewContainer) {
   border: 1px solid var(--surface-border-secondary);
-  border-radius: var(--radius-2xl);
-  transition: border-radius 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   padding: var(--spacing-6) var(--spacing-8);
   position: relative;
-  overflow: hidden;
+  overflow: hidden; 
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
+.canvasContainer {
+  background-color: var(--surface-bg-primary); 
+  transition: border-radius 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contentWrapper[data-preview-visible='false'] > .canvasContainer {
+  border-radius: var(--radius-2xl);
+}
 .contentWrapper[data-preview-visible='true'] > .canvasContainer {
   border-radius: var(--radius-2xl) 0 0 var(--radius-2xl);
 }
@@ -100,6 +112,9 @@
   user-select: none;
   position: relative;
   min-height: 200px;
+  flex-grow: 1; 
+  display: flex;
+  flex-direction: column;
 }
 
 .promptCard.isBackgroundTarget {
@@ -132,16 +147,6 @@
   color: var(--surface-fg-primary);
   flex-grow: 1;
   user-select: none; 
-}
-
-.contentWrapper[data-preview-visible='false'] > .previewContainer {
-  flex-basis: 0;
-  min-width: 0;
-  padding: 0;
-  opacity: 0;
-  border-width: 0;
-  margin-left: calc(-1 * var(--spacing-4)); 
-  pointer-events: none; /* Add this for extra robustness */
 }
 
 /* --- REST OF THE STYLES (UNCHANGED) --- */
