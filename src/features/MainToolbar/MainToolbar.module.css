@@ -85,7 +85,13 @@
   font-weight: 500;
   color: inherit;
   line-height: 1;
-  transition: color 0.2s;
+  /* UPDATED: Added font-weight to transition for smooth changes */
+  transition: color 0.2s, font-weight 0.2s;
+}
+
+/* ADDED: Active label font-weight now matches the app header tabs */
+.mainToolbar.normal .toolbarButton.active .toolbarLabel {
+  font-weight: 600;
 }
 
 .mainToolbar.normal .toolbarButton.active {
