@@ -44,11 +44,11 @@
 .toolbarButton .material-symbols-rounded {
   font-size: 24px;
   color: inherit; 
-  font-variation-settings: 'FILL' 0;
-  /* ADDED: -webkit prefix for wider compatibility. */
-  -webkit-background-clip: text;
-  background-clip: text;
-  transition: color 0.2s, font-variation-settings 0.2s ease-in-out, transform 0.2s ease;
+  /* Use the correct properties for variable font control */
+  font-weight: 400; /* Base weight */
+  /* We only need to set the axes that differ from the base reset. */
+  font-variation-settings: 'opsz' 24;
+  transition: font-variation-settings 0.2s ease-in-out, font-weight 0.2s ease-in-out;
 }
 
 .toolbarButton:hover:not(.active):not(:disabled) {
@@ -63,17 +63,15 @@
   border-width: 2px;
 }
 
+/* With the architectural fix, this more specific rule now wins the cascade as intended. */
 .toolbarButton.active .material-symbols-rounded {
-  font-variation-settings: 'FILL' 1;
-  color: transparent;
-  /* UPDATED: Using the newly defined semantic accent variables */
-  background-image: linear-gradient(160deg, var(--accent-solid-primary), var(--accent-solid-secondary));
+  font-weight: 600; /* Control weight with the correct property */
+  font-variation-settings: 'FILL' 1, 'GRAD' 0, 'opsz' 24;
 }
 
 .toolbarButton.active:hover .material-symbols-rounded {
-  /* UPDATED: Using the newly defined semantic accent variables */
-  background-image: linear-gradient(160deg, var(--accent-solid-primary-hover), var(--accent-solid-secondary-hover));
-  transform: scale(1.1);
+  /* The hover effect only needs to modify the 'GRAD' axis. */
+  font-variation-settings: 'FILL' 1, 'GRAD' 200, 'opsz' 24;
 }
 
 .mainToolbar.compact .toolbarButton {
@@ -99,15 +97,11 @@
 
 .toolbarLabel {
   font-size: 14px; 
-  /* UPDATED: Font weight is now constant */
   font-weight: 500;
   color: inherit;
   line-height: 1;
-  /* UPDATED: Removed font-weight from transition */
   transition: color 0.2s;
 }
-
-/* REMOVED: The rule to bold the active label has been removed. */
 
 .mainToolbar.normal .toolbarButton.active {
   background-color: var(--control-bg-selected);

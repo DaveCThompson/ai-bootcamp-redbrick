@@ -15,10 +15,14 @@ const findHoveredContainer = (overId: string, allComponents: Record<string, Canv
   if (overId === CANVAS_BACKGROUND_ID) return CANVAS_BACKGROUND_ID;
   const overComponent = allComponents[overId] as ContainerComponent;
   if (!overComponent) return null;
-  // A component is a valid container if it's a layout component AND NOT a template container.
+  
+  // CRITICAL: A component is a valid drop container ONLY if it's a layout component
+  // AND it is NOT a special template container. This prevents users from dropping
+  // new items into a locked, form-like template.
   if (overComponent.componentType === 'layout' && !overComponent.properties.isTemplateContainer) {
     return overId;
   }
+  
   // If the hovered component is not a valid container, check its parent.
   if (overComponent.parentId) {
       const parent = allComponents[overComponent.parentId] as ContainerComponent;
@@ -132,7 +136,6 @@ export const useCanvasDnd = () => {
     const oldParentId = oldComponent.parentId;
     if (!oldParentId) return;
     const oldParent = allComponents[oldParentId];
-    // FIX: Only layout components can be parents.
     if (!oldParent || oldParent.componentType !== 'layout') return;
 
     const oldIndex = oldParent.children.indexOf(activeId);
@@ -193,23 +196,20 @@ export const useCanvasDnd = () => {
     const overComponent = allComponents[overId] as ContainerComponent;
     if (!overComponent) return null;
     
-    // Only non-template layout components with no children are valid empty drop targets.
     if (overComponent.componentType === 'layout' && !overComponent.properties.isTemplateContainer && overComponent.children.length === 0) {
       return { parentId: overId, index: 0, viewportRect: null, isGrid: false };
     }
 
-    const parentId = overComponent.componentType === 'layout' && !overComponent.properties.isTemplateContainer ? overId : overComponent.parentId;
+    const parentId = (overComponent.componentType === 'layout' && !overComponent.properties.isTemplateContainer) ? overId : overComponent.parentId;
     if (!parentId) return null;
     const parent = allComponents[parentId];
-    // FIX: Only layout components can be parents.
     if (!parent || parent.componentType !== 'layout') return null;
 
-    const isGrid = false; // Grid layout is removed, always false.
+    const isGrid = false;
     const children = parent.children;
     const overRect = over.rect;
     
     if (overId === parentId) {
-        // Smart container drop logic
         const dropPointY = draggingRect.top + draggingRect.height / 2;
         const containerMidPointY = overRect.top + overRect.height / 2;
         const isTopHalf = dropPointY < containerMidPointY;

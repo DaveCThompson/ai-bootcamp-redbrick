@@ -1,0 +1,21 @@
+/* src/styles/layout.css */
+/* Contains global styles for layout-related component patterns, like the resizer. */
+/* This file is imported into the 'components' cascade layer. */
+
+.resizer {
+  width: 1px;
+  cursor: col-resize;
+  background-color: var(--surface-border-secondary);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  transition: background-color 0.2s, width 0.2s ease, right 0.2s ease;
+}
+
+.resizer:hover {
+  background-color: var(--control-border-primary);
+  width: 4px;
+  right: -2px;
+}

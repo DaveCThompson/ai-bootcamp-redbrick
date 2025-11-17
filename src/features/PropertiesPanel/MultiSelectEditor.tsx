@@ -3,7 +3,7 @@ import { registerPropertyEditor, MultiSelectEditorProps } from './propertyEditor
 import styles from './PropertiesPanel.module.css';
 
 const MultiSelectEditor = ({ count }: MultiSelectEditorProps) => (
-  <div className={styles.propertiesPanelPlaceholder}>
+  <div className={`${styles.propertiesPanelPlaceholder} ${styles.isFullHeight}`}>
     <span className="material-symbols-rounded">select_all</span>
     <p>{count} items selected</p>
   </div>

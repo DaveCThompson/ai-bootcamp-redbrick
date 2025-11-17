@@ -9,6 +9,14 @@ import { useEditorInteractions } from '../useEditorInteractions';
 import { CanvasSelectionToolbar } from '../CanvasSelectionToolbar';
 import styles from '../EditorCanvas.module.css';
 
+/**
+ * ARCHITECTURE: This is a specialized renderer for "Template Containers".
+ * Its purpose is to render a locked, form-like group of components that
+ * behave as a single atomic unit on the canvas. It is not a generic container;
+ * it cannot accept new children via drag-and-drop. Content editing is handled
+ * internally by the `TemplateFormItem` component.
+ */
+
 // Internal component to manage the state of a single form item
 const TemplateFormItem = ({ component }: { component: WidgetComponent }) => {
   const commitAction = useSetAtom(commitActionAtom);
@@ -20,7 +28,7 @@ const TemplateFormItem = ({ component }: { component: WidgetComponent }) => {
   }, [component.properties.content]);
 
   const handleBlur = () => {
-    // Only commit if the value has actually changed
+    // Only commit if the value has actually changed to avoid unnecessary history entries.
     if (value !== (component.properties.content || '')) {
       commitAction({
         action: {
@@ -63,7 +71,6 @@ export const TemplateContainerRenderer = ({ component }: RendererProps<Container
   };
   
   const wrapperClasses = `${styles.sortableItem} ${isDragging ? styles.isDragging : ''}`;
-  // The selectable wrapper provides the blue outline for the whole block
   const selectionClasses = `${styles.selectableWrapper} ${isSelected ? styles.selected : ''}`;
 
   return (

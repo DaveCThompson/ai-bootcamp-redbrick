@@ -45,10 +45,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
   text-align: center;
   color: var(--surface-fg-tertiary);
   padding: var(--spacing-4);
+  min-height: 150px; /* Ensure it has some height but doesn't fill the container */
+}
+
+/* Modifier class for placeholders that should take up the full panel height */
+.propertiesPanelPlaceholder.isFullHeight {
+  height: 100%;
 }
 
 .placeholderIcon {

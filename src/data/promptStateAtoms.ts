@@ -88,7 +88,6 @@ const deleteComponentAndChildren = (
   const componentToDelete = components[componentId];
   if (!componentToDelete) return;
 
-  // FIX: Only layout components have children to recurse through.
   if (componentToDelete.componentType === 'layout' && componentToDelete.children) {
     [...componentToDelete.children].forEach(childId => {
       deleteComponentAndChildren(components, childId);
@@ -96,7 +95,6 @@ const deleteComponentAndChildren = (
   }
 
   const parent = components[componentToDelete.parentId];
-  // FIX: Only layout components can be parents.
   if (parent && parent.componentType === 'layout') {
     parent.children = parent.children.filter(id => id !== componentId);
   }
@@ -126,7 +124,6 @@ export const commitActionAtom = atom(
             
             presentState.components[newComponent.id] = newComponent;
             const parent = presentState.components[parentId];
-            // FIX: Only layout components can have children added to them.
             if (parent && parent.componentType === 'layout') {
               const childrenCountBefore = parent.children.length;
               parent.children.splice(index, 0, newComponent.id);
@@ -137,31 +134,33 @@ export const commitActionAtom = atom(
             break;
           }
           case 'TEMPLATE_ADD': {
+            // ARCHITECTURE: This action instantiates a complex, locked component group from a blueprint.
+            // It creates a main `ContainerComponent` with `isTemplateContainer: true` and then populates it
+            // with locked child `WidgetComponent`s based on the structure in `templatesMock.ts`.
+            // This ensures templates are atomic, consistent, and easy to manage.
             const { templateId, parentId, index } = action.action.payload;
             const template = templates[templateId];
             if (!template) break;
 
-            // Create the main container for the template form
             const templateContainer = createLayoutComponent(parentId, template.name);
             templateContainer.properties.isTemplateContainer = true;
             templateContainer.isLocked = true;
             presentState.components[templateContainer.id] = templateContainer;
 
-            // Function to create components from the template blueprint
             const createFromTemplate = (item: TemplateItem, currentParentId: string): string[] => {
               let newComponent: CanvasComponent;
               if (item.type === 'group') {
-                const headerItem = item.children.find(c => c.type === 'Section Header') as HeaderTemplateItem | undefined;
-                const inputItem = item.children.find(c => c.type === 'Text Input') as TextInputTemplateItem | undefined;
+                const headerItem = item.children.find((c): c is HeaderTemplateItem => c.type === 'Section Header');
+                const inputItem = item.children.find((c): c is TextInputTemplateItem => c.type === 'Text Input');
 
                 if (headerItem && inputItem) {
                   newComponent = createWidgetComponent({
                     parentId: currentParentId,
-                    name: headerItem.content, // Use header content as the name/label
+                    name: headerItem.content,
                     controlType: 'text-input',
                     controlTypeProps: {
                       ...inputItem.props,
-                      label: headerItem.content, // Ensure label is set from header
+                      label: headerItem.content,
                     },
                   });
                   newComponent.isLocked = item.isLocked;
@@ -187,7 +186,6 @@ export const commitActionAtom = atom(
             templateContainer.children = childrenIds;
 
             const parent = presentState.components[parentId];
-            // FIX: Only layout components can have children added to them.
             if (parent && parent.componentType === 'layout') {
               parent.children.splice(index, 0, templateContainer.id);
             }
@@ -208,7 +206,6 @@ export const commitActionAtom = atom(
           case 'COMPONENT_REORDER': {
             const { parentId, oldIndex, newIndex } = action.action.payload;
             const parent = presentState.components[parentId];
-            // FIX: Only layout components can have their children reordered.
             if (parent && parent.componentType === 'layout') {
               const [moved] = parent.children.splice(oldIndex, 1);
               parent.children.splice(newIndex, 0, moved);
@@ -218,12 +215,10 @@ export const commitActionAtom = atom(
           case 'COMPONENT_MOVE': {
             const { componentId, oldParentId, newParentId, newIndex } = action.action.payload;
             const oldParent = presentState.components[oldParentId];
-            // FIX: Only layout components can be parents.
             if (oldParent && oldParent.componentType === 'layout') {
               oldParent.children = oldParent.children.filter(id => id !== componentId);
             }
             const newParent = presentState.components[newParentId];
-            // FIX: Only layout components can be parents.
             if (newParent && newParent.componentType === 'layout') {
               newParent.children.splice(newIndex, 0, componentId);
             }
@@ -236,7 +231,6 @@ export const commitActionAtom = atom(
           case 'COMPONENTS_WRAP': {
             const { componentIds, parentId } = action.action.payload;
             const parent = presentState.components[parentId];
-            // FIX: Only layout components can be parents.
             if (!parent || parent.componentType !== 'layout') break;
             
             const newContainer = createLayoutComponent(parentId);
@@ -259,7 +253,6 @@ export const commitActionAtom = atom(
             if (!container || container.componentType !== 'layout') break;
             
             const parent = presentState.components[container.parentId];
-            // FIX: Only layout components can be parents.
             if (!parent || parent.componentType !== 'layout') break;
 
             const containerIndex = parent.children.indexOf(componentId);

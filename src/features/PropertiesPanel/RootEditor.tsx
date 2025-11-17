@@ -8,7 +8,7 @@ const RootEditor = ({ component }: PropertyEditorProps) => {
   }
 
   return (
-    <div className={styles.propertiesPanelPlaceholder}>
+    <div className={`${styles.propertiesPanelPlaceholder} ${styles.isFullHeight}`}>
       <span className={`material-symbols-rounded ${styles.placeholderIcon}`}>apps</span>
       <p>Root Container</p>
       <p style={{ fontSize: '0.8em', color: 'var(--surface-fg-tertiary)'}}>

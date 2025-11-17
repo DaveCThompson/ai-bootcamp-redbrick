@@ -21,6 +21,7 @@ import './LayoutEditor';
 import './WidgetEditor';
 import './RootEditor';
 import './RoleEditor';
+import './TemplateContainerEditor';
 
 export const PropertiesPanel = () => {
   const selectedIds = useAtomValue(selectedCanvasComponentIdsAtom);
@@ -54,7 +55,14 @@ export const PropertiesPanel = () => {
         return <Editor component={component} />;
     }
 
-    const editorType = component.componentType === 'dynamic' ? component.dynamicType : component.componentType;
+    // ARCHITECTURE: This logic determines which property editor to render.
+    // It's a key routing point. For special cases like template containers,
+    // we override the default `componentType` to route to a specialized editor.
+    let editorType: string = component.componentType === 'dynamic' ? component.dynamicType : component.componentType;
+    if (component.componentType === 'layout' && component.properties.isTemplateContainer) {
+      editorType = 'template-container';
+    }
+    
     const Editor = getPropertyEditor(editorType);
     if (!Editor) {
         const FallbackEditor = getPropertyEditor('widget');
