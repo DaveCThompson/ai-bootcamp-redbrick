@@ -1,5 +1,5 @@
 // src/features/MainToolbar/MainToolbar.tsx
-import React from 'react'; // CORRECTED: This import is essential for JSX to work.
+import React from 'react';
 import { useAtom, useAtomValue } from 'jotai';
 import { isToolbarCompactAtom, activeToolbarTabAtom, isComponentBrowserVisibleAtom, ToolbarTabId } from '../../data/atoms';
 import { Tooltip } from '../../components/Tooltip';
@@ -35,13 +35,18 @@ export const MainToolbar = () => {
   const renderButton = (item: { id: ToolbarTabId; label: string; icon: string }) => {
     const isActive = item.id === activeTabId;
     const isCurrentlyActiveAndOpen = isActive && isPanelVisible;
-    const buttonClasses = `${styles.toolbarButton} ${isCurrentlyActiveAndOpen ? styles.active : ''}`;
+    
+    // DEFINITIVE FIX: Remove the manual `.active` class logic.
+    // The button's visual state is now driven entirely by the `aria-pressed` attribute.
+    
     return (
       <Tooltip content={item.label} side="right" key={item.id}>
         <button 
-          className={buttonClasses} 
+          className={styles.toolbarButton} 
           aria-label={item.label}
           onClick={() => handleTabClick(item.id)}
+          // Add the semantic `aria-pressed` attribute. This is now the source of truth for the 'active' state.
+          aria-pressed={isCurrentlyActiveAndOpen}
         >
           <span className="material-symbols-rounded">{item.icon}</span>
           {!isCompact && (

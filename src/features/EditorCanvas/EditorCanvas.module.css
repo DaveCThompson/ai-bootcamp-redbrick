@@ -37,10 +37,10 @@
 }
 
 .contentWrapper {
-  display: inline-flex; /* CRITICAL CHANGE: This enables shrink-to-fit ("hugging") */
+  display: flex;
   flex-direction: row;
-  width: auto;
-  max-width: 1800px;
+  width: auto; /* CRITICAL: Always let width be determined by children */
+  max-width: 100%;
   height: auto;
   border-radius: var(--radius-4xl);
   background-color: var(--surface-bg-primary);
@@ -53,8 +53,9 @@
   margin-bottom: var(--spacing-8);
 }
 
+/* REMOVED the conflicting width: 100% from this rule */
 .contentWrapper[data-preview-visible='true'] {
-  width: 100%; /* When preview is visible, expand to fill available space */
+  max-width: 1800px;
 }
 
 
@@ -66,13 +67,16 @@
   display: flex;
   flex-direction: column;
   flex: 1 1 0;
-  min-width: 600px;
+  min-width: 0;
+  width: 600px;
+  max-width: 800px;
   background-color: var(--surface-bg-primary);
   border: 1px solid var(--surface-border-secondary);
   border-radius: var(--radius-2xl);
   transition: border-radius 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   padding: var(--spacing-6) var(--spacing-8);
   position: relative;
+  overflow: hidden;
 }
 
 .contentWrapper[data-preview-visible='true'] > .canvasContainer {
@@ -131,14 +135,13 @@
 }
 
 .contentWrapper[data-preview-visible='false'] > .previewContainer {
-  flex-basis: 0 !important;
-  min-width: 0 !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-  opacity: 0 !important;
-  border-width: 0 !important;
-  margin-left: -16px;
-  overflow: hidden;
+  flex-basis: 0;
+  min-width: 0;
+  padding: 0;
+  opacity: 0;
+  border-width: 0;
+  margin-left: calc(-1 * var(--spacing-4)); 
+  pointer-events: none; /* Add this for extra robustness */
 }
 
 /* --- REST OF THE STYLES (UNCHANGED) --- */

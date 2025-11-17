@@ -2,8 +2,10 @@
 .previewContainer {
   display: flex;
   flex-direction: column;
-  flex: 1 1 0;
-  min-width: 500px;
+  flex: 1 1 0; /* Distribute space equally */
+  min-width: 0; /* Allow shrinking */
+  width: 600px; /* Define a base width */
+  max-width: 800px;
   background-color: var(--surface-bg-secondary);
   font-family: var(--font-family-sans);
   border: 1px solid var(--surface-border-secondary);
@@ -13,9 +15,10 @@
     flex-basis 0.4s cubic-bezier(0.16, 1, 0.3, 1),
     min-width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
     padding 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 0.3s ease,
-    border-width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    margin-left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    margin-left 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.2s ease-out,
+    border-width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
 }
 
 .previewCard {
