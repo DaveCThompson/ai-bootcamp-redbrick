@@ -37,25 +37,24 @@
 }
 
 .contentWrapper {
-  display: flex;
+  display: inline-flex; /* CRITICAL CHANGE: This enables shrink-to-fit ("hugging") */
   flex-direction: row;
-  /* REMOVED align-items: stretch to allow natural height growth */
   width: auto;
-  max-width: 100%;
+  max-width: 1800px;
   height: auto;
   border-radius: var(--radius-4xl);
   background-color: var(--surface-bg-primary);
   border: 1px solid var(--surface-border-secondary);
   box-shadow: var(--surface-shadow-lg);
   position: relative;
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), justify-content 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   padding: var(--spacing-4);
   gap: var(--spacing-4);
   margin-bottom: var(--spacing-8);
 }
 
-.contentWrapper[data-preview-visible='false'] {
-  justify-content: center; /* This makes the wrapper hug the single visible child */
+.contentWrapper[data-preview-visible='true'] {
+  width: 100%; /* When preview is visible, expand to fill available space */
 }
 
 
@@ -66,8 +65,8 @@
 .canvasContainer {
   display: flex;
   flex-direction: column;
-  flex-shrink: 0; /* Prevent the container from shrinking smaller than its content */
-  width: 600px; /* Give it a base width */
+  flex: 1 1 0;
+  min-width: 600px;
   background-color: var(--surface-bg-primary);
   border: 1px solid var(--surface-border-secondary);
   border-radius: var(--radius-2xl);
@@ -134,12 +133,11 @@
 .contentWrapper[data-preview-visible='false'] > .previewContainer {
   flex-basis: 0 !important;
   min-width: 0 !important;
-  width: 0 !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
   opacity: 0 !important;
   border-width: 0 !important;
-  margin-left: -16px; /* Account for the gap */
+  margin-left: -16px;
   overflow: hidden;
 }
 

@@ -2,9 +2,8 @@
 .previewContainer {
   display: flex;
   flex-direction: column;
-  flex-basis: 500px; /* Start with a base width */
-  flex-shrink: 0;
-  width: 500px;
+  flex: 1 1 0;
+  min-width: 500px;
   background-color: var(--surface-bg-secondary);
   font-family: var(--font-family-sans);
   border: 1px solid var(--surface-border-secondary);
@@ -12,11 +11,11 @@
   padding: var(--spacing-6) var(--spacing-8);
   transition: 
     flex-basis 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
     min-width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
     padding 0.4s cubic-bezier(0.16, 1, 0.3, 1),
     opacity 0.3s ease,
-    border-width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border-width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    margin-left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .previewCard {
