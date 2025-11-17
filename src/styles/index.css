@@ -1,6 +1,7 @@
 /*
   This file is the single source of truth for the CSS cascade layer order.
   The layer order MUST be defined before any other statements.
+  Fonts are imported via <link> in index.html.
 */
 @layer tokens, base, themes, components, utilities;
 
@@ -26,7 +27,6 @@
 @import url('./menu.css') layer(components);
 @import url('./tabs.css') layer(components);
 @import url('./toggles.css') layer(components);
-/* ADDED: A new import for global layout component styles */
 @import url('./layout.css') layer(components);
 
 /* Layer 5: Utility Classes */

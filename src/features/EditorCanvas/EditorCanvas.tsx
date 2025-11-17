@@ -1,6 +1,6 @@
 // src/features/EditorCanvas/EditorCanvas.tsx
 import React, { useRef, useEffect } from 'react';
-import { useAtomValue, useSetAtom, useAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useDroppable } from '@dnd-kit/core';
 import {
   canvasInteractionAtom,
@@ -11,17 +11,20 @@ import {
   contextMenuTargetIdAtom,
   isContextMenuOpenAtom,
   contextMenuInstanceKeyAtom,
-  editorLayoutModeAtom,
-  EditorLayoutMode,
+  isPreviewPaneVisibleAtom,
+  copyAnimationStateAtom,
 } from '../../data/atoms';
 import { rootComponentIdAtom } from '../../data/promptStateAtoms';
 import { useAutoScroller } from '../../data/useAutoScroller';
+import { promptMarkdownAtom } from '../../data/markdownSelectors';
+import { addToastAtom } from '../../data/toastAtoms';
 
 import { CanvasNode } from './CanvasNode';
 import { FloatingMultiSelectToolbar } from './CanvasUI';
 import { CanvasContextMenu } from './CanvasContextMenu';
-import { ScreenToolbar } from './ScreenToolbar';
 import { PromptPreviewPanel } from './PromptPreviewPanel';
+import { Button } from '../../components/Button';
+import { Switch } from '../../components/Switch';
 
 import styles from './EditorCanvas.module.css';
 
@@ -37,17 +40,10 @@ const CanvasView = () => {
   const setContextMenuTargetId = useSetAtom(contextMenuTargetIdAtom);
   const isMenuOpen = useAtomValue(isContextMenuOpenAtom);
   const setContextMenuInstanceKey = useSetAtom(contextMenuInstanceKeyAtom);
+  const [isPreviewVisible, setIsPreviewVisible] = useAtom(isPreviewPaneVisibleAtom);
 
-  const canvasContainerRef = useRef<HTMLDivElement>(null);
   const { setNodeRef: setBackgroundNodeRef } = useDroppable({ id: CANVAS_BACKGROUND_ID });
-
-  const setMergedRefs = (node: HTMLDivElement | null) => {
-    canvasContainerRef.current = node;
-    setBackgroundNodeRef(node);
-  };
   
-  useAutoScroller(canvasContainerRef);
-
   const handleCanvasClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (interactionState.mode !== 'selecting' || interactionState.ids[0] !== rootId || interactionState.ids.length > 1) {
@@ -88,68 +84,64 @@ const CanvasView = () => {
   ].filter(Boolean).join(' ');
 
   return (
-    <CanvasContextMenu>
-      <div 
-        ref={setMergedRefs} 
-        className={styles.canvasContainer} 
-        onClick={handleBackgroundClick}
-        onContextMenu={handleCanvasContextMenu}
-      >
-        <div className={promptCardClasses} onClick={handleCanvasClick}>
-          <div className={styles.promptCardHeader}>
-            {/* The main builder title is static to provide a consistent, symmetric UI with the preview panel. */}
-            <h2 className={styles.panelTitle}>Prompt Builder</h2>
-          </div>
-          <div className={styles.canvasDroppableArea}>
-            {rootId && <CanvasNode componentId={rootId} />}
-          </div>
+    <div 
+      className={styles.canvasContainer} 
+      onContextMenu={handleCanvasContextMenu}
+    >
+      <div className={styles.promptCardHeader}>
+        <h2 className={styles.panelTitle}>Prompt Builder</h2>
+        <div className={styles.previewToggleWrapper}>
+          <span className={styles.previewToggleLabel}>Preview</span>
+          <Switch 
+            checked={isPreviewVisible}
+            onCheckedChange={setIsPreviewVisible}
+            aria-label="Toggle Preview Pane"
+          />
         </div>
-        <FloatingMultiSelectToolbar />
       </div>
-    </CanvasContextMenu>
+      <CanvasContextMenu>
+        <div ref={setBackgroundNodeRef} className={promptCardClasses} onClick={handleCanvasClick} onDoubleClick={handleBackgroundClick}>
+          {rootId && <CanvasNode componentId={rootId} />}
+        </div>
+      </CanvasContextMenu>
+      <FloatingMultiSelectToolbar />
+    </div>
   );
 }
 
 export const EditorCanvas = () => {
-  const [layoutMode, setLayoutMode] = useAtom(editorLayoutModeAtom);
-  const setIsPropertiesPanelVisible = useSetAtom(isPropertiesPanelVisibleAtom);
-
-  // Sync properties panel visibility with the layout mode.
-  useEffect(() => {
-    if (layoutMode === 'preview') {
-      setIsPropertiesPanelVisible(false);
-    } else {
-      // In split or builder mode, the properties panel is potentially visible.
-      setIsPropertiesPanelVisible(true);
-    }
-  }, [layoutMode, setIsPropertiesPanelVisible]);
+  const isPreviewVisible = useAtomValue(isPreviewPaneVisibleAtom);
+  const markdown = useAtomValue(promptMarkdownAtom);
+  const addToast = useSetAtom(addToastAtom);
+  const [copyAnimState, setCopyAnimState] = useAtom(copyAnimationStateAtom);
+  const editorContainerRef = useRef<HTMLDivElement>(null);
   
-  const renderContent = () => {
-    switch (layoutMode) {
-      case 'builder':
-        return <CanvasView />;
-      case 'preview':
-        return <PromptPreviewPanel isPrimaryView />;
-      case 'split':
-        return (
-          <div className={styles.splitView}>
-            <CanvasView />
-            <PromptPreviewPanel isPrimaryView={false} />
-          </div>
-        );
-      default:
-        return null;
+  useAutoScroller(editorContainerRef);
+
+  useEffect(() => {
+    if (copyAnimState === 'running') {
+      const timer = setTimeout(() => {
+        setCopyAnimState('idle');
+      }, 1200);
+      return () => clearTimeout(timer);
     }
+  }, [copyAnimState, setCopyAnimState]);
+
+  const handleCopy = () => {
+    void navigator.clipboard.writeText(markdown);
+    addToast({ message: 'Prompt copied to clipboard', icon: 'content_copy' });
+    setCopyAnimState('running');
   };
 
   return (
-    <div className={styles.editorViewContainer}>
-      <ScreenToolbar
-        layoutMode={layoutMode}
-        onLayoutModeChange={(mode: EditorLayoutMode) => setLayoutMode(mode)}
-      />
-      <div className={styles.editorContent}>
-        {renderContent()}
+    <div className={styles.editorViewContainer} data-copy-animation-state={copyAnimState} ref={editorContainerRef}>
+      <Button variant="primary" size="m" className={styles.floatingCopyButton} onClick={handleCopy}>
+        <span className="material-symbols-rounded">content_copy</span>
+        Copy Prompt
+      </Button>
+      <div className={styles.contentWrapper} data-preview-visible={isPreviewVisible}>
+        <CanvasView />
+        <PromptPreviewPanel />
       </div>
     </div>
   );

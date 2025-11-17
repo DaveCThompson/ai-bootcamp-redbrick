@@ -1,60 +1,56 @@
 /* src/features/EditorCanvas/PromptPreviewPanel.module.css */
 .previewContainer {
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  height: 100%;
-  background-color: var(--surface-bg-tertiary);
+  flex-direction: column;
+  flex-basis: 500px; /* Start with a base width */
+  flex-shrink: 0;
+  width: 500px;
+  background-color: var(--surface-bg-secondary);
   font-family: var(--font-family-sans);
-  overflow-y: auto;
-  padding: var(--spacing-8);
-}
-
-.previewContainer.splitView {
-  flex: 1;
-  min-width: 0; /* Important for flexbox sizing */
+  border: 1px solid var(--surface-border-secondary);
+  border-radius: 0 var(--radius-2xl) var(--radius-2xl) 0;
+  padding: var(--spacing-6) var(--spacing-8);
+  transition: 
+    flex-basis 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    min-width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    padding 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.3s ease,
+    border-width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .previewCard {
-  /* FIX: Use secondary background and remove shadow for de-emphasis */
-  background-color: var(--surface-bg-secondary);
+  background-color: transparent;
   box-shadow: none;
-  border-radius: var(--radius-3xl);
-  max-width: 800px;
   width: 100%;
-  margin: var(--spacing-8) auto;
-  border: 1px solid var(--surface-border-secondary);
+  border: none;
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
 }
 
 .previewHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-4) var(--spacing-6);
-  border-bottom: 1px solid var(--surface-border-secondary);
+  padding: 0;
+  margin-bottom: var(--spacing-6);
   flex-shrink: 0;
 }
 
-/* DEPRECATED: h3 styling is now handled by shared .panelTitle class */
-.previewHeader h3 {
-  margin: 0;
-  font-size: 1.1em;
-  font-weight: 600;
-  color: var(--surface-fg-primary);
+.panelTitle {
+  color: var(--surface-fg-tertiary);
 }
 
 .previewContent {
   flex-grow: 1;
-  padding: var(--spacing-6);
+  padding: 0;
   min-height: 200px;
 }
 
 .markdownOutput {
   white-space: pre-wrap;
   word-wrap: break-word;
-  /* FIX: Use monospace font family */
   font-family: var(--font-family-mono);
   font-size: 1em;
   line-height: 1.7;

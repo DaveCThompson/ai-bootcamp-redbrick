@@ -1,11 +1,11 @@
 // src/data/useEditorHotkeys.ts
 import { useEffect } from 'react';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import {
   canvasInteractionAtom,
   selectedCanvasComponentIdsAtom,
   appViewModeAtom,
-  editorLayoutModeAtom, // Import the new layout mode atom
+  isPreviewPaneVisibleAtom,
 } from './atoms';
 import { canvasComponentsByIdAtom } from './promptStateAtoms';
 import { useUndoRedo } from './useUndoRedo';
@@ -18,12 +18,14 @@ export const useEditorHotkeys = () => {
   const { undo, redo } = useUndoRedo();
   const actions = useCanvasActions(selectedIds);
   const viewMode = useAtomValue(appViewModeAtom);
-  const editorLayoutMode = useAtomValue(editorLayoutModeAtom); // Read the new layout mode
+  const isPreviewVisible = useAtomValue(isPreviewPaneVisibleAtom);
+  const setPreviewVisible = useSetAtom(isPreviewPaneVisibleAtom);
+
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // CRITICAL: Disable all editor hotkeys if not in editor view or if in preview layout mode.
-      if (viewMode !== 'editor' || editorLayoutMode === 'preview') {
+      // CRITICAL: Disable all editor hotkeys if not in editor view.
+      if (viewMode !== 'editor') {
         return;
       }
 
@@ -42,6 +44,13 @@ export const useEditorHotkeys = () => {
 
       const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
       const isCtrlOrCmd = isMac ? event.metaKey : event.ctrlKey;
+
+      // Toggle Preview Panel
+      if (isCtrlOrCmd && event.key === '\\') {
+        event.preventDefault();
+        setPreviewVisible(!isPreviewVisible);
+        return;
+      }
 
       // Undo/Redo Logic
       const isUndo = isCtrlOrCmd && event.key === 'z' && !event.shiftKey;
@@ -72,9 +81,6 @@ export const useEditorHotkeys = () => {
         return;
       }
 
-      // REMOVED: 'Enter' key no longer triggers edit mode to allow for better multi-line input.
-      // The only ways to enter edit mode are now Double-Click or Alt/Option+Click.
-
       if (isCtrlOrCmd && event.key.toLowerCase() === 'g') {
         event.preventDefault();
         if (event.shiftKey) {
@@ -101,5 +107,5 @@ export const useEditorHotkeys = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [interactionState, selectedIds, allComponents, undo, redo, actions, viewMode, editorLayoutMode]);
+  }, [interactionState, selectedIds, allComponents, undo, redo, actions, viewMode, isPreviewVisible, setPreviewVisible]);
 };

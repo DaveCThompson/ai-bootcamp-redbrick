@@ -15,9 +15,9 @@ body {
 }
 
 /* 
-  This rule establishes the global default for all Material Symbols icons.
-  It is intentionally placed in the 'base' cascade layer to give it the
-  lowest precedence, allowing component-level styles to easily override it.
+  UPDATED: This is the full, robust reset for Material Symbols from the successful project.
+  It correctly normalizes all font properties and places them in the 'base' cascade layer
+  to ensure they can be reliably overridden by more specific component styles.
 */
 .material-symbols-outlined, .material-symbols-rounded {
   font-family: 'Material Symbols Rounded', sans-serif;
@@ -40,8 +40,4 @@ body {
   'wght' 400,
   'GRAD' 0,
   'opsz' 20;
-}
-
-.material-symbols-outlined.outlined {
-    font-family: 'Material Symbols Outlined', sans-serif;
 }

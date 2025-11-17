@@ -38,15 +38,14 @@
   box-sizing: border-box;
   color: var(--surface-fg-quaternary);
   /* Base state reserves 2px for the active border to prevent layout shift. */
-  border: 2px solid transparent;
+  border: 1px solid transparent;
 }
 
 .toolbarButton .material-symbols-rounded {
   font-size: 24px;
   color: inherit; 
-  /* Use the correct properties for variable font control */
-  font-weight: 400; /* Base weight */
-  /* We only need to set the axes that differ from the base reset. */
+  /* The base 'font-weight' and other properties are now correctly inherited from the robust base.css reset. */
+  /* We only need to set the axes that differ from the base reset ('opsz' due to font-size change). */
   font-variation-settings: 'opsz' 24;
   transition: font-variation-settings 0.2s ease-in-out, font-weight 0.2s ease-in-out;
 }
@@ -60,17 +59,19 @@
 
 .toolbarButton.active {
   color: var(--control-fg-selected);
-  border-width: 2px;
+  border-width: 1px;
 }
 
-/* With the architectural fix, this more specific rule now wins the cascade as intended. */
+/* This rule now works reliably because the base style is properly architected in a lower-precedence layer. */
 .toolbarButton.active .material-symbols-rounded {
-  font-weight: 600; /* Control weight with the correct property */
+  /* We use the correct CSS property to control the 'wght' axis. */
+  font-weight: 600;
+  /* We only declare the axes that need to change from the base state. */
   font-variation-settings: 'FILL' 1, 'GRAD' 0, 'opsz' 24;
 }
 
 .toolbarButton.active:hover .material-symbols-rounded {
-  /* The hover effect only needs to modify the 'GRAD' axis. */
+  /* The hover effect preserves the active state and only modifies the 'GRAD' axis. */
   font-variation-settings: 'FILL' 1, 'GRAD' 200, 'opsz' 24;
 }
 

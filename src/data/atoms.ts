@@ -31,8 +31,11 @@ export const focusIntentAtom = atom<string | null>(null);
 //                         Canvas State
 // =================================================================
 
-export type EditorLayoutMode = 'split' | 'builder' | 'preview';
-export const editorLayoutModeAtom = atom<EditorLayoutMode>('split');
+// NEW: A simple boolean to control the visibility of the preview pane.
+export const isPreviewPaneVisibleAtom = atom(true);
+
+// NEW: A state machine atom to trigger the background animation on copy.
+export const copyAnimationStateAtom = atom<'idle' | 'running'>('idle');
 
 export type CanvasInteractionState =
   | { mode: 'idle' }

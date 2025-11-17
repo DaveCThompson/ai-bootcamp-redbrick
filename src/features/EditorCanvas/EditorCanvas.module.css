@@ -1,68 +1,83 @@
 /* src/features/EditorCanvas/EditorCanvas.module.css */
+@keyframes backgroundWave {
+  0% {
+    background-position: 10% 0%;
+  }
+  50% {
+    background-position: 91% 100%;
+  }
+  100% {
+    background-position: 10% 0%;
+  }
+}
+
 .editorViewContainer {
   flex-grow: 1;
   display: flex;
-  flex-direction: column; /* Changed to column for toolbar positioning */
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   position: relative; 
-  overflow: hidden;
-  height: 100%; /* Ensure container fills height */
-}
-
-.editorContent {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: row; /* Main content is a row (canvas/split) */
-  min-height: 0; /* Prevents flexbox overflow issues */
-}
-
-.splitView {
-  display: flex;
-  flex-grow: 1;
+  overflow: auto;
   height: 100%;
-  min-height: 0;
+  padding: var(--spacing-8);
+  gap: var(--spacing-6);
+  background: linear-gradient(0deg, var(--primitives-theme-200), var(--primitives-theme-25));
+  background-size: 200% 200%;
+  transition: background-position 0.5s ease-out;
+}
+
+.editorViewContainer[data-copy-animation-state='running'] {
+  animation: backgroundWave 1.2s ease-in-out;
+}
+
+.floatingCopyButton {
+  box-shadow: var(--surface-shadow-lg);
+  flex-shrink: 0;
+}
+
+.contentWrapper {
+  display: flex;
+  flex-direction: row;
+  /* REMOVED align-items: stretch to allow natural height growth */
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-4xl);
+  background-color: var(--surface-bg-primary);
+  border: 1px solid var(--surface-border-secondary);
+  box-shadow: var(--surface-shadow-lg);
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), justify-content 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: var(--spacing-4);
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-8);
+}
+
+.contentWrapper[data-preview-visible='false'] {
+  justify-content: center; /* This makes the wrapper hug the single visible child */
+}
+
+
+.editorViewContainer[data-copy-animation-state='running'] .contentWrapper {
+  transform: scale(1.01);
 }
 
 .canvasContainer {
-  width: 100%;
-  height: 100%;
-  background-color: var(--surface-bg-tertiary);
-  padding: var(--spacing-8);
-  overflow-y: auto;
-  position: relative;
   display: flex;
-  align-items: flex-start; 
-  justify-content: center;
-}
-
-.splitView .canvasContainer {
-  flex: 1;
-  min-width: 0;
-  border-right: 1px solid var(--surface-border-secondary);
-}
-
-.promptCard {
+  flex-direction: column;
+  flex-shrink: 0; /* Prevent the container from shrinking smaller than its content */
+  width: 600px; /* Give it a base width */
   background-color: var(--surface-bg-primary);
-  border-radius: var(--radius-3xl);
-  padding: var(--spacing-6);
-  max-width: 800px;
-  width: 100%;
-  margin: var(--spacing-8) auto; 
-  box-shadow: var(--surface-shadow-lg);
-  transition: background-color 0.2s ease, border-color 0.2s ease, outline-color 0.2s, box-shadow 0.2s;
   border: 1px solid var(--surface-border-secondary);
+  border-radius: var(--radius-2xl);
+  transition: border-radius 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: var(--spacing-6) var(--spacing-8);
   position: relative;
-  min-height: 200px;
-  user-select: none;
 }
 
-.promptCard.isBackgroundTarget {
-  border-color: var(--control-border-selected);
-  box-shadow: var(--surface-shadow-lg), 0 0 0 2px var(--control-focus-ring-standard);
-}
-
-.promptCard.isRootSelected {
-  border-color: var(--control-border-selected);
-  box-shadow: var(--surface-shadow-lg), 0 0 0 1px var(--control-border-selected);
+.contentWrapper[data-preview-visible='true'] > .canvasContainer {
+  border-radius: var(--radius-2xl) 0 0 var(--radius-2xl);
 }
 
 .promptCardHeader {
@@ -71,9 +86,42 @@
   align-items: center;
   gap: var(--spacing-4);
   margin-bottom: var(--spacing-6);
+  flex-shrink: 0;
 }
 
-/* NEW: Shared style for Builder and Preview panel headers */
+.promptCard {
+  background-color: transparent;
+  width: 100%;
+  box-shadow: none;
+  border: none;
+  user-select: none;
+  position: relative;
+  min-height: 200px;
+}
+
+.promptCard.isBackgroundTarget {
+  outline: 2px solid var(--control-focus-ring-standard);
+  border-radius: var(--radius-lg);
+}
+
+.promptCard.isRootSelected {
+  outline: 1px solid var(--control-border-selected);
+  border-radius: var(--radius-lg);
+}
+
+.previewToggleWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.previewToggleLabel {
+  font-size: 0.9em;
+  font-weight: 500;
+  color: var(--surface-fg-secondary);
+  user-select: none;
+}
+
 .panelTitle {
   font-size: 1.5em;
   font-weight: 600;
@@ -83,22 +131,26 @@
   user-select: none; 
 }
 
+.contentWrapper[data-preview-visible='false'] > .previewContainer {
+  flex-basis: 0 !important;
+  min-width: 0 !important;
+  width: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  opacity: 0 !important;
+  border-width: 0 !important;
+  margin-left: -16px; /* Account for the gap */
+  overflow: hidden;
+}
 
+/* --- REST OF THE STYLES (UNCHANGED) --- */
 .selectableWrapper {
   position: relative;
   touch-action: none;
   border-radius: var(--radius-lg);
 }
-
-.sortableItem {
-  position: relative;
-}
-
-.sortableItem.isDragging {
-  opacity: 0;
-}
-
-/* --- HOVER & SELECTION STYLES --- */
+.sortableItem { position: relative; }
+.sortableItem.isDragging { opacity: 0; }
 .promptElementContent, .layoutContainer, .roleContainer, .templateContainer {
   border: 1px solid transparent;
   padding: var(--spacing-1);
@@ -106,7 +158,6 @@
   border-radius: var(--radius-lg);
   transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
-
 .selectableWrapper:not(.selected):hover > .promptElementContent,
 .selectableWrapper:not(.selected):hover > .layoutContainer,
 .selectableWrapper:not(.selected):hover > .roleContainer,
@@ -114,7 +165,6 @@
   background-color: var(--surface-bg-primary-hover);
   border-color: var(--control-border-tertiary-hover);
 }
-
 .selectableWrapper.selected > .promptElementContent,
 .selectableWrapper.selected > .layoutContainer,
 .selectableWrapper.selected > .roleContainer,
@@ -122,32 +172,23 @@
   border-color: var(--control-border-selected);
   background-color: var(--control-bg-selected);
 }
-
-/* --- SPECIALIZED SELECTION STYLES --- */
-/* Override for atomic blocks like User Context Template */
 .selectableWrapper.selected > .templateContainer {
   background-color: var(--surface-bg-primary);
   border-color: var(--control-border-selected);
 }
-
-
-/* --- LAYOUT CONTAINER SPECIFIC STYLES --- */
 .layoutContainer {
   border: 1px dashed var(--surface-border-tertiary);
   min-height: 40px;
   transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s, border-style 0.2s;
 }
-
 .selectableWrapper:not(.selected):hover > .layoutContainer {
   background-color: var(--surface-bg-secondary_subtle);
   border-color: var(--surface-border-primary);
 }
-
 .layoutContainer.is-over-container {
   background-color: var(--primitives-theme-25);
   border-color: var(--primitives-theme-300);
 }
-
 .layoutContainerEmpty {
   display: flex;
   align-items: center;
@@ -156,24 +197,17 @@
   font-size: 0.9em;
   user-select: none; 
 }
-
 .layoutContainerEmpty.drag-active:not(.is-over-container) {
   background-color: var(--surface-bg-secondary_subtle);
   border-style: solid;
 }
-.layoutContainerEmpty.drag-active .emptyText {
-  display: block;
-}
-
+.layoutContainerEmpty.drag-active .emptyText { display: block; }
 .layoutContainerContent {
   width: 100%;
   height: 100%;
   position: relative;
   border-radius: var(--radius-md);
 }
-
-/* --- ROLE CONTAINER --- */
-/* REFACTORED: Simplified styles for non-nestable component */
 .roleContainer {
   border: 1px solid var(--primitives-blue-200);
   background-color: var(--primitives-blue-25);
@@ -205,9 +239,6 @@
   margin: 0;
   line-height: 1.5;
 }
-
-
-/* --- DnD PLACEHOLDER --- */
 .dropPlaceholder {
   position: absolute;
   background-color: var(--control-border-primary);
@@ -216,15 +247,12 @@
   pointer-events: none;
   height: 4px; 
 }
-
-/* --- FORM ITEM & INLINE EDITING --- */
 .promptElementContent {
   position: relative;
   padding: var(--spacing-2);
   background-color: transparent;
   border-radius: 6px;
 }
-
 .promptElementLabel {
   font-size: 0.8em;
   color: var(--surface-fg-secondary);
@@ -232,7 +260,6 @@
   display: block;
   font-weight: 500;
 }
-
 .controlPlaceholder {
   width: 100%;
   height: 36px;
@@ -245,17 +272,6 @@
   font-size: 0.9em;
   color: var(--surface-fg-tertiary);
 }
-
-.controlWithIcon { justify-content: space-between; }
-.controlIcon { color: var(--surface-fg-secondary); font-size: 20px; }
-
-.radioGroupExample { display: flex; flex-direction: column; gap: var(--spacing-2); padding: var(--spacing-2) 0; }
-.radioOptionExample { display: flex; align-items: center; gap: var(--spacing-2); font-size: 0.9em; color: var(--surface-fg-tertiary); }
-.radioCircle { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--surface-border-primary); background-color: var(--surface-bg-primary); }
-.checkboxExample { display: flex; align-items: center; gap: var(--spacing-2); }
-.checkboxSquare { width: 16px; height: 16px; border-radius: 4px; border: 2px solid var(--surface-border-primary); background-color: var(--surface-bg-primary); }
-
-/* --- TEMPLATE CONTAINER --- */
 .templateContainer {
   padding: var(--spacing-4);
   border: 1px solid var(--surface-border-tertiary);
@@ -264,13 +280,11 @@
   flex-direction: column;
   gap: var(--spacing-5);
 }
-
 .templateItem {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
 }
-
 .templateItemLabel {
   font-size: 1.1em;
   font-weight: 600;
@@ -279,7 +293,6 @@
   padding: 0;
   user-select: none;
 }
-
 .templateItemInput {
   width: 100%;
   padding: var(--spacing-2) var(--spacing-3);
@@ -295,20 +308,13 @@
   line-height: 1.5;
   transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
 }
-.templateItemInput::placeholder {
-  color: var(--surface-fg-tertiary);
-}
-.templateItemInput:hover {
-  border-color: var(--surface-border-primary-hover);
-}
+.templateItemInput::placeholder { color: var(--surface-fg-tertiary); }
+.templateItemInput:hover { border-color: var(--surface-border-primary-hover); }
 .templateItemInput:focus {
   border-color: var(--surface-border-theme);
   background-color: var(--surface-bg-secondary_subtle);
   box-shadow: 0 0 0 2px var(--control-focus-ring-standard);
 }
-
-
-/* --- INLINE EDITING --- */
 .inlineInput {
   appearance: none;
   border: none;
@@ -326,10 +332,7 @@
   caret-color: var(--surface-fg-theme-primary);
   border-radius: var(--radius-md);
 }
-.inlineInput:focus {
-  box-shadow: 0 0 0 2px var(--control-focus-ring-standard);
-}
-
+.inlineInput:focus { box-shadow: 0 0 0 2px var(--control-focus-ring-standard); }
 .inlineInputForLabel {
   font-size: 0.8em !important;
   font-weight: 500 !important;
@@ -337,7 +340,6 @@
   margin-bottom: var(--spacing-1) !important;
   padding: 1px 0;
 }
-
 .promptElementContent > p,
 .promptElementContent > h1,
 .promptElementContent > h2,
@@ -348,9 +350,8 @@
   color: var(--surface-fg-primary);
   padding: 1px 0;
   margin: 0;
-  border-radius: var(--radius-md); /* Match inline input */
+  border-radius: var(--radius-md);
 }
-
 .promptElementContent > h1, .inlineInput.is-h1 { font-size: 2em; font-weight: 800; }
 .promptElementContent > h2, .inlineInput.is-h2 { font-size: 1.5em; font-weight: 700; }
 .promptElementContent > h3, .inlineInput.is-h3 { font-size: 1.17em; font-weight: 600; }
