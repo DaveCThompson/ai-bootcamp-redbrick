@@ -50,7 +50,7 @@ export const CanvasSelectionToolbar = ({
     if (capabilities.canUnwrap) items.push({ id: 'unwrap', icon: 'disabled_by_default', label: 'Unwrap Group', hotkey: `${modKey}+Shift+G`, onClick: actions.handleUnwrap });
 
     items.push('separator');
-    items.push({ id: 'duplicate', icon: 'content_copy', label: 'Duplicate', hotkey: `${modKey}+D`, onClick: () => {}, disabled: true });
+    items.push({ id: 'copy-snippet', icon: 'content_copy', label: 'Copy Snippet', onClick: actions.handleCopySnippet, disabled: false });
     items.push({ id: 'delete', icon: 'delete', label: 'Delete', hotkey: isMac ? '⌫' : 'Del', onClick: actions.handleDelete, destructive: true, disabled: !capabilities.canDelete });
 
     return items;
@@ -73,24 +73,13 @@ export const CanvasSelectionToolbar = ({
               </Button>
             </Toolbar.Button>
           </Tooltip>
-          {capabilities.canUnwrap && (
-            <Tooltip content="Unwrap Group" side="top">
-              <Toolbar.Button asChild>
-                <Button variant="on-solid" size="s" iconOnly onClick={actions.handleUnwrap} aria-label="Unwrap container">
-                  <span className="material-symbols-rounded">disabled_by_default</span>
-                </Button>
-              </Toolbar.Button>
-            </Tooltip>
-          )}
-          {capabilities.canWrap && !capabilities.canUnwrap && (
-            <Tooltip content="Wrap in Group" side="top">
-              <Toolbar.Button asChild>
-                <Button variant="on-solid" size="s" iconOnly onClick={actions.handleWrap} aria-label="Wrap in container">
-                  <span className="material-symbols-rounded">add_box</span>
-                </Button>
-              </Toolbar.Button>
-            </Tooltip>
-          )}
+          <Tooltip content="Copy Snippet" side="top">
+            <Toolbar.Button asChild>
+              <Button variant="on-solid" size="s" iconOnly onClick={actions.handleCopySnippet} aria-label="Copy component snippet">
+                <span className="material-symbols-rounded">content_copy</span>
+              </Button>
+            </Toolbar.Button>
+          </Tooltip>
           <Tooltip content="Delete" side="top">
             <Toolbar.Button asChild>
               <Button variant="on-solid" size="s" iconOnly onClick={actions.handleDelete} aria-label="Delete component" disabled={!capabilities.canDelete}>

@@ -33,12 +33,10 @@ interface TemplateDefinition {
 }
 
 export const templates: Record<string, TemplateDefinition> = {
-  'lab-1-profile': {
-    name: 'Lab 1: User Profile',
+  'user-context': {
+    name: 'User Context',
     icon: 'assignment_ind',
     components: [
-      // REVERTED to the original hierarchical structure. The history reducer will now interpret this
-      // to build the new TemplateContainer component.
       { type: 'group', isLocked: true, children: [
           { type: 'Section Header', content: 'My name is', isLocked: true },
           { type: 'Text Input', props: { label: 'Name', fieldName: 'userName', isLabelHidden: true } }

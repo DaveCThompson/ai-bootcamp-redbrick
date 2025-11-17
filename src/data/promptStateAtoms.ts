@@ -11,7 +11,7 @@ import {
   isComponentBrowserVisibleAtom,
 } from './atoms';
 import { createWidgetComponent, createLayoutComponent, createDynamicComponent } from './componentFactory';
-import { templates, TemplateItem } from './templatesMock';
+import { templates, TemplateItem, HeaderTemplateItem, TextInputTemplateItem } from './templatesMock';
 
 // 1. DEFINE THE CORE SHAPES
 export interface UndoableState {
@@ -147,16 +147,14 @@ export const commitActionAtom = atom(
             templateContainer.isLocked = true;
             presentState.components[templateContainer.id] = templateContainer;
 
-            // Recursive function to create components from the template blueprint
-            const createFromTemplate = (item: TemplateItem, currentParentId: string): string => {
+            // Function to create components from the template blueprint
+            const createFromTemplate = (item: TemplateItem, currentParentId: string): string[] => {
               let newComponent: CanvasComponent;
               if (item.type === 'group') {
-                // Groups within templates are flattened. We only care about their children.
-                // We extract the Header and Input and create them as direct children of the container.
-                const headerItem = item.children.find(c => c.type === 'Section Header');
-                const inputItem = item.children.find(c => c.type === 'Text Input');
-                
-                if (headerItem && inputItem && headerItem.type === 'Section Header' && inputItem.type === 'Text Input') {
+                const headerItem = item.children.find(c => c.type === 'Section Header') as HeaderTemplateItem | undefined;
+                const inputItem = item.children.find(c => c.type === 'Text Input') as TextInputTemplateItem | undefined;
+
+                if (headerItem && inputItem) {
                   newComponent = createWidgetComponent({
                     parentId: currentParentId,
                     name: headerItem.content, // Use header content as the name/label
@@ -168,10 +166,9 @@ export const commitActionAtom = atom(
                   });
                   newComponent.isLocked = item.isLocked;
                   presentState.components[newComponent.id] = newComponent;
-                  return newComponent.id;
+                  return [newComponent.id];
                 }
               }
-              // Handle standalone Text Blocks
               else if (item.type === 'Text Block') {
                 newComponent = createWidgetComponent({
                   parentId: currentParentId,
@@ -181,12 +178,12 @@ export const commitActionAtom = atom(
                 });
                 newComponent.isLocked = item.isLocked;
                 presentState.components[newComponent.id] = newComponent;
-                return newComponent.id;
+                return [newComponent.id];
               }
-              return ''; // Should not happen with valid template structure
+              return [];
             };
 
-            const childrenIds = template.components.map(item => createFromTemplate(item, templateContainer.id)).filter(Boolean);
+            const childrenIds = template.components.flatMap(item => createFromTemplate(item, templateContainer.id));
             templateContainer.children = childrenIds;
 
             const parent = presentState.components[parentId];

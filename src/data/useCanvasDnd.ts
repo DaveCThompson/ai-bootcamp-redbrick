@@ -5,7 +5,7 @@ import { useSetAtom, useAtomValue } from 'jotai';
 import { Active, DragEndEvent, DragOverEvent, DragStartEvent, Over, ClientRect } from '@dnd-kit/core';
 import { activeDndIdAtom, overDndIdAtom, dropPlaceholderAtom, canvasInteractionAtom } from './atoms';
 import { canvasComponentsByIdAtom, commitActionAtom, rootComponentIdAtom } from './promptStateAtoms';
-import { DndData, CanvasComponent } from '../types';
+import { DndData, CanvasComponent, ContainerComponent } from '../types';
 import { getComponentName } from '../features/EditorCanvas/canvasUtils';
 import { templates } from './templatesMock';
 
@@ -13,13 +13,16 @@ const CANVAS_BACKGROUND_ID = '--canvas-background--';
 
 const findHoveredContainer = (overId: string, allComponents: Record<string, CanvasComponent>): string | null => {
   if (overId === CANVAS_BACKGROUND_ID) return CANVAS_BACKGROUND_ID;
-  const overComponent = allComponents[overId];
+  const overComponent = allComponents[overId] as ContainerComponent;
   if (!overComponent) return null;
-  // FIX: Only LayoutComponents can be containers for other items.
-  if (overComponent.componentType === 'layout') return overId;
+  // A component is a valid container if it's a layout component AND NOT a template container.
+  if (overComponent.componentType === 'layout' && !overComponent.properties.isTemplateContainer) {
+    return overId;
+  }
+  // If the hovered component is not a valid container, check its parent.
   if (overComponent.parentId) {
-      const parent = allComponents[overComponent.parentId];
-      if (parent && parent.componentType === 'layout') {
+      const parent = allComponents[overComponent.parentId] as ContainerComponent;
+      if (parent && parent.componentType === 'layout' && !parent.properties.isTemplateContainer) {
           return parent.id;
       }
   }
@@ -187,15 +190,15 @@ export const useCanvasDnd = () => {
       return { parentId: rootId, index, viewportRect: placeholderViewportRect, isGrid: false };
     }
 
-    const overComponent = allComponents[overId];
+    const overComponent = allComponents[overId] as ContainerComponent;
     if (!overComponent) return null;
     
-    // FIX: Only layout components with no children are valid empty drop targets.
-    if (overComponent.componentType === 'layout' && overComponent.children.length === 0) {
+    // Only non-template layout components with no children are valid empty drop targets.
+    if (overComponent.componentType === 'layout' && !overComponent.properties.isTemplateContainer && overComponent.children.length === 0) {
       return { parentId: overId, index: 0, viewportRect: null, isGrid: false };
     }
 
-    const parentId = overComponent.componentType === 'layout' ? overId : overComponent.parentId;
+    const parentId = overComponent.componentType === 'layout' && !overComponent.properties.isTemplateContainer ? overId : overComponent.parentId;
     if (!parentId) return null;
     const parent = allComponents[parentId];
     // FIX: Only layout components can be parents.

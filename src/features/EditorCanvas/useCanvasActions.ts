@@ -8,6 +8,8 @@ import {
   commitActionAtom,
   canvasComponentsByIdAtom,
 } from '../../data/promptStateAtoms';
+import { componentSnippetSelectorAtom } from '../../data/markdownSelectors';
+import { addToastAtom } from '../../data/toastAtoms';
 import { getComponentName } from './canvasUtils';
 
 /**
@@ -19,6 +21,8 @@ export const useCanvasActions = (selectedIds: string[]) => {
   const setAnchorId = useSetAtom(selectionAnchorIdAtom);
   const commitAction = useSetAtom(commitActionAtom);
   const allComponents = useAtomValue(canvasComponentsByIdAtom);
+  const getComponentSnippet = useAtomValue(componentSnippetSelectorAtom);
+  const addToast = useSetAtom(addToastAtom);
 
   const handleDelete = () => {
     if (selectedIds.length === 0) return;
@@ -96,6 +100,15 @@ export const useCanvasActions = (selectedIds: string[]) => {
       });
     }
   };
+  
+  const handleCopySnippet = () => {
+    if (selectedIds.length !== 1) return;
+    const snippet = getComponentSnippet(selectedIds[0]);
+    if (snippet) {
+      void navigator.clipboard.writeText(snippet);
+      addToast({ message: 'Snippet copied to clipboard', icon: 'content_copy' });
+    }
+  };
 
   return {
     handleDelete,
@@ -103,5 +116,6 @@ export const useCanvasActions = (selectedIds: string[]) => {
     handleWrap,
     handleUnwrap,
     handleNudge,
+    handleCopySnippet,
   };
 };

@@ -43,7 +43,7 @@ const TemplateFormItem = ({ component }: { component: WidgetComponent }) => {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onBlur={handleBlur}
-        placeholder="Enter your response..."
+        placeholder={component.properties.placeholder || "Enter your response..."}
         minRows={1}
       />
     </div>
@@ -72,11 +72,12 @@ export const TemplateContainerRenderer = ({ component }: RendererProps<Container
         {isOnlySelection && <CanvasSelectionToolbar componentId={component.id} referenceElement={wrapperRef.current} dndListeners={dndListeners} />}
         
         <div className={styles.templateContainer}>
-          {component.children.map(childId => {
-            const childComponent = allComponents[childId] as WidgetComponent | undefined;
-            if (!childComponent) return null;
-            return <TemplateFormItem key={childId} component={childComponent} />;
-          })}
+            <h2 className={styles.panelTitle}>{component.name}</h2>
+            {component.children.map(childId => {
+                const childComponent = allComponents[childId] as WidgetComponent | undefined;
+                if (!childComponent) return null;
+                return <TemplateFormItem key={childId} component={childComponent} />;
+            })}
         </div>
       </div>
     </div>

@@ -54,9 +54,7 @@ export const GeneralComponentsBrowser = () => {
     setIsPanelVisible(false);
   }
 
-  const templateComponents: DraggableComponent[] = Object.entries(templates)
-    .filter(([, template]) => template.components.length > 0)
-    .map(([id, template]) => ({
+  const templateComponents: DraggableComponent[] = Object.entries(templates).map(([id, template]) => ({
       id,
       name: template.name,
       icon: template.icon,

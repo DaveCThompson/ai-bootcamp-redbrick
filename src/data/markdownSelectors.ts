@@ -17,14 +17,17 @@ const generateMarkdownRecursive = (
     case 'layout':
       // Special handling for template containers
       if (component.properties.isTemplateContainer) {
+        // The title "User Context" is now derived from the component's name property.
         output += `## ${component.name}\n`;
 
         // Process children with special formatting
         const childMarkdown = component.children
           .map(childId => {
-            const child = allComponents[childId] as WidgetComponent;
+            const child = allComponents[childId] as WidgetComponent; // We know children of templates are widgets
             if (!child) return '';
+            // The label of the child widget is the question
             const question = `### ${child.properties.label}`;
+            // The content of the child widget is the answer
             const answer = child.properties.content?.trim() ? child.properties.content.trim() : '[not provided]';
             return `${question}\n${answer}`;
           })
@@ -47,7 +50,7 @@ const generateMarkdownRecursive = (
       if (component.dynamicType === 'role') {
         const roleDef = roles[component.properties.roleType];
         if (roleDef) {
-          // NEW: Add the H2 "ROLE" header before the snippet.
+          // Add the H2 "ROLE" header before the snippet.
           output += `## ROLE\n\n${roleDef.promptSnippet}`;
         }
       }
@@ -99,4 +102,4 @@ export const componentSnippetSelectorAtom = atom((get) => {
     if (!component) return null;
     return generateMarkdownRecursive(componentId, allComponents).trim();
   };
-})
+});
