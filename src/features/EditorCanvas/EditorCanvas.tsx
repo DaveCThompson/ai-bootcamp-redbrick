@@ -1,5 +1,5 @@
 // src/features/EditorCanvas/EditorCanvas.tsx
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useDroppable } from '@dnd-kit/core';
 import {
@@ -43,10 +43,15 @@ const CanvasView = () => {
   const [isPreviewVisible, setIsPreviewVisible] = useAtom(isPreviewPaneVisibleAtom);
 
   const { setNodeRef: setBackgroundNodeRef } = useDroppable({ id: CANVAS_BACKGROUND_ID });
-  
+
   const handleCanvasClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (interactionState.mode !== 'selecting' || interactionState.ids[0] !== rootId || interactionState.ids.length > 1) {
+    const rootSelected =
+      interactionState.mode === 'selecting' &&
+      interactionState.ids[0] === rootId &&
+      interactionState.ids.length === 1;
+
+    if (!rootSelected) {
       setInteractionState({ mode: 'selecting', ids: [rootId] });
       setIsPropertiesPanelVisible(true);
       setAnchorId(rootId);
@@ -66,12 +71,9 @@ const CanvasView = () => {
     const targetElement = e.target as HTMLElement;
     const componentNode = targetElement.closest('[data-id]');
     const componentId = componentNode?.getAttribute('data-id') ?? null;
-    
-    setContextMenuTargetId(componentId);
 
-    if (isMenuOpen) {
-      setContextMenuInstanceKey(k => k + 1);
-    }
+    setContextMenuTargetId(componentId);
+    if (isMenuOpen) setContextMenuInstanceKey(k => k + 1);
   };
 
   const isOverBackground = overId === CANVAS_BACKGROUND_ID;
@@ -81,48 +83,69 @@ const CanvasView = () => {
     styles.promptCard,
     isOverBackground ? styles.isBackgroundTarget : '',
     isRootSelected ? styles.isRootSelected : '',
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <div 
-      className={styles.canvasContainer} 
-      onContextMenu={handleCanvasContextMenu}
-    >
+    <div className={styles.canvasContainer} onContextMenu={handleCanvasContextMenu}>
       <div className={styles.promptCardHeader}>
         <h2 className={styles.panelTitle}>Prompt Builder</h2>
         <div className={styles.previewToggleWrapper}>
           <span className={styles.previewToggleLabel}>Preview</span>
-          <Switch 
+          <Switch
             checked={isPreviewVisible}
             onCheckedChange={setIsPreviewVisible}
             aria-label="Toggle Preview Pane"
           />
         </div>
       </div>
+
       <CanvasContextMenu>
-        <div ref={setBackgroundNodeRef} className={promptCardClasses} onClick={handleCanvasClick} onDoubleClick={handleBackgroundClick}>
+        <div
+          ref={setBackgroundNodeRef}
+          className={promptCardClasses}
+          onClick={handleCanvasClick}
+          onDoubleClick={handleBackgroundClick}
+        >
           {rootId && <CanvasNode componentId={rootId} />}
         </div>
       </CanvasContextMenu>
+
       <FloatingMultiSelectToolbar />
     </div>
   );
-}
+};
 
 export const EditorCanvas = () => {
   const isPreviewVisible = useAtomValue(isPreviewPaneVisibleAtom);
   const markdown = useAtomValue(promptMarkdownAtom);
   const addToast = useSetAtom(addToastAtom);
   const [copyAnimState, setCopyAnimState] = useAtom(copyAnimationStateAtom);
+
   const editorContainerRef = useRef<HTMLDivElement>(null);
-  
+
+  // NEW: preview presence state
+  const [isPreviewMounted, setIsPreviewMounted] = useState(isPreviewVisible);
+
   useAutoScroller(editorContainerRef);
 
+  // Handle mount/unmount of preview panel
+  useEffect(() => {
+    if (isPreviewVisible) {
+      setIsPreviewMounted(true);
+    } else {
+      const timer = setTimeout(() => {
+        setIsPreviewMounted(false);
+      }, 220);
+      return () => clearTimeout(timer);
+    }
+  }, [isPreviewVisible]);
+
+  // Copy button animation
   useEffect(() => {
     if (copyAnimState === 'running') {
-      const timer = setTimeout(() => {
-        setCopyAnimState('idle');
-      }, 1200);
+      const timer = setTimeout(() => setCopyAnimState('idle'), 1200);
       return () => clearTimeout(timer);
     }
   }, [copyAnimState, setCopyAnimState]);
@@ -134,14 +157,29 @@ export const EditorCanvas = () => {
   };
 
   return (
-    <div className={styles.editorViewContainer} data-copy-animation-state={copyAnimState} ref={editorContainerRef}>
-      <Button variant="primary" size="m" className={styles.floatingCopyButton} onClick={handleCopy}>
+    <div
+      className={styles.editorViewContainer}
+      data-copy-animation-state={copyAnimState}
+      ref={editorContainerRef}
+    >
+      <Button
+        variant="primary"
+        size="m"
+        className={styles.floatingCopyButton}
+        onClick={handleCopy}
+      >
         <span className="material-symbols-rounded">content_copy</span>
         Copy Prompt
       </Button>
-      <div className={styles.contentWrapper} data-preview-visible={isPreviewVisible}>
+
+      <div
+        className={styles.contentWrapper}
+        data-preview-visible={isPreviewVisible}
+        data-preview-mounted={isPreviewMounted}
+      >
         <CanvasView />
-        <PromptPreviewPanel />
+
+        {isPreviewMounted && <PromptPreviewPanel />}
       </div>
     </div>
   );

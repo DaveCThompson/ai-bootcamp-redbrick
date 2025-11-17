@@ -8,7 +8,7 @@ export const PromptPreviewPanel = () => {
   const markdown = useAtomValue(promptMarkdownAtom);
 
   return (
-    <div className={`${styles.previewContainer} ${editorStyles.previewContainer}`}>
+    <div className={`${styles.previewContainer} ${editorStyles.panel}`}>
       <div className={styles.previewCard}>
         <div className={styles.previewHeader}>
           <h2 className={`${editorStyles.panelTitle} ${styles.panelTitle}`}>Prompt Preview</h2>

@@ -3,59 +3,53 @@
   background-color: var(--surface-bg-secondary);
   font-family: var(--font-family-sans);
   border-radius: 0 var(--radius-2xl) var(--radius-2xl) 0;
-  
-  transition: 
-    padding 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 0.2s ease-out,
-    border-width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    min-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-:global(.contentWrapper[data-preview-visible='false']) > .previewContainer {
-  padding: 0;
-  opacity: 0;
-  border-width: 0;
-  pointer-events: none;
   min-height: 0;
+  padding: var(--spacing-6);
+  border: 1px solid var(--surface-border-secondary);
+  overflow:hidden;
+
+  /* ADDED: Animate padding and border to ensure a complete collapse */
+  transition:
+    padding 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* ADDED: When not expanded, force horizontal padding and border to zero */
+:global(.contentWrapper[data-preview-expanded='false']) > .previewContainer {
+  padding-left: 0;
+  padding-right: 0;
+  border-width: 0;
+}
+
+/* The inner card handles the content visibility, driven by 'visible' state */
 .previewCard {
-  background-color: transparent;
-  box-shadow: none;
   width: 100%;
-  border: none;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-
-  /*
-    SOLUTION: Animate the opacity of the inner card.
-    - On close: Fades out quickly (0.1s) with no delay.
-    - On open: Fades in (0.2s) *after* a delay (0.15s), allowing the container to expand first.
-  */
-  transition: opacity 0.2s ease-out;
+  transition: opacity 0.2s ease-out, visibility 0s;
 }
 
+/* On Open: Delay the fade-in */
 :global(.contentWrapper[data-preview-visible='true']) .previewCard {
   opacity: 1;
-  transition-delay: 0.15s;
+  visibility: visible;
+  transition-delay: 0.15s, 0s;
 }
 
+/* On Close: Fade out, then hide completely */
 :global(.contentWrapper[data-preview-visible='false']) .previewCard {
   opacity: 0;
-  transition-duration: 0.1s; /* Make it disappear fast */
-  transition-delay: 0s;     /* With no delay */
+  visibility: hidden;
+  transition-delay: 0s, 0.2s;
 }
-
 
 .previewHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0;
   margin-bottom: var(--spacing-6);
   flex-shrink: 0;
-  transition: margin-bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .panelTitle {
@@ -64,16 +58,7 @@
 
 .previewContent {
   flex-grow: 1;
-  padding: 0;
   min-height: 200px;
-  transition: min-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-:global(.contentWrapper[data-preview-visible='false']) .previewHeader {
-  margin-bottom: 0;
-}
-:global(.contentWrapper[data-preview-visible='false']) .previewContent {
-  min-height: 0;
 }
 
 .markdownOutput {
