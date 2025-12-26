@@ -1,15 +1,10 @@
 // src/features/EditorCanvas/EditorCanvas.tsx
-import React, { useRef, useEffect } from 'react';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useRef, useEffect } from 'react';
+import { useAtom, useAtomValue } from 'jotai';
 import { useDroppable } from '@dnd-kit/core';
 import {
-  canvasInteractionAtom,
-  selectionAnchorIdAtom,
   overDndIdAtom,
   selectedCanvasComponentIdsAtom,
-  contextMenuTargetIdAtom,
-  isContextMenuOpenAtom,
-  contextMenuInstanceKeyAtom,
   isPreviewPaneVisibleAtom,
   copyAnimationStateAtom,
 } from '../../data/atoms';
@@ -33,7 +28,7 @@ const CanvasView = () => {
   const { setNodeRef: setBackgroundNodeRef } = useDroppable({ id: CANVAS_BACKGROUND_ID });
   
   // Event handlers for canvas background interactions
-  const handleCanvasClick = (e: React.MouseEvent) => {
+  const handleCanvasClick = () => {
     // Logic handled by interaction hooks, this is just a surface
   };
   
