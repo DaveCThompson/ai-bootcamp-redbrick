@@ -1,8 +1,16 @@
 /* src/features/EditorCanvas/EditorCanvas.module.css */
 @keyframes backgroundWave {
-  0% { background-position: 10% 0%; }
-  50% { background-position: 91% 100%; }
-  100% { background-position: 10% 0%; }
+  0% {
+    background-position: 10% 0%;
+  }
+
+  50% {
+    background-position: 91% 100%;
+  }
+
+  100% {
+    background-position: 10% 0%;
+  }
 }
 
 .editorViewContainer {
@@ -10,15 +18,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* Centered vertically */
+  justify-content: center;
+  /* Centered vertically */
   position: relative;
   height: 100%;
   padding: var(--spacing-8);
-  padding-top: var(--spacing-12); /* Space for the pill */
-  background: linear-gradient(0deg, var(--primitives-theme-200), var(--primitives-theme-25));
+  padding-top: var(--spacing-12);
+  /* Space for the pill */
+  background: linear-gradient(0deg, var(--surface-bg-quaternary), var(--surface-bg-tertiary));
   background-size: 200% 200%;
   transition: background-position 0.5s ease-out;
-  overflow: hidden; /* Prevent layout shifts from triggering scroll during transition */
+  overflow: hidden;
+  /* Prevent layout shifts from triggering scroll during transition */
 }
 
 .editorViewContainer[data-copy-animation-state='running'] {
@@ -32,12 +43,12 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 20;
-  
+
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
   padding: var(--spacing-2) var(--spacing-3);
-  
+
   background-color: var(--surface-bg-primary);
   border: 1px solid var(--surface-border-secondary);
   border-radius: var(--radius-full);
@@ -67,6 +78,7 @@
 .pillButton {
   color: var(--surface-fg-primary);
 }
+
 .pillButton:hover {
   background-color: var(--surface-bg-secondary_subtle);
 }
@@ -77,14 +89,16 @@
   /* 1fr 0fr creates the collapsible drawer effect */
   grid-template-columns: 1fr 0fr;
   width: 100%;
-  max-width: 1400px; /* Reasonable max width for the split view */
-  height: 85vh; /* Fixed height relative to viewport for "App-like" feel */
-  
+  max-width: 1400px;
+  /* Reasonable max width for the split view */
+  height: 85vh;
+  /* Fixed height relative to viewport for "App-like" feel */
+
   border-radius: var(--radius-3xl);
   background-color: var(--surface-bg-primary);
   border: 1px solid var(--surface-border-secondary);
   box-shadow: var(--surface-shadow-xl);
-  
+
   /* The Magic: Clip the children to create "Concentric Radii" automatically */
   overflow: hidden;
   position: relative;
@@ -114,8 +128,9 @@
   composes: panel;
   background-color: var(--surface-bg-primary);
   padding: var(--spacing-8);
-  overflow-y: auto; /* Internal scroll */
-  
+  overflow-y: auto;
+  /* Internal scroll */
+
   /* Create the separator line on the right edge of the canvas */
   border-right: 1px solid transparent;
   transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
@@ -130,8 +145,10 @@
    but here we style the grid cell wrapper */
 .previewGridCell {
   composes: panel;
-  background-color: var(--surface-bg-secondary); /* Subtle contrast */
-  overflow: hidden; /* Crucial for the transition */
+  background-color: var(--surface-bg-secondary);
+  /* Subtle contrast */
+  overflow: hidden;
+  /* Crucial for the transition */
 }
 
 /* --- PROMPT CARD STYLES --- */
@@ -143,7 +160,8 @@
 .promptCard {
   background-color: transparent;
   width: 100%;
-  min-height: 100%; /* Fill the scrollable area */
+  min-height: 100%;
+  /* Fill the scrollable area */
   display: flex;
   flex-direction: column;
   outline: none;
@@ -159,7 +177,7 @@
   font-weight: 600;
   margin: 0;
   color: var(--surface-fg-primary);
-  user-select: none; 
+  user-select: none;
 }
 
 /* --- DND STYLES (Preserved) --- */
@@ -168,8 +186,14 @@
   touch-action: none;
   border-radius: var(--radius-lg);
 }
-.sortableItem { position: relative; }
-.sortableItem.isDragging { opacity: 0; }
+
+.sortableItem {
+  position: relative;
+}
+
+.sortableItem.isDragging {
+  opacity: 0;
+}
 
 /* ... (Rest of component specific styles: layoutContainer, roleContainer etc. remain valid) ... */
 .layoutContainer {
@@ -179,15 +203,18 @@
   border-radius: var(--radius-lg);
   padding: var(--spacing-1);
 }
+
 .layoutContainer.is-over-container {
   background-color: var(--primitives-theme-25);
   border-color: var(--primitives-theme-300);
 }
+
 .layoutContainerContent {
   width: 100%;
   height: 100%;
   border-radius: var(--radius-md);
 }
+
 .layoutContainerEmpty {
   display: flex;
   align-items: center;
@@ -204,12 +231,14 @@
   flex-direction: column;
   gap: var(--spacing-2);
 }
+
 .roleHeader {
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
   color: var(--primitives-blue-700);
 }
+
 .roleDescription {
   font-size: 0.9em;
   color: var(--primitives-blue-700);
@@ -223,16 +252,19 @@
   flex-direction: column;
   gap: var(--spacing-5);
 }
+
 .templateItem {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
 }
+
 .templateItemLabel {
   font-size: 1.1em;
   font-weight: 600;
   color: var(--surface-fg-primary);
 }
+
 .templateItemInput {
   width: 100%;
   padding: var(--spacing-2) var(--spacing-3);
@@ -245,6 +277,7 @@
   resize: none;
   min-height: 40px;
 }
+
 .templateItemInput:focus {
   border-color: var(--surface-border-theme);
   box-shadow: 0 0 0 2px var(--control-focus-ring-standard);
@@ -254,6 +287,7 @@
 .promptElementContent {
   padding: var(--spacing-2);
 }
+
 .promptElementLabel {
   font-size: 0.8em;
   color: var(--surface-fg-secondary);
@@ -261,6 +295,7 @@
   display: block;
   font-weight: 500;
 }
+
 .controlPlaceholder {
   width: 100%;
   height: 36px;
@@ -272,6 +307,7 @@
   padding: 0 var(--spacing-3);
   color: var(--surface-fg-tertiary);
 }
+
 .inlineInput {
   background: transparent;
   border: none;
@@ -281,12 +317,27 @@
   color: inherit;
   border-radius: var(--radius-md);
 }
-.inlineInput:focus { box-shadow: 0 0 0 2px var(--control-focus-ring-standard); }
+
+.inlineInput:focus {
+  box-shadow: 0 0 0 2px var(--control-focus-ring-standard);
+}
 
 /* Typography Helpers */
-.inlineInput.is-h1 { font-size: 2em; font-weight: 800; }
-.inlineInput.is-h2 { font-size: 1.5em; font-weight: 700; }
-.inlineInput.is-p { font-size: 1em; font-weight: 400; line-height: 1.5; }
+.inlineInput.is-h1 {
+  font-size: 2em;
+  font-weight: 800;
+}
+
+.inlineInput.is-h2 {
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
+.inlineInput.is-p {
+  font-size: 1em;
+  font-weight: 400;
+  line-height: 1.5;
+}
 
 /* Drop Placeholder */
 .dropPlaceholder {
@@ -295,5 +346,5 @@
   border-radius: 2px;
   z-index: 1;
   pointer-events: none;
-  height: 4px; 
+  height: 4px;
 }

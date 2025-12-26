@@ -42,7 +42,7 @@ export const CanvasSelectionToolbar = ({
     const items: (ActionMenuItem | 'separator')[] = [];
 
     items.push({ id: 'rename', icon: 'edit', label: 'Rename', hotkey: 'Enter', onClick: actions.handleRename, disabled: !capabilities.canRename });
-    
+
     items.push('separator');
     items.push({ id: 'move-up', icon: 'arrow_upward', label: 'Move Up', hotkey: '↑', onClick: () => actions.handleNudge('up'), disabled: !capabilities.canNudgeUp });
     items.push({ id: 'move-down', icon: 'arrow_downward', label: 'Move Down', hotkey: '↓', onClick: () => actions.handleNudge('down'), disabled: !capabilities.canNudgeDown });
@@ -61,28 +61,28 @@ export const CanvasSelectionToolbar = ({
       <Toolbar.Root asChild>
         <>
           <Toolbar.Button asChild className={styles.dragHandle} {...dndListeners}>
-            <Button variant="on-solid" size="s" iconOnly aria-label="Drag to reorder">
+            <Button variant="tertiary" size="s" iconOnly aria-label="Drag to reorder">
               <span className="material-symbols-rounded">drag_indicator</span>
             </Button>
           </Toolbar.Button>
           <Toolbar.Separator className={styles.divider} />
           <Tooltip content={renameTooltipContent} side="top">
             <Toolbar.Button asChild>
-              <Button variant="on-solid" size="s" iconOnly onClick={actions.handleRename} aria-label="Rename component" disabled={!capabilities.canRename}>
+              <Button variant="tertiary" size="s" iconOnly onClick={actions.handleRename} aria-label="Rename component" disabled={!capabilities.canRename}>
                 <span className="material-symbols-rounded">edit</span>
               </Button>
             </Toolbar.Button>
           </Tooltip>
           <Tooltip content="Copy Snippet" side="top">
             <Toolbar.Button asChild>
-              <Button variant="on-solid" size="s" iconOnly onClick={actions.handleCopySnippet} aria-label="Copy component snippet">
+              <Button variant="tertiary" size="s" iconOnly onClick={actions.handleCopySnippet} aria-label="Copy component snippet">
                 <span className="material-symbols-rounded">content_copy</span>
               </Button>
             </Toolbar.Button>
           </Tooltip>
           <Tooltip content="Delete" side="top">
             <Toolbar.Button asChild>
-              <Button variant="on-solid" size="s" iconOnly onClick={actions.handleDelete} aria-label="Delete component" disabled={!capabilities.canDelete}>
+              <Button variant="tertiary" size="s" iconOnly onClick={actions.handleDelete} aria-label="Delete component" disabled={!capabilities.canDelete}>
                 <span className="material-symbols-rounded">delete</span>
               </Button>
             </Toolbar.Button>
@@ -90,7 +90,7 @@ export const CanvasSelectionToolbar = ({
           <DropdownMenu.Root>
             <DropdownMenu.Trigger asChild>
               <Toolbar.Button asChild>
-                <Button variant="on-solid" size="s" iconOnly aria-label="More options">
+                <Button variant="tertiary" size="s" iconOnly aria-label="More options">
                   <span className="material-symbols-rounded">more_vert</span>
                 </Button>
               </Toolbar.Button>

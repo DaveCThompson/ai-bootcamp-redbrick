@@ -52,21 +52,21 @@ export const FloatingMultiSelectToolbar = () => {
   return (
     <ActionToolbar mode="fixed">
       <Tooltip content="Clear selection">
-        <Button variant="on-solid" size="s" iconOnly onClick={handleClearSelection} aria-label="Clear selection">
+        <Button variant="tertiary" size="s" iconOnly onClick={handleClearSelection} aria-label="Clear selection">
           <span className="material-symbols-rounded">close</span>
         </Button>
       </Tooltip>
       <span className={styles.floatingToolbarText}>{selectedIds.length} selected</span>
       <div className={styles.floatingToolbarDivider} />
-      <Button variant="on-solid" size="s" iconOnly onClick={handleWrap} aria-label="Wrap in container">
+      <Button variant="tertiary" size="s" iconOnly onClick={handleWrap} aria-label="Wrap in container">
         <span className="material-symbols-rounded">add_box</span>
       </Button>
       <Tooltip content="Repath items (Coming Soon)">
-        <Button variant="on-solid" size="s" iconOnly aria-label="Repath selected components" disabled>
+        <Button variant="tertiary" size="s" iconOnly aria-label="Repath selected components" disabled>
           <span className="material-symbols-rounded">alt_route</span>
         </Button>
       </Tooltip>
-      <Button variant="on-solid" size="s" iconOnly onClick={handleDelete} aria-label="Delete selected components">
+      <Button variant="tertiary" size="s" iconOnly onClick={handleDelete} aria-label="Delete selected components">
         <span className="material-symbols-rounded">delete</span>
       </Button>
     </ActionToolbar>

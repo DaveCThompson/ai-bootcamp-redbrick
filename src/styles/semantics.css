@@ -92,7 +92,7 @@
   --surface-shadow-xl: 0 8px 10px -4px #0A0C1214, 0 16px 24px -8px #0A0C1207, 0 0 1px 0 #0A0C120A;
   --surface-shadow-2xl: 0 20px 24px -8px #0A0C122D, 0 0 1px 0 #0A0C120A;
   --surface-shadow-3xl: 0 32px 64px -16px #0A0C1223, 0 0 1px 0 #0A0C120A;
-  
+
   /* ----------------------------------------- */
   /*             SEMANTIC - CONTROL            */
   /* ----------------------------------------- */
@@ -111,9 +111,12 @@
   --control-bg-tertiary: var(--utility-alpha-grey-10);
   --control-bg-tertiary-hover: var(--utility-alpha-grey-30);
   --control-bg-tertiary-pressed: var(--utility-alpha-grey-60);
-  --control-bg-quaternary: transparent; /* Explicitly transparent at rest for components like buttons */
-  --control-bg-quaternary-hover: var(--utility-alpha-grey-30); /* CORRECTED based on Figma */
-  --control-bg-quaternary-pressed: var(--utility-alpha-grey-60); /* CORRECTED based on Figma */
+  --control-bg-quaternary: transparent;
+  /* Explicitly transparent at rest for components like buttons */
+  --control-bg-quaternary-hover: var(--utility-alpha-grey-30);
+  /* CORRECTED based on Figma */
+  --control-bg-quaternary-pressed: var(--utility-alpha-grey-60);
+  /* CORRECTED based on Figma */
   --control-bg-on-solid-hover: var(--utility-alpha-white-20);
   --control-bg-on-solid-pressed: var(--utility-alpha-white-40);
   --control-bg-disabled: var(--primitives-grey-50);

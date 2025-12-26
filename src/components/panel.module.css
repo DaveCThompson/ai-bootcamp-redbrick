@@ -4,11 +4,14 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background-color: var(--surface-bg-secondary); /* Container has subtle gray bg */
+  background-color: var(--surface-bg-secondary);
+  /* Container has subtle gray bg */
   font-family: var(--font-family-sans);
   border-right: 1px solid var(--surface-border-secondary);
-  position: relative; /* For positioning the action bar */
-  overflow: hidden; /* For positioning the action bar */
+  position: relative;
+  /* For positioning the action bar */
+  overflow: hidden;
+  /* For positioning the action bar */
 }
 
 .componentBrowserContainer.insideModal {
@@ -19,7 +22,8 @@
 .panelHeaderSection {
   flex-shrink: 0;
   border-bottom: 1px solid var(--surface-border-secondary);
-  background-color: var(--surface-bg-primary); /* Header elements on white bg */
+  background-color: var(--surface-bg-primary);
+  /* Header elements on white bg */
 }
 
 .componentBrowserHeader {
@@ -48,9 +52,9 @@
 }
 
 .breadcrumbWrapper {
-    padding: var(--spacing-2) var(--spacing-4);
-    border-bottom: 1px solid var(--surface-border-secondary);
-    flex-shrink: 0;
+  padding: var(--spacing-2) var(--spacing-4);
+  border-bottom: 1px solid var(--surface-border-secondary);
+  flex-shrink: 0;
 }
 
 .breadcrumb {
@@ -59,9 +63,13 @@
   gap: var(--spacing-1);
   font-size: 0.85em;
   color: var(--surface-fg-secondary);
-  margin: 0; 
+  margin: 0;
 }
-.breadcrumb .material-symbols-rounded { font-size: 16px; }
+
+.breadcrumb .material-symbols-rounded {
+  font-size: 16px;
+}
+
 .breadcrumb button {
   background: none;
   border: none;
@@ -74,15 +82,18 @@
   text-decoration-color: transparent;
   transition: text-decoration-color 0.2s, color 0.2s;
 }
+
 .breadcrumb button:hover:not(:disabled) {
   text-decoration-color: var(--surface-fg-secondary);
 }
-.breadcrumb .active { 
-  color: var(--surface-fg-theme-strong); 
-  font-weight: 600; 
+
+.breadcrumb .active {
+  color: var(--surface-fg-theme-strong);
+  font-weight: 600;
   cursor: default;
   text-decoration: none;
 }
+
 .breadcrumb button:disabled {
   cursor: default;
 }
@@ -92,14 +103,20 @@
 }
 
 /* --- Component List Styles --- */
-.componentListContainer { 
-  flex: 1; 
-  min-height: 0; 
-  overflow-y: auto; 
+.componentListContainer {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   background-color: var(--surface-bg-primary);
   padding-bottom: 80px;
 }
-.componentList, .componentList ul { list-style: none; margin: 0; padding: 0; }
+
+.componentList,
+.componentList ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 
 .componentListGroup {
   padding: var(--spacing-2) var(--spacing-4);
@@ -156,7 +173,8 @@
   align-items: center;
   justify-content: center;
 }
-.componentIcon { 
+
+.componentIcon {
   color: var(--surface-fg-secondary);
 }
 
@@ -184,7 +202,8 @@
   justify-content: center;
   pointer-events: none;
 }
-.multiSelectToolbarWrapper > * {
+
+.multiSelectToolbarWrapper>* {
   pointer-events: all;
 }
 
@@ -194,12 +213,12 @@
   padding: 0 var(--spacing-2);
   white-space: nowrap;
   user-select: none;
-  color: var(--control-fg-on-solid);
+  color: var(--surface-fg-secondary);
 }
 
 .floatingToolbarDivider {
-  width: 2px;
+  width: 1px;
   height: 20px;
-  background-color: var(--surface-border-theme);
+  background-color: var(--surface-border-secondary);
   margin: 0 var(--spacing-2);
 }

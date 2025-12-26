@@ -11,36 +11,36 @@ import { RoleRenderer } from './renderers/RoleRenderer';
 
 // --- REPLACEMENTS FOR DELETED PREVIEW COMPONENTS ---
 const BrowserItemPreview = ({ name, icon }: { name: string; icon: string }) => (
-    <div style={{
-        padding: '8px 12px',
-        backgroundColor: 'var(--surface-bg-primary)',
-        border: '1px solid var(--surface-border-secondary)',
-        borderRadius: '6px',
-        boxShadow: 'var(--surface-shadow-lg)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--spacing-3)',
-        color: 'var(--surface-fg-primary)',
-        fontFamily: 'var(--font-family-sans)',
-        fontSize: '0.9em',
-        userSelect: 'none',
-    }}>
-        <span className="material-symbols-rounded" style={{ color: 'var(--surface-fg-secondary)' }}>{icon}</span>
-        <span>{name}</span>
-    </div>
+  <div style={{
+    padding: '8px 12px',
+    backgroundColor: 'var(--surface-bg-primary)',
+    border: '1px solid var(--surface-border-secondary)',
+    borderRadius: '6px',
+    boxShadow: 'var(--surface-shadow-lg)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'var(--spacing-3)',
+    color: 'var(--surface-fg-primary)',
+    fontFamily: 'var(--font-family-sans)',
+    fontSize: '0.9em',
+    userSelect: 'none',
+  }}>
+    <span className="material-symbols-rounded" style={{ color: 'var(--surface-fg-secondary)' }}>{icon}</span>
+    <span>{name}</span>
+  </div>
 );
 
 const ContainerPreview = ({ component }: { component: CanvasComponent }) => (
-    <div style={{
-        padding: 'var(--spacing-4)',
-        backgroundColor: 'var(--surface-bg-primary)',
-        border: '1px dashed var(--surface-border-tertiary)',
-        borderRadius: '6px',
-        minWidth: '200px',
-        minHeight: '60px'
-    }}>
-        <p style={{ margin: 0, fontSize: '0.9em', color: 'var(--surface-fg-secondary)' }}>{component.componentType === 'layout' ? component.name : ''}</p>
-    </div>
+  <div style={{
+    padding: 'var(--spacing-4)',
+    backgroundColor: 'var(--surface-bg-primary)',
+    border: '1px dashed var(--surface-border-tertiary)',
+    borderRadius: '6px',
+    minWidth: '200px',
+    minHeight: '60px'
+  }}>
+    <p style={{ margin: 0, fontSize: '0.9em', color: 'var(--surface-fg-secondary)' }}>{component.componentType === 'layout' ? component.name : ''}</p>
+  </div>
 );
 
 interface DndDragOverlayProps {
@@ -49,7 +49,7 @@ interface DndDragOverlayProps {
 
 export const DndDragOverlay = ({ activeItem }: DndDragOverlayProps) => {
   const allComponents = useAtomValue(canvasComponentsByIdAtom);
-  
+
   if (!activeItem) return null;
 
   const activeData = activeItem.data.current as DndData;
@@ -58,13 +58,13 @@ export const DndDragOverlay = ({ activeItem }: DndDragOverlayProps) => {
   if (isNew) {
     return <BrowserItemPreview name={name ?? ''} icon={icon ?? ''} />;
   }
-  
+
   const componentId = activeItem.id;
   if (typeof componentId !== 'string') return null;
 
   const activeComponent = allComponents[componentId];
   if (!activeComponent) return null;
-  
+
   const renderComponent = (comp: CanvasComponent) => {
     switch (comp.componentType) {
       case 'layout':

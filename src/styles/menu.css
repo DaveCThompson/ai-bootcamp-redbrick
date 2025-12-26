@@ -3,23 +3,28 @@
 
 /* --- Menu Popover Container --- */
 .menu-popover {
-  z-index: 1100; /* Above most UI, below modals */
-  background-color: var(--surface-bg-primary);
-  border-radius: var(--radius-3xl); /* 20px */
-  box-shadow: var(--surface-shadow-xl);
-  border: 1px solid var(--surface-border-primary);
-  padding: var(--spacing-2); /* Increased padding for concentric feel */
-  min-width: 220px;
-  display: flex;
-  flex-direction: column;
-  /* Add a 2px gap between menu items */
-  gap: 2px;
+    z-index: 1100;
+    /* Above most UI, below modals */
+    background-color: var(--surface-bg-primary);
+    border-radius: var(--radius-xl);
+    /* Concentric: 10px item + 4px ≈ 12px */
+    box-shadow: var(--surface-shadow-xl);
+    border: 1px solid var(--surface-border-primary);
+    padding: var(--spacing-1);
+    /* 4px for tighter feel */
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    /* Add a 2px gap between menu items */
+    gap: 2px;
 }
+
 .menu-popover[data-state='open'] {
-  animation: popover-show 150ms ease-out;
+    animation: popover-show 150ms ease-out;
 }
+
 .menu-popover[data-state='closed'] {
-  animation: popover-hide 150ms ease-in;
+    animation: popover-hide 150ms ease-in;
 }
 
 
@@ -30,8 +35,9 @@
     align-items: center;
     width: 100%;
     text-align: left;
-    gap: var(--spacing-3); /* 12px */
-    
+    gap: var(--spacing-3);
+    /* 12px */
+
     /* Typography */
     font-size: 0.9em;
     font-weight: 500;
@@ -42,9 +48,12 @@
     /* Appearance & Sizing */
     background: none;
     cursor: pointer;
-    padding: var(--spacing-2) var(--spacing-1p5); /* 8px 6px */
-    border-radius: var(--radius-xl); /* 12px */
-    border: 1px solid transparent; /* Reserve space for border */
+    padding: var(--spacing-2) var(--spacing-1p5);
+    /* 8px 6px */
+    border-radius: var(--radius-lg);
+    /* 10px */
+    border: 1px solid transparent;
+    /* Reserve space for border */
     transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
     user-select: none;
     outline: none;
@@ -60,6 +69,7 @@
     border-color: transparent !important;
     box-shadow: none !important;
 }
+
 .menu-item:disabled .material-symbols-rounded,
 .menu-item[data-disabled] .material-symbols-rounded,
 .menu-item:disabled .hotkey,
@@ -76,6 +86,7 @@
     background-color: var(--control-bg-tertiary-hover);
     color: var(--control-fg-tertiary-hover);
 }
+
 .menu-item:hover:not(:disabled):not([data-disabled]):not([data-state='checked']) .material-symbols-rounded,
 .menu-item[data-highlighted]:not([data-disabled]):not([data-state='checked']) .material-symbols-rounded,
 .menu-item:hover:not(:disabled):not([data-disabled]):not([data-state='checked']) .hotkey,
@@ -94,26 +105,35 @@
 /* --- Variants --- */
 
 /* Destructive Variant */
-.menu-item.destructive { color: var(--surface-fg-alert-primary); }
+.menu-item.destructive {
+    color: var(--surface-fg-alert-primary);
+}
+
 .menu-item.destructive .material-symbols-rounded,
-.menu-item.destructive .hotkey { color: var(--surface-fg-alert-primary); }
+.menu-item.destructive .hotkey {
+    color: var(--surface-fg-alert-primary);
+}
+
 .menu-item.destructive:hover:not(:disabled):not([data-disabled]),
 .menu-item.destructive[data-highlighted]:not([data-disabled]) {
     background-color: var(--control-bg-alert-hover);
     border-color: var(--control-border-alert);
     color: var(--control-fg-on-solid);
 }
+
 .menu-item.destructive:hover:not(:disabled):not([data-disabled]) .material-symbols-rounded,
 .menu-item.destructive[data-highlighted]:not([data-disabled]) .material-symbols-rounded,
 .menu-item.destructive:hover:not(:disabled):not([data-disabled]) .hotkey,
 .menu-item.destructive[data-highlighted]:not([data-disabled]) .hotkey {
     color: var(--control-fg-on-solid);
 }
+
 .menu-item.destructive[data-highlighted]:focus-visible:not([data-disabled]) {
     background-color: transparent;
     box-shadow: inset 0 0 0 2px var(--control-focus-ring-error);
     color: var(--surface-fg-alert-primary);
 }
+
 .menu-item.destructive[data-highlighted]:focus-visible:not([data-disabled]) .material-symbols-rounded,
 .menu-item.destructive[data-highlighted]:focus-visible:not([data-disabled]) .hotkey {
     color: var(--surface-fg-alert-primary);
@@ -126,6 +146,7 @@
     border-color: transparent;
     color: var(--control-fg-selected);
 }
+
 .menu-item[data-state="checked"] .material-symbols-rounded,
 .menu-item[data-state="checked"] .hotkey,
 .menu-item[data-state="checked"] .chevron {
@@ -138,6 +159,7 @@
     background-color: var(--control-bg-selected-hover);
     color: var(--control-fg-selected-hover);
 }
+
 /* NEW: Keyboard focus state for CHECKED items */
 .menu-item[data-state='checked'][data-highlighted]:focus-visible:not([data-disabled]) {
     box-shadow: inset 0 0 0 2px var(--control-focus-ring-standard);
@@ -153,20 +175,25 @@
     justify-content: center;
     flex-shrink: 0;
 }
+
 .menu-item .material-symbols-rounded {
     font-size: 18px;
     color: var(--surface-fg-secondary);
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 18;
     transition: color 0.2s;
 }
+
 .menu-item .hotkey {
     margin-left: auto;
     color: var(--surface-fg-tertiary);
     font-size: 12px;
     font-weight: 500;
     padding-left: var(--spacing-6);
+    padding-right: var(--spacing-0p5);
+    /* 2px extra for breathing room */
     transition: color 0.2s;
 }
+
 .menu-item .chevron {
     color: var(--surface-fg-tertiary);
     font-size: 16px;
