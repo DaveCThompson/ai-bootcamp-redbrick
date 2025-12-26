@@ -8,6 +8,7 @@ import { PlainTextRenderer } from './renderers/PlainTextRenderer';
 import { LayoutRenderer } from './renderers/LayoutRenderer';
 import { RoleRenderer } from './renderers/RoleRenderer';
 import { TemplateContainerRenderer } from './renderers/TemplateContainerRenderer';
+import { VoiceInputRenderer } from './renderers/VoiceInputRenderer';
 
 /**
  * ARCHITECTURE: This is the central "Renderer Router" for the canvas.
@@ -46,6 +47,8 @@ export const CanvasNode = ({ componentId }: { componentId: string }) => {
             return <TextInputRenderer component={comp} mode="canvas" />;
           case 'plain-text':
             return <PlainTextRenderer component={comp} mode="canvas" />;
+          case 'voice-input':
+            return <VoiceInputRenderer component={comp} mode="canvas" />;
           default:
             return <div>Unknown control type</div>;
         }

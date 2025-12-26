@@ -8,6 +8,7 @@ export const promptElements: ComponentGroup[] = [
       { id: 'group-container', name: 'Group', type: 'layout', icon: 'view_quilt' },
       { id: 'heading', name: 'Section Header', type: 'widget', icon: 'title' },
       { id: 'paragraph', name: 'Text Block', type: 'widget', icon: 'notes' },
+      { id: 'voice-input', name: 'Voice Input', type: 'widget', icon: 'mic' },
     ],
   },
   {

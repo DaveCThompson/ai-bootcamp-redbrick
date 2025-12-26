@@ -7,4 +7,10 @@ export default defineConfig({
   // Configure the base path for GitHub Pages deployment.
   // This should match the name of your repository.
   base: '/ai-bootcamp/',
+  optimizeDeps: {
+    exclude: ['vosk-browser']
+  },
+  build: {
+    target: 'esnext'
+  }
 })

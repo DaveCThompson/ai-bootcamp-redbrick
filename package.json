@@ -37,7 +37,8 @@
     "nanoid": "^5.1.6",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-textarea-autosize": "^8.5.9"
+    "react-textarea-autosize": "^8.5.9",
+    "vosk-browser": "^0.0.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

@@ -15,7 +15,7 @@ interface BaseCanvasComponent {
 // This is the ONLY component type that can have children.
 export interface ContainerComponent extends BaseCanvasComponent {
   componentType: 'layout';
-  name:string;
+  name: string;
   children: string[];
   properties: {
     arrangement: 'stack' | 'row';
@@ -37,7 +37,7 @@ export interface WidgetComponent extends BaseCanvasComponent {
     content?: string;
     textElement?: 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
     // Field-specific
-    controlType: 'text-input' | 'dropdown' | 'radio-buttons' | 'plain-text';
+    controlType: 'text-input' | 'dropdown' | 'radio-buttons' | 'plain-text' | 'voice-input';
   };
 }
 
