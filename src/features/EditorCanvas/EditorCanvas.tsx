@@ -1,15 +1,10 @@
 // src/features/EditorCanvas/EditorCanvas.tsx
-import React, { useRef, useEffect } from 'react';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useRef, useEffect } from 'react';
+import { useAtom, useAtomValue } from 'jotai';
 import { useDroppable } from '@dnd-kit/core';
 import {
-  canvasInteractionAtom,
-  selectionAnchorIdAtom,
   overDndIdAtom,
   selectedCanvasComponentIdsAtom,
-  contextMenuTargetIdAtom,
-  isContextMenuOpenAtom,
-  contextMenuInstanceKeyAtom,
   isPreviewPaneVisibleAtom,
   copyAnimationStateAtom,
 } from '../../data/atoms';
@@ -31,12 +26,12 @@ const CanvasView = () => {
   const overId = useAtomValue(overDndIdAtom);
   const selectedIds = useAtomValue(selectedCanvasComponentIdsAtom);
   const { setNodeRef: setBackgroundNodeRef } = useDroppable({ id: CANVAS_BACKGROUND_ID });
-  
+
   // Event handlers for canvas background interactions
-  const handleCanvasClick = (e: React.MouseEvent) => {
+  const handleCanvasClick = () => {
     // Logic handled by interaction hooks, this is just a surface
   };
-  
+
   const isOverBackground = overId === CANVAS_BACKGROUND_ID;
   const isRootSelected = selectedIds.length === 1 && selectedIds[0] === rootId;
 
@@ -48,13 +43,13 @@ const CanvasView = () => {
 
   return (
     <div className={styles.canvasContainer}>
-       <div className={styles.promptCardHeader}>
+      <div className={styles.promptCardHeader}>
         <h2 className={styles.panelTitle}>Prompt Builder</h2>
       </div>
       <CanvasContextMenu>
-        <div 
-          ref={setBackgroundNodeRef} 
-          className={promptCardClasses} 
+        <div
+          ref={setBackgroundNodeRef}
+          className={promptCardClasses}
           onClick={handleCanvasClick}
         >
           {rootId && <CanvasNode componentId={rootId} />}
@@ -69,7 +64,7 @@ export const EditorCanvas = () => {
   const isPreviewVisible = useAtomValue(isPreviewPaneVisibleAtom);
   const [copyAnimState, setCopyAnimState] = useAtom(copyAnimationStateAtom);
   const editorContainerRef = useRef<HTMLDivElement>(null);
-  
+
   // Auto-scroll capability for drag-and-drop
   useAutoScroller(editorContainerRef);
 
@@ -84,22 +79,22 @@ export const EditorCanvas = () => {
   }, [copyAnimState, setCopyAnimState]);
 
   return (
-    <div 
-      className={styles.editorViewContainer} 
-      data-copy-animation-state={copyAnimState} 
+    <div
+      className={styles.editorViewContainer}
+      data-copy-animation-state={copyAnimState}
       ref={editorContainerRef}
     >
       {/* Floating Controls Pill - Positioned absolute top center */}
       <EditorControlsPill />
-      
+
       {/* Main Split Layout */}
-      <div 
-        className={styles.contentWrapper} 
+      <div
+        className={styles.contentWrapper}
         data-preview-visible={isPreviewVisible}
       >
         <CanvasView />
         <div className={styles.previewGridCell}>
-           <PromptPreviewPanel />
+          <PromptPreviewPanel />
         </div>
       </div>
     </div>

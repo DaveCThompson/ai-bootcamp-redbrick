@@ -37,7 +37,7 @@ export interface WidgetComponent extends BaseCanvasComponent {
     content?: string;
     textElement?: 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
     // Field-specific
-    controlType: 'text-input' | 'dropdown' | 'radio-buttons' | 'plain-text' | 'voice-input';
+    controlType: 'text-input' | 'dropdown' | 'radio-buttons' | 'plain-text';
   };
 }
 
