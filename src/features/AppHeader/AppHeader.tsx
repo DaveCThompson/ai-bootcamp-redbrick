@@ -13,7 +13,7 @@ export const AppHeader = () => {
       <div className={styles.left}>
         <div className={styles.logoGroup}>
           <AnimatedLogo size="header" />
-          <span className="material-symbols-rounded">close</span>
+          <span className="material-symbols-rounded" aria-hidden="true">close</span>
           <PartnerLogo size="header" />
         </div>
       </div>

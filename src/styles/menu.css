@@ -50,8 +50,8 @@
     cursor: pointer;
     padding: var(--spacing-2) var(--spacing-1p5);
     /* 8px 6px */
-    border-radius: var(--radius-lg);
-    /* 10px */
+    border-radius: var(--radius-md);
+    /* 8px for concentric harmony (8+4=12) */
     border: 1px solid transparent;
     /* Reserve space for border */
     transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
