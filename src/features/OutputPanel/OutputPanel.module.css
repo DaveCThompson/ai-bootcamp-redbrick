@@ -8,6 +8,27 @@
     font-family: var(--font-family-sans);
 }
 
+/* Custom header without bottom border for continuity */
+.outputHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--spacing-4);
+    height: 44px;
+    flex-shrink: 0;
+    /* No border-bottom for continuous look */
+}
+
+.outputHeader h4 {
+    margin: 0;
+    color: var(--surface-fg-primary);
+    font-family: var(--font-family-sans);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    letter-spacing: -0.21px;
+}
+
 .panelContent {
     flex: 1;
     overflow-y: auto;
@@ -15,7 +36,7 @@
 }
 
 .markdownOutput {
-    background-color: var(--surface-bg-secondary_subtle);
+    background-color: var(--surface-bg-primary);
     border: 1px solid var(--surface-border-secondary);
     border-radius: var(--radius-lg);
     padding: var(--spacing-3);

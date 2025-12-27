@@ -39,6 +39,12 @@
   --surface-bg-brand-section: var(--primitives-theme-800);
   --surface-bg-active: var(--primitives-grey-50);
 
+  /* Sidebar Selection State */
+  --surface-bg-selected: var(--primitives-grey-100);
+  /* Darker gray for selected nav item */
+  --brand-accent-selected: var(--primitives-grey-800);
+  /* Dark neutral accent bar */
+
   /* Foreground (Text/Icons) */
   --surface-fg-primary: var(--primitives-grey-900);
   --surface-fg-secondary: var(--primitives-grey-700);

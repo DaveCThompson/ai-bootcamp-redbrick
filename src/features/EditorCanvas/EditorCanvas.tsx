@@ -26,8 +26,14 @@ const CanvasView = () => {
   const setInteractionState = useSetAtom(canvasInteractionAtom);
   const { setNodeRef: setBackgroundNodeRef } = useDroppable({ id: CANVAS_BACKGROUND_ID });
 
-  // Click on background deselects all
-  const handleCanvasClick = () => {
+  // Click on background deselects all, but ignore clicks inside Radix portals
+  const handleCanvasClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const isInsideOverlay = target.closest(
+      '[data-radix-popper-content-wrapper], [data-radix-select-content], [data-radix-portal], .menu-popover, [data-floating-ui-portal]'
+    );
+    if (isInsideOverlay) return;
+
     setInteractionState({ mode: 'idle' });
   };
 
@@ -104,9 +110,7 @@ export const EditorCanvas = () => {
       data-copy-animation-state={copyAnimState}
       ref={editorContainerRef}
     >
-      <div className={styles.canvasCard}>
-        <CanvasView />
-      </div>
+      <CanvasView />
     </div>
   );
 };

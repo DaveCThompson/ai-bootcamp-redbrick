@@ -17,19 +17,13 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  /* Centered vertically */
   position: relative;
+  width: 100%;
   height: 100%;
-  padding: var(--spacing-8);
-  padding-top: var(--spacing-12);
-  /* Space for the pill */
-  background: linear-gradient(0deg, var(--surface-bg-quaternary), var(--surface-bg-tertiary));
-  background-size: 200% 200%;
+  /* Secondary background directly - no floating effect */
+  background-color: var(--surface-bg-secondary);
   transition: background-position 0.5s ease-out;
   overflow: hidden;
-  /* Prevent layout shifts from triggering scroll during transition */
 }
 
 .editorViewContainer[data-copy-animation-state='running'] {
@@ -83,27 +77,22 @@
   background-color: var(--surface-bg-secondary_subtle);
 }
 
-/* --- CONTENT WRAPPER (The Grid) --- */
+/* --- CONTENT WRAPPER (No floating card - secondary bg) --- */
 .contentWrapper {
   display: grid;
-  /* 1fr 0fr creates the collapsible drawer effect */
   grid-template-columns: 1fr 0fr;
   width: 100%;
   max-width: 1400px;
-  /* Reasonable max width for the split view */
   height: 85vh;
-  /* Fixed height relative to viewport for "App-like" feel */
 
   border-radius: var(--radius-3xl);
   background-color: var(--surface-bg-primary);
   border: 1px solid var(--surface-border-secondary);
-  box-shadow: var(--surface-shadow-xl);
+  /* Removed: box-shadow for floating effect */
 
-  /* The Magic: Clip the children to create "Concentric Radii" automatically */
   overflow: hidden;
   position: relative;
 
-  /* High-craft transition curve */
   transition: grid-template-columns 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -123,24 +112,22 @@
   position: relative;
 }
 
-/* Canvas Side */
+/* Canvas Side - fills full width, no wrapping */
 .canvasContainer {
   composes: panel;
-  background-color: var(--surface-bg-primary);
-  padding: var(--spacing-8);
+  flex: 1;
+  width: 100%;
+  background-color: transparent;
+  /* Inherits secondary from editorViewContainer */
+  padding: var(--spacing-6);
   overflow-y: auto;
-  /* Internal scroll */
-
-  /* Create the separator line on the right edge of the canvas */
-  border-right: 1px solid transparent;
-  transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .contentWrapper[data-preview-visible='true'] .canvasContainer {
   border-right-color: var(--surface-border-secondary);
 }
 
-/* --- CANVAS CARD (Replacement for contentWrapper in single-pane mode) --- */
+/* --- CANVAS CARD (Secondary bg, no shadow) --- */
 .canvasCard {
   width: 100%;
   max-width: 1400px;
@@ -149,7 +136,7 @@
   border-radius: var(--radius-3xl);
   background-color: var(--surface-bg-primary);
   border: 1px solid var(--surface-border-secondary);
-  box-shadow: var(--surface-shadow-xl);
+  /* Removed: box-shadow for floating effect */
 
   overflow: hidden;
   position: relative;
@@ -368,13 +355,25 @@
 
 /* 
  * NESTED HOVER SUPPRESSION:
- * If a child element (like the text input) is being hovered, 
- * we want to turn *off* the border hover effect on the parent selectable container,
- * UNLESS that container is currently selected.
+ * Suppress parent wrapper border when hovering any internal interactive content.
+ * Does NOT apply when parent is selected (user should see selection state).
  */
-.selectableWrapper:not(.selected):has(.promptElementContent:hover) {
+.selectableWrapper:not(.selected):has(.promptElementContent:hover),
+.selectableWrapper:not(.selected):has(.controlPlaceholder:hover),
+.selectableWrapper:not(.selected):has(.roleBlock:hover),
+.selectableWrapper:not(.selected):has(.snippetHeader:hover),
+.selectableWrapper:not(.selected):has(.layoutContainerContent:hover),
+.selectableWrapper:not(.selected):has(.templateItemInput:hover),
+.selectableWrapper:not(.selected):has(.templateItem:hover),
+.selectableWrapper:not(.selected):has(.templateContainer:hover) {
   border-color: var(--canvas-block-border-idle);
 }
+
+/* Template item inputs hover state */
+.templateItemInput:hover {
+  background-color: var(--input-bg-attention-hover);
+}
+
 
 .inlineInput {
   background: transparent;

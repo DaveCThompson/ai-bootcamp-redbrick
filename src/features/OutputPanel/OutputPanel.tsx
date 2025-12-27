@@ -3,7 +3,6 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { promptMarkdownAtom } from '../../data/markdownSelectors';
 import { copyAnimationStateAtom } from '../../data/atoms';
 import { addToastAtom } from '../../data/toastAtoms';
-import { PanelHeader } from '../../components/PanelHeader';
 import { Button } from '../../components/Button';
 import styles from './OutputPanel.module.css';
 
@@ -20,20 +19,19 @@ export const OutputPanel = () => {
 
     return (
         <div className={styles.outputPanelContainer}>
-            <PanelHeader
-                title="Output"
-                actions={
-                    <Button
-                        variant="primary"
-                        size="s"
-                        onClick={handleCopy}
-                        aria-label="Copy Full Prompt"
-                    >
-                        <span className="material-symbols-rounded">content_copy</span>
-                        Copy
-                    </Button>
-                }
-            />
+            {/* Custom header without border for continuity */}
+            <div className={styles.outputHeader}>
+                <h4>Output</h4>
+                <Button
+                    variant="primary"
+                    size="s"
+                    onClick={handleCopy}
+                    aria-label="Copy Full Prompt"
+                >
+                    <span className="material-symbols-rounded">content_copy</span>
+                    Copy
+                </Button>
+            </div>
             <div className={styles.panelContent}>
                 <pre className={styles.markdownOutput}>{markdown}</pre>
             </div>

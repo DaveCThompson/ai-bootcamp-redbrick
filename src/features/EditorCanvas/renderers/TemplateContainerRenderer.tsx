@@ -61,7 +61,7 @@ const TemplateFormItem = ({ component }: { component: WidgetComponent }) => {
 
 // The main renderer for the entire template block
 export const TemplateContainerRenderer = ({ component }: RendererProps<ContainerComponent>) => {
-  const { isSelected, isDragging, isOnlySelection, sortableProps, selectionProps, dndListeners } = useEditorInteractions(component);
+  const { isSelected, isDragging, isOnlySelection, sortableProps, selectionProps, contextMenuProps, dndListeners } = useEditorInteractions(component);
   const allComponents = useAtomValue(canvasComponentsByIdAtom);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -69,22 +69,23 @@ export const TemplateContainerRenderer = ({ component }: RendererProps<Container
     wrapperRef.current = node;
     sortableProps.ref(node);
   };
-  
+
   const wrapperClasses = `${styles.sortableItem} ${isDragging ? styles.isDragging : ''}`;
   const selectionClasses = `${styles.selectableWrapper} ${isSelected ? styles.selected : ''}`;
 
   return (
     <div className={wrapperClasses} {...sortableProps} data-id={component.id} ref={setMergedRefs}>
-      <div className={selectionClasses} {...selectionProps} {...dndListeners}>
+      <div className={selectionClasses} {...selectionProps} {...contextMenuProps} {...dndListeners}>
         {isOnlySelection && <CanvasSelectionToolbar componentId={component.id} referenceElement={wrapperRef.current} dndListeners={dndListeners} />}
-        
+
+
         <div className={styles.templateContainer}>
-            <h2 className={styles.panelTitle}>{component.name}</h2>
-            {component.children.map(childId => {
-                const childComponent = allComponents[childId] as WidgetComponent | undefined;
-                if (!childComponent) return null;
-                return <TemplateFormItem key={childId} component={childComponent} />;
-            })}
+          <h2 className={styles.panelTitle}>{component.name}</h2>
+          {component.children.map(childId => {
+            const childComponent = allComponents[childId] as WidgetComponent | undefined;
+            if (!childComponent) return null;
+            return <TemplateFormItem key={childId} component={childComponent} />;
+          })}
         </div>
       </div>
     </div>

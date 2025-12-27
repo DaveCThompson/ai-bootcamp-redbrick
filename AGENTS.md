@@ -84,3 +84,24 @@ These are non-negotiable rules learned from the project's history. Violating the
 17. **Strict Concentric Radii Calculation.** Do not guess radii. **STOP AND COMPUTE:** `Inner Radius = Outer Radius - Padding`.
     -   *Example:* A standard menu item has a `10px` radius and `4px` padding. Therefore, any internal button or highlight must have a `6px` radius.
     -   *Violation:* Using `4px` (too sharp) or `8px` (too round) breaks the visual harmony.
+
+18. **Avoid `as any` Casts.** Use specific union types or discriminated narrowing instead. Common fix: add a guard clause before the cast to narrow the type (e.g., `if (type === 'snippet') return;` before casting to a non-snippet union). Lint will flag `as any`—fix it properly, don't suppress.
+
+19. **Use Global Form Styles for Modal Inputs.** Inputs and textareas in modals should rely on `forms.css` global styles, not inline styles. This ensures consistent focus rings (`--control-focus-ring-standard`), borders (`--surface-border-primary`), and hover states. Remove all inline `style={{}}` from form elements.
+
+20. **Modal Close Buttons Must Use Button Component.** Never create bare `<button>` elements for modal close. Use `<Button variant="tertiary" size="s" iconOnly>` for proper hover states and consistent styling. This applies to all modal headers.
+
+21. **Context Menu Must Set Target Before Opening.** All canvas components must spread `contextMenuProps` from `useEditorInteractions`. This handler sets `contextMenuTargetIdAtom` on right-click, ensuring the context menu always operates on the currently right-clicked item.
+    -   **Pattern:** `<div {...selectionProps} {...contextMenuProps} {...dndListeners}>`
+    -   **Failure Mode:** Without this, context menu operates on previously selected item, not the right-clicked one.
+
+22. **Radix Select Must Capture Events.** When using Radix Select inside canvas components, the trigger must capture pointer and click events to prevent bubbling to parent deselection handlers.
+    -   **Required Handlers:** `onPointerDownCapture={e => e.stopPropagation()}` and `onClickCapture={e => e.stopPropagation()}`
+    -   **Required Handlers:** `onPointerDownCapture={e => e.stopPropagation()}` and `onClickCapture={e => e.stopPropagation()}`
+    -   **Failure Mode:** Dropdown opens then immediately closes as parent click handler fires.
+
+23. **Respect Layout Background Hierarchy.** Follow the strict background color pattern for the app layout:
+    -   **App Wrapper:** `--surface-bg-tertiary` (Darker frame)
+    -   **Workspace/Canvas/Elements Panel:** `--surface-bg-secondary` (Flat, no floating cards)
+    -   **Output/Content:** `--surface-bg-primary` (White, high contrast)
+    -   **Violation:** Wrapping the canvas in a white card or making the side panel white breaks the desired depth hierarchy.

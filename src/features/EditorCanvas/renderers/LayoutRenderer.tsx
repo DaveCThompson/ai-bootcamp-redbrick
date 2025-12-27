@@ -16,12 +16,12 @@ import styles from '../EditorCanvas.module.css';
 // --- Pure View Component ---
 const LayoutView = React.memo(({ children }: { children?: React.ReactNode }) => {
   // Simplified: Always a vertical stack with a default gap.
-  const contentStyle: React.CSSProperties = { 
-    display: 'flex', 
+  const contentStyle: React.CSSProperties = {
+    display: 'flex',
     flexDirection: 'column',
     gap: 'var(--spacing-4)', // Use a consistent, non-configurable gap
   };
-  
+
   return (
     <div>
       <div data-arrangement="stack">
@@ -33,7 +33,7 @@ const LayoutView = React.memo(({ children }: { children?: React.ReactNode }) => 
 
 // --- Unified Renderer ---
 export const LayoutRenderer = ({ component, mode }: RendererProps<ContainerComponent>) => {
-  const { isSelected, isDragging, isOnlySelection, isRoot, sortableProps, selectionProps, dndListeners } = useEditorInteractions(component);
+  const { isSelected, isDragging, isOnlySelection, isRoot, sortableProps, selectionProps, contextMenuProps, dndListeners } = useEditorInteractions(component);
   const overId = useAtomValue(overDndIdAtom);
   const dropPlaceholder = useAtomValue(dropPlaceholderAtom);
   const activeDndId = useAtomValue(activeDndIdAtom);
@@ -63,7 +63,8 @@ export const LayoutRenderer = ({ component, mode }: RendererProps<ContainerCompo
   };
 
   const wrapperClasses = `${styles.sortableItem} ${isDragging ? styles.isDragging : ''}`;
-  const selectionClasses = `${styles.selectableWrapper} ${isSelected ? styles.selected : ''}`;
+  // Root should not have selectableWrapper class to prevent hover/selection styling
+  const selectionClasses = isRoot ? '' : `${styles.selectableWrapper} ${isSelected ? styles.selected : ''}`;
   const containerClasses = [
     styles.formComponentWrapper, styles.layoutContainer,
     isEmpty ? styles.layoutContainerEmpty : '',
@@ -76,8 +77,10 @@ export const LayoutRenderer = ({ component, mode }: RendererProps<ContainerCompo
 
   return (
     <div className={wrapperClasses} {...sortableProps} data-id={component.id} ref={setMergedRefsForSortable}>
-      <div className={selectionClasses} {...selectionProps} {...dndListeners}>
+      <div className={selectionClasses} {...(isRoot ? {} : { ...selectionProps, ...contextMenuProps, ...dndListeners })}>
         {isOnlySelection && !isRoot && <CanvasSelectionToolbar componentId={component.id} referenceElement={wrapperRef.current} dndListeners={dndListeners} />}
+
+
         <div className={containerClasses} data-is-root={isRoot}>
           <div ref={setMergedRefsForDroppable} className={styles.layoutContainerContent}>
             <LayoutView>

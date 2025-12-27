@@ -3,7 +3,8 @@ import { ComponentGroup } from '../types';
 
 export const promptElements: ComponentGroup[] = [
   {
-    title: 'Structure & Content',
+    title: 'Structure & Context',
+    labId: 'lab-3',
     components: [
       { id: 'group-container', name: 'Group', type: 'layout', icon: 'view_quilt' },
       { id: 'heading', name: 'Section Header', type: 'widget', icon: 'title' },
@@ -12,6 +13,7 @@ export const promptElements: ComponentGroup[] = [
   },
   {
     title: 'Variables',
+    labId: 'lab-2',
     components: [
       { id: 'role-container', name: 'Role', type: 'dynamic', icon: 'person' },
       { id: 'text-input', name: 'Text Input', type: 'widget', icon: 'text_fields' },

@@ -1,3 +1,4 @@
+
 # CSS Specification
 
 Specific token values and implementation details for the CSS design system. For high-level patterns and principles, see [STRATEGY-CSS.md](./STRATEGY-CSS.md).
@@ -23,6 +24,16 @@ Specific token values and implementation details for the CSS design system. For 
 | `--radius-lg` | 10px | Icon-only buttons (s), menu items |
 | `--radius-xl` | 12px | Icon-only buttons (m), toolbar/menu containers |
 | `--radius-2xl` | 16px | Larger containers (unused after radius step-down) |
+
+### Panel Background Hierarchy
+
+The application follows a strict background color hierarchy to define depth and structure:
+
+| Token | Purpose | Usage |
+|-------|---------|-------|
+| `--surface-bg-tertiary` | **App Shell / Wrapper** | The outermost app container. Creates a darker backdrop for the "raised" workspace. |
+| `--surface-bg-secondary` | **Workspace / Canvas** | The "flat" background for the Prompt Elements panel and the main Editor Canvas. No floating cards here. |
+| `--surface-bg-primary` | **Content Zones** | The Output Panel and specific content cards. Creates the highest contrast area for reading/results. |
 
 ### Current Concentric Radii Implementation
 
@@ -108,3 +119,20 @@ These tokens draw user focus to editable input fields.
 |-------|-------|-------|
 | `--input-bg-attention` | `var(--primitives-theme-25)` | Editable input background |
 | `--input-bg-attention-hover` | `var(--primitives-theme-50)` | Editable input hover |
+
+---
+
+## Component Browser Item Specifications
+
+Action buttons that appear on hover within Component Browser draggable items.
+
+| Property | Value | Notes |
+|----------|-------|-------|
+| Button Size | 24px × 24px | Matches icon-only small hit area |
+| Border Radius | `--radius-sm` (6px) | Concentric with parent item radius |
+| Icon Size | 16px | Smaller than default 20px |
+| Icon `opsz` | 16 | Must match icon size |
+| Transition | 0.15s ease-in-out | Opacity + color |
+| Rest Color | `--control-fg-tertiary` | |
+| Hover Color | `--control-fg-tertiary-hover` | |
+| Hover Background | `--control-bg-tertiary-hover` | |

@@ -69,20 +69,15 @@ export const CanvasSelectionToolbar = ({
             </Button>
           </Toolbar.Button>
           <Toolbar.Separator className={styles.divider} />
-          <Tooltip content={renameTooltipContent} side="top">
-            <Toolbar.Button asChild>
-              <Button variant="tertiary" size="s" iconOnly onClick={actions.handleRename} aria-label="Rename component" disabled={!capabilities.canRename}>
-                <span className="material-symbols-rounded">edit</span>
-              </Button>
-            </Toolbar.Button>
-          </Tooltip>
-          <Tooltip content="Copy Snippet" side="top">
-            <Toolbar.Button asChild>
-              <Button variant="tertiary" size="s" iconOnly onClick={actions.handleCopySnippet} aria-label="Copy component snippet">
-                <span className="material-symbols-rounded">content_copy</span>
-              </Button>
-            </Toolbar.Button>
-          </Tooltip>
+          {capabilities.canRename && (
+            <Tooltip content={renameTooltipContent} side="top">
+              <Toolbar.Button asChild>
+                <Button variant="tertiary" size="s" iconOnly onClick={actions.handleRename} aria-label="Rename component">
+                  <span className="material-symbols-rounded">edit</span>
+                </Button>
+              </Toolbar.Button>
+            </Tooltip>
+          )}
           {capabilities.canUnlink && (
             <Tooltip content="Unlink Snippet" side="top">
               <Toolbar.Button asChild>

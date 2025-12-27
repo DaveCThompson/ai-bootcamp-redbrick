@@ -42,12 +42,16 @@ export const Select = ({ children, value, onValueChange, placeholder }: SelectPr
       <RadixSelect.Trigger
         className={styles.selectTrigger}
         aria-label={placeholder}
-        data-focused={isOpen} // Add data attribute for focus styling
+        data-focused={isOpen}
+        onPointerDownCapture={e => e.stopPropagation()}
+        onClickCapture={e => e.stopPropagation()}
       >
+
         <RadixSelect.Value placeholder={placeholder} />
         <RadixSelect.Icon className={styles.selectIcon}>
           <span className="material-symbols-rounded">expand_more</span>
         </RadixSelect.Icon>
+
       </RadixSelect.Trigger>
       <RadixSelect.Portal>
         {/* Use global .menu-popover for appearance and local .selectContent for width */}

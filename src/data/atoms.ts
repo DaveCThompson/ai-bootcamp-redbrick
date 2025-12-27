@@ -9,10 +9,27 @@ export type AppViewMode = 'welcome' | 'editor' | 'references';
 export type ToolbarTabId = 'lab-1' | 'lab-2' | 'lab-3' | 'lab-4';
 export type SettingsLayoutMode = 'single-column' | 'two-column';
 
+// --- New Sidebar Navigation (PRD v1.1) ---
+export type PrimaryNavMode = 'builder' | 'reference';
+export type SidebarNavItem = 'welcome' | 'lab-1' | 'lab-2' | 'lab-3' | 'lab-4';
+
+export const primaryNavModeAtom = atom<PrimaryNavMode>('builder');
+export const sidebarNavItemAtom = atom<SidebarNavItem>('lab-1');
+
+// Derived atom: panels visible only in builder mode AND not on welcome
+export const shouldShowPanelsAtom = atom((get) => {
+  const mode = get(primaryNavModeAtom);
+  const navItem = get(sidebarNavItemAtom);
+  if (mode === 'reference') return false;
+  if (navItem === 'welcome') return false;
+  return true;
+});
+// --- End New Sidebar Navigation ---
+
 export const appViewModeAtom = atom<AppViewMode>('editor');
 export const isSettingsMenuOpenAtom = atom(false);
 export const activeToolbarTabAtom = atom<ToolbarTabId>('lab-1');
-export const isComponentBrowserVisibleAtom = atom(false);
+export const isComponentBrowserVisibleAtom = atom(true);
 
 // =================================================================
 //                         View Preferences

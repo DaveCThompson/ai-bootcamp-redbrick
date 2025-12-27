@@ -29,6 +29,19 @@ React components, UI libraries (Radix), and animation libraries (Framer Motion) 
 
 ## Key Architectural Patterns
 
+### The "Unwrapped" Layout Strategy
+
+The application layout uses a specific background hierarchy to create depth without clutter:
+
+1.  **App Wrapper (Tertiary):** The outermost container uses a darker tertiary background to frame the workspace.
+2.  **Workspace (Secondary):** The main "raised" sheet uses the secondary background.
+3.  **Panels & Canvas:**
+    *   **Elements Panel:** Inherits the **Secondary** background (Flat).
+    *   **Editor Canvas:** Inherits the **Secondary** background (Flat). It is **NO LONGER** a floating card. It fills the available space.
+    *   **Output Panel:** Uses the **Primary (White)** background to stand out as the result/read area.
+
+**Goal:** This creates a visual progression from "App Frame" -> "Workspace/Tools" -> "Final Output".
+
 ### The Concentric Radii Pattern
 
 When a container wraps interactive elements (buttons, menu items), its `border-radius` must equal the inner element's radius plus the container's padding.
@@ -43,15 +56,6 @@ This creates visually harmonious, concentric rounded corners. See SPEC-CSS for c
 -   Container Radius: 10px (`--radius-lg`)
 -   Padding/Spacing: 4px
 -   Button Radius: `10px - 4px = 6px` (`--radius-sm`)
-
-### The "Safe Zone" Padding Contract for Focus Rings
-
-We use a **2px outer focus ring** for all interactive components.
-
--   **Problem:** Parent containers with `overflow: hidden` will clip this ring.
--   **Solution:** Any container with `overflow: hidden` must provide internal padding (`2px` / `--spacing-0p5`) to accommodate focus rings.
-
-**Exception:** Menu items use an **inset box-shadow** for focus state since they're flush with popover edges.
 
 ### The Shared Menu System
 
@@ -68,15 +72,6 @@ A three-layer system controls icon appearance:
 
 **Critical Rule:** The `font-variation-settings` property is **atomic**—every rule must define all four axes (`FILL`, `wght`, `GRAD`, `opsz`).
 
-**Important Note on Optical Sizing:** If you need to use icons smaller than 20px (e.g., 16px), you **must** ensure the `index.html` font import includes the correct range (e.g., `15..48`). If the import defaults to `20..48`, the browser will clamp any `opsz` value below 20 to 20px, causing icons to look "fat" or distorted.
-
-### The Icon Badging Pattern
-
-To add secondary information to an icon:
--   Wrapper `div` with `position: relative`
--   Badge icon absolutely positioned at top-right
--   Smaller `font-size` and matching `opsz` for clarity
-
 ### The Canvas Block State Pattern
 
 Canvas components use **borders to communicate state**, not to define structure. This reduces visual clutter from nested borders.
@@ -85,12 +80,9 @@ Canvas components use **borders to communicate state**, not to define structure.
 -   **Hover:** `border-color: var(--canvas-block-border-hover)` - Faint grey
 -   **Selected:** `border-color: var(--canvas-block-border-selected)` - Theme color
 
-**Smart Nested Hover:** Use `:has()` to suppress parent hover when child is hovered:
-```css
-.selectableWrapper:hover:has(.selectableWrapper:hover) {
-  border-color: transparent;
-}
-```
+**Smart Nested Hover:** Use `:has()` to suppress parent hover when any internal content is hovered. This applies when a parent is NOT selected.
+
+**Design Principle:** Only the deepest hovered element shows its border; parents remain invisible unless selected.
 
 ### The Input Attention Pattern
 
@@ -100,3 +92,14 @@ Editable input fields on the canvas use a subtle theme-tinted background to draw
 -   **Read-only content:** `background-color: var(--surface-bg-secondary_subtle)`
 
 This visual hierarchy guides users to interactive elements without adding borders.
+
+### The Component Browser Item Pattern
+
+Draggable items in the Component Browser use a consistent pattern for hover-reveal actions:
+
+1.  **Base:** Item uses `menu-item` class for consistent list styling (height, padding, hover background).
+2.  **Actions Container:** Positioned absolutely at right, hidden by default (`opacity: 0`).
+3.  **Hover Reveal:** On item hover, actions appear (`opacity: 1`) with 0.15s transition.
+4.  **Button Stops:** Action buttons use `onPointerDown={e => e.stopPropagation()}` to prevent drag initiation.
+
+**Why This Pattern:** Enables both dragging (via the item body) and quick actions (via dedicated buttons) without conflicting interactions.

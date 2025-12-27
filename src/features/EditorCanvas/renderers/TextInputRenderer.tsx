@@ -26,7 +26,7 @@ const TextInputView = memo(({ label, placeholder, isLabelHidden }: WidgetCompone
 
 // --- Unified Renderer ---
 export const TextInputRenderer = ({ component, mode }: RendererProps<WidgetComponent>) => {
-  const { isSelected, isEditing, isDragging, isOnlySelection, sortableProps, selectionProps, dndListeners } = useEditorInteractions(component);
+  const { isSelected, isEditing, isDragging, isOnlySelection, sortableProps, selectionProps, contextMenuProps, dndListeners } = useEditorInteractions(component);
   const setInteractionState = useSetAtom(canvasInteractionAtom);
   const commitAction = useSetAtom(commitActionAtom);
 
@@ -55,9 +55,10 @@ export const TextInputRenderer = ({ component, mode }: RendererProps<WidgetCompo
 
   return (
     <div className={wrapperClasses} {...sortableProps} data-id={component.id} ref={setMergedRefs}>
-      <div className={selectionClasses} {...selectionProps} {...dndListeners}>
+      <div className={selectionClasses} {...selectionProps} {...contextMenuProps} {...dndListeners}>
         {isOnlySelection && <CanvasSelectionToolbar componentId={component.id} referenceElement={wrapperRef.current} dndListeners={dndListeners} />}
-        
+
+
         {isEditing ? (
           <div className={styles.promptElementContent}>
             <input {...editableProps} ref={ref} className={`${styles.inlineInput} ${styles.inlineInputForLabel}`} onClick={(e) => e.stopPropagation()} />

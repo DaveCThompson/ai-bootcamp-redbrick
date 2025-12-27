@@ -10,8 +10,11 @@ import panelStyles from '../../components/panel.module.css';
 import { SnippetsSection } from './SnippetsSection';
 import { SnippetModal } from './SnippetModal';
 
+interface GeneralComponentsBrowserProps {
+  labId?: string;
+}
 
-export const GeneralComponentsBrowser = () => {
+export const GeneralComponentsBrowser = ({ labId = 'lab-1' }: GeneralComponentsBrowserProps) => {
   const setIsPanelVisible = useSetAtom(isComponentBrowserVisibleAtom);
 
   const handleClosePanel = () => {
@@ -25,13 +28,19 @@ export const GeneralComponentsBrowser = () => {
     type: 'template'
   }));
 
+  // Filter prompt elements by labId
+  const filteredGroups = promptElements.filter(group => group.labId === labId);
+
+  // Snippets and Templates only show on lab-1
+  const showSnippetsAndTemplates = labId === 'lab-1';
+
   return (
     <div className={panelStyles.componentBrowserContainer}>
       <PanelHeader title="Prompt Elements" onClose={handleClosePanel} />
       <div className={panelStyles.componentListContainer}>
         <ul className={panelStyles.componentList}>
-          <SnippetsSection />
-          {templateComponents.length > 0 && (
+          {showSnippetsAndTemplates && <SnippetsSection />}
+          {showSnippetsAndTemplates && templateComponents.length > 0 && (
             <li className={panelStyles.componentListGroup}>
               <h5 className={panelStyles.listGroupTitle}>Templates</h5>
               <ul className={panelStyles.componentListGroupItems}>
@@ -41,7 +50,7 @@ export const GeneralComponentsBrowser = () => {
               </ul>
             </li>
           )}
-          {promptElements.map((group) => (
+          {filteredGroups.map((group) => (
             <li key={group.title} className={panelStyles.componentListGroup}>
               <h5 className={panelStyles.listGroupTitle}>{group.title}</h5>
               <ul className={panelStyles.componentListGroupItems}>
@@ -53,7 +62,7 @@ export const GeneralComponentsBrowser = () => {
           ))}
         </ul>
       </div>
-      <SnippetModal />
+      {showSnippetsAndTemplates && <SnippetModal />}
     </div>
   );
 };

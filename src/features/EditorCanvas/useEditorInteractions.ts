@@ -1,11 +1,13 @@
 // src/features/EditorCanvas/useEditorInteractions.ts
 import { useSortable } from '@dnd-kit/sortable';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
   appViewModeAtom,
   canvasInteractionAtom,
   selectionAnchorIdAtom,
   CanvasInteractionState,
+  contextMenuTargetIdAtom,
+  contextMenuInstanceKeyAtom,
 } from '../../data/atoms';
 import { canvasComponentsByIdAtom, rootComponentIdAtom } from '../../data/promptStateAtoms';
 import { CanvasComponent, DndData } from '../../types';
@@ -22,6 +24,8 @@ export const useEditorInteractions = (component: CanvasComponent) => {
   const [anchorId, setAnchorId] = useAtom(selectionAnchorIdAtom);
   const allComponents = useAtomValue(canvasComponentsByIdAtom);
   const rootId = useAtomValue(rootComponentIdAtom);
+  const setContextMenuTargetId = useSetAtom(contextMenuTargetIdAtom);
+  const setContextMenuInstanceKey = useSetAtom(contextMenuInstanceKeyAtom);
 
 
   const isRoot = component.id === rootId;
@@ -94,6 +98,16 @@ export const useEditorInteractions = (component: CanvasComponent) => {
     }
   };
 
+  // Handler for right-click context menu - sets target and triggers selection
+  const handleContextMenu = () => {
+    if (viewMode !== 'editor') return;
+    if (isRoot) return;
+
+    // Set this component as the context menu target before Radix opens the menu
+    setContextMenuTargetId(component.id);
+    setContextMenuInstanceKey(prev => prev + 1);
+  };
+
   const sortableStyle: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -112,6 +126,9 @@ export const useEditorInteractions = (component: CanvasComponent) => {
     },
     selectionProps: {
       onClick: handleSelect,
+    },
+    contextMenuProps: {
+      onContextMenu: handleContextMenu,
     },
     dndListeners: listeners,
   };

@@ -19,7 +19,7 @@ export const SnippetInstanceRenderer = ({ component, mode = 'canvas' }: SnippetI
 
     // Cast to CanvasComponent since useEditorInteractions expects the full union type
     // SnippetInstanceComponent is a valid CanvasComponent as per types.ts
-    const { isSelected, sortableProps, selectionProps, dndListeners } = useEditorInteractions(
+    const { isSelected, sortableProps, selectionProps, contextMenuProps, dndListeners } = useEditorInteractions(
         component as unknown as import('../../../types').CanvasComponent
     );
 
@@ -61,8 +61,10 @@ export const SnippetInstanceRenderer = ({ component, mode = 'canvas' }: SnippetI
             className={wrapperClasses}
             style={sortableProps.style}
             {...selectionProps}
+            {...contextMenuProps}
             {...dndListeners}
         >
+
             <Collapsible.Root open={isExpanded} onOpenChange={handleToggle}>
                 <Collapsible.Trigger asChild>
                     <div className={styles.snippetHeader}>

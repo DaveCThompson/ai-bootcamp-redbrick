@@ -15,7 +15,7 @@ import styles from '../EditorCanvas.module.css';
  * Uses the design system Select component for high-craft dropdown.
  */
 export const RoleRenderer = ({ component, mode }: RendererProps<DynamicComponent>) => {
-  const { isSelected, isDragging, isOnlySelection, sortableProps, selectionProps, dndListeners } = useEditorInteractions(component);
+  const { isSelected, isDragging, isOnlySelection, sortableProps, selectionProps, contextMenuProps, dndListeners } = useEditorInteractions(component);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const commitAction = useSetAtom(commitActionAtom);
 
@@ -75,8 +75,9 @@ export const RoleRenderer = ({ component, mode }: RendererProps<DynamicComponent
 
   return (
     <div className={wrapperClasses} {...sortableProps} data-id={component.id} ref={setMergedRefsForSortable}>
-      <div className={selectionClasses} {...selectionProps} {...dndListeners}>
+      <div className={selectionClasses} {...selectionProps} {...contextMenuProps} {...dndListeners}>
         {isOnlySelection && <CanvasSelectionToolbar componentId={component.id} referenceElement={wrapperRef.current} dndListeners={dndListeners} />}
+
         <RoleView />
       </div>
     </div>

@@ -22,7 +22,7 @@ const PlainTextView = memo(({ content, textElement = 'p' }: { content?: string, 
 
 // --- Unified Renderer ---
 export const PlainTextRenderer = ({ component, mode }: RendererProps<WidgetComponent>) => {
-  const { isSelected, isEditing, isDragging, isOnlySelection, sortableProps, selectionProps, dndListeners } = useEditorInteractions(component);
+  const { isSelected, isEditing, isDragging, isOnlySelection, sortableProps, selectionProps, contextMenuProps, dndListeners } = useEditorInteractions(component);
   const setInteractionState = useSetAtom(canvasInteractionAtom);
   const commitAction = useSetAtom(commitActionAtom);
 
@@ -40,7 +40,7 @@ export const PlainTextRenderer = ({ component, mode }: RendererProps<WidgetCompo
     setInteractionState({ mode: 'selecting', ids: [component.id] });
   };
   const handleCancel = () => setInteractionState({ mode: 'selecting', ids: [component.id] });
-  
+
   const isHeading = component.properties.textElement?.startsWith('h');
   const { ref, ...editableProps } = useEditable<HTMLInputElement | HTMLTextAreaElement>(
     component.properties.content || '',
@@ -49,7 +49,7 @@ export const PlainTextRenderer = ({ component, mode }: RendererProps<WidgetCompo
     isEditing,
     { multiline: !isHeading }
   );
-  
+
   if (mode === 'preview') {
     return <PlainTextView {...component.properties} />;
   }
@@ -62,8 +62,9 @@ export const PlainTextRenderer = ({ component, mode }: RendererProps<WidgetCompo
 
   return (
     <div className={wrapperClasses} {...sortableProps} data-id={component.id} ref={setMergedRefs}>
-      <div className={selectionClasses} {...selectionProps} {...dndListeners}>
+      <div className={selectionClasses} {...selectionProps} {...contextMenuProps} {...dndListeners}>
         {isOnlySelection && <CanvasSelectionToolbar componentId={component.id} referenceElement={wrapperRef.current} dndListeners={dndListeners} />}
+
         <div className={styles.promptElementContent}>
           {isEditing ? (
             isHeading ? (

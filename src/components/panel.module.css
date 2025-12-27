@@ -5,13 +5,10 @@
   width: 100%;
   height: 100%;
   background-color: var(--surface-bg-secondary);
-  /* Container has subtle gray bg */
   font-family: var(--font-family-sans);
   border-right: 1px solid var(--surface-border-secondary);
   position: relative;
-  /* For positioning the action bar */
   overflow: hidden;
-  /* For positioning the action bar */
 }
 
 .componentBrowserContainer.insideModal {
@@ -22,8 +19,7 @@
 .panelHeaderSection {
   flex-shrink: 0;
   border-bottom: 1px solid var(--surface-border-secondary);
-  background-color: var(--surface-bg-primary);
-  /* Header elements on white bg */
+  background-color: var(--surface-bg-secondary);
 }
 
 .componentBrowserHeader {
@@ -107,7 +103,7 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  background-color: var(--surface-bg-primary);
+  background-color: var(--surface-bg-secondary);
   padding-bottom: 80px;
 }
 

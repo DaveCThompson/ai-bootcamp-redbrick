@@ -14,6 +14,7 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
   const defaultState = {
     canRename: false, canDelete: false, canWrap: false, canUnwrap: false,
     canNudgeUp: false, canNudgeDown: false, canSelectParent: false, canUnlink: false,
+    canCopySnippet: false,
   };
 
   if (selectedIds.length === 0) {
@@ -39,8 +40,8 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
       canNudgeUp = index > 0;
       canNudgeDown = index < parent.children.length - 1;
     }
-    // Allow deletion and movement for locked items.
-    return { ...defaultState, canDelete: !isRootSelected, canNudgeUp, canNudgeDown };
+    // Allow deletion and movement for locked items. Copy is always available.
+    return { ...defaultState, canDelete: !isRootSelected, canNudgeUp, canNudgeDown, canCopySnippet: true };
   }
 
   // If any selected component is locked, bulk actions like wrap/delete are disabled.
@@ -51,6 +52,8 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
 
   const canDelete = !isRootSelected;
   const canWrap = !isRootSelected;
+  // Copy snippet is always available for any non-root selection
+  const canCopySnippet = !isRootSelected;
 
   const canUnwrap = isSingleSelection &&
     primaryComponent.componentType === 'layout' &&
@@ -58,7 +61,10 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
     primaryComponent.children.length > 0 &&
     !!parent;
 
-  const canRename = isSingleSelection && !isRootSelected;
+  // canRename: false for root, snippet-instance (has fixed name from source)
+  const canRename = isSingleSelection &&
+    !isRootSelected &&
+    primaryComponent.componentType !== 'snippet-instance';
 
   const canSelectParent = isSingleSelection && !!parent && parent.id !== rootId;
 
@@ -81,5 +87,6 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
     canNudgeDown,
     canSelectParent,
     canUnlink,
+    canCopySnippet,
   };
 };

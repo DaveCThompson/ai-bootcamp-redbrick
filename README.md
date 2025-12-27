@@ -25,6 +25,7 @@ The architectural guidance that follows reflects the new, streamlined focus of A
 -   **Single Source of Truth:** Every piece of data has one, and only one, unambiguous source of truth. State is managed centrally (Jotai), and content is separated from its presentation in the editor.
 -   **State-Driven Appearance:** The UI reflects the application's state by changing the appearance of existing elements (via `data-*` attributes for selection, hover, etc.), not by swapping out chunks of the DOM. This ensures UI stability.
 -   **Predictable Undo/Redo:** Every meaningful action is captured in a robust undo/redo history. This system restores not just the canvas state but also the user's selection state, ensuring that undoing an action feels like a true reversal of the last step.
+-   **Visual Hierarchy:** The UI follows a strict background hierarchy (App Frame > Workspace > Content) to create depth without relying on skeletal borders or unnecessary nesting. The canvas is part of the workspace, not a floating element.
 
 ## 2. Directory Structure & Import Guidelines
 
@@ -54,6 +55,7 @@ The canvas is built for intuitive interaction with a small, focused set of compo
 -   **Text Block:** A simple multi-line text element for descriptive content.
 -   **Variables (Text Input, Role, etc.):** Simple input placeholders that represent data collection points (variables) in a prompt or workflow.
     -   **Role:** A special variable that inserts a predefined persona and prompt snippet. It features an **inline dropdown** directly on the canvas for selecting the desired role, displaying the full prompt text below.
+-   **Snippet Instance:** A reusable text block created from the user's Snippets Library. Renders as a **collapsible accordion** on the canvas showing the snippet name and content. Snippet instances are snapshots—they do not auto-update when the source snippet changes. Users can **unlink** a snippet instance to convert it into a plain text block.
 
 ### Unified Rendering Pattern
 All canvas components are rendered through a unified set of renderer components located in `src/features/EditorCanvas/renderers/`. Each renderer accepts a `mode: 'canvas' | 'preview'` prop to separate its interactive editor appearance from its clean "final" appearance.
@@ -71,6 +73,7 @@ The editor uses an industry-standard selection model:
 ### Data & State Management (`src/data/`)
 *   **`atoms.ts`**: Defines all global **UI state** using Jotai atoms.
 *   **`promptStateAtoms.ts`**: Implements the undo/redo system and manages the core canvas state.
+*   **`snippetsAtoms.ts`**: Manages user-defined snippets with localStorage persistence and CRUD operations.
 *   **`useCanvasDnd.ts`**: Encapsulates all drag-and-drop logic for the canvas.
 *   **`useEditorHotkeys.ts`**: Centralizes all global keyboard shortcut logic.
 
@@ -81,5 +84,8 @@ The editor uses an industry-standard selection model:
     *   `renderers/`: The directory containing the single source of truth for component rendering.
         *   `RoleRenderer.tsx`: Renders the Role component with inline dropdown for role selection.
         *   `TemplateContainerRenderer.tsx`: A specialized renderer for the form-like template block.
+        *   `SnippetInstanceRenderer.tsx`: Renders snippet instances as collapsible accordions.
 *   **`OutputPanel/`**: The right-hand panel displaying the compiled prompt markdown with copy functionality.
 *   **`ComponentBrowser/`**: The left-hand panel for adding new components, with copy-to-clipboard snippet support.
+    *   `SnippetsSection.tsx`: The "MY SNIPPETS" section with create/edit/delete functionality.
+    *   `SnippetModal.tsx`: Modal for creating and editing user snippets.

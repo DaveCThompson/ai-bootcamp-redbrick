@@ -92,6 +92,7 @@ export interface DraggableComponent {
 
 export interface ComponentGroup {
   title: string;
+  labId?: string;
   components: DraggableComponent[];
 }
 
