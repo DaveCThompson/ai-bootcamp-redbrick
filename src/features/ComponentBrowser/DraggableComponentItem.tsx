@@ -77,18 +77,21 @@ export const DraggableComponentItem = ({ component, isTemplate = false }: Dragga
                 message: `Added ${component.name} to prompt`
             });
         } else {
+            // Guard: snippets can't be added via COMPONENT_ADD
+            if (component.type === 'snippet') return;
+
             commitAction({
                 action: {
                     type: 'COMPONENT_ADD',
                     payload: {
-                        componentType: component.type as any,
+                        componentType: component.type as 'layout' | 'widget' | 'dynamic',
                         name: component.name,
                         parentId: 'root',
                         index: 9999,
                         // Logic mirrored from Dnd setup 
                         controlType: (component.id === 'heading') ? 'plain-text' :
                             (component.id === 'paragraph') ? 'plain-text' :
-                                (component.type === 'widget') ? component.id as any : undefined,
+                                (component.type === 'widget') ? component.id as WidgetComponent['properties']['controlType'] : undefined,
                         controlTypeProps: component.id === 'heading' ? { textElement: 'h2', content: 'Section Header' } :
                             component.id === 'paragraph' ? { textElement: 'p', content: 'This is a block of text.' } : undefined,
                         dynamicType: component.type === 'dynamic' ? 'role' : undefined,

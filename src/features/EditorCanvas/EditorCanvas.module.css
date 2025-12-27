@@ -407,6 +407,58 @@
   line-height: 1.5;
 }
 
+/* Snippet Instance Styles */
+.snippetHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  cursor: pointer;
+  background-color: transparent;
+  transition: background-color 0.15s ease-out;
+  user-select: none;
+  border-radius: var(--radius-lg);
+}
+
+.selectableWrapper:hover .snippetHeader {
+  background-color: var(--surface-bg-secondary);
+}
+
+.snippetHeaderIcon {
+  color: var(--surface-fg-secondary);
+  font-size: 20px;
+}
+
+.snippetTitle {
+  flex: 1;
+  font-size: 0.95em;
+  font-weight: 600;
+  color: var(--surface-fg-primary);
+}
+
+.snippetChevron {
+  color: var(--surface-fg-tertiary);
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+.snippetChevronExpanded {
+  transform: rotate(180deg);
+}
+
+.snippetContent {
+  padding: var(--spacing-4) var(--spacing-3);
+  background-color: var(--surface-bg-tertiary);
+  border-top: 1px solid var(--surface-border-tertiary);
+  font-size: 0.95em;
+  line-height: 1.6;
+  color: var(--surface-fg-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
+}
+
 /* Drop Placeholder */
 .dropPlaceholder {
   position: absolute;

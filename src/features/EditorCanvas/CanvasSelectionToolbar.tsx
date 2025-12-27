@@ -51,6 +51,9 @@ export const CanvasSelectionToolbar = ({
 
     items.push('separator');
     items.push({ id: 'copy-snippet', icon: 'content_copy', label: 'Copy Snippet', onClick: actions.handleCopySnippet, disabled: false });
+    if (capabilities.canUnlink) {
+      items.push({ id: 'unlink', icon: 'link_off', label: 'Unlink Snippet', onClick: actions.handleUnlink });
+    }
     items.push({ id: 'delete', icon: 'delete', label: 'Delete', hotkey: isMac ? '⌫' : 'Del', onClick: actions.handleDelete, destructive: true, disabled: !capabilities.canDelete });
 
     return items;
@@ -80,6 +83,15 @@ export const CanvasSelectionToolbar = ({
               </Button>
             </Toolbar.Button>
           </Tooltip>
+          {capabilities.canUnlink && (
+            <Tooltip content="Unlink Snippet" side="top">
+              <Toolbar.Button asChild>
+                <Button variant="tertiary" size="s" iconOnly onClick={actions.handleUnlink} aria-label="Unlink snippet">
+                  <span className="material-symbols-rounded">link_off</span>
+                </Button>
+              </Toolbar.Button>
+            </Tooltip>
+          )}
           <Tooltip content="Delete" side="top">
             <Toolbar.Button asChild>
               <Button variant="tertiary" size="s" iconOnly onClick={actions.handleDelete} aria-label="Delete component" disabled={!capabilities.canDelete}>

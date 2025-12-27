@@ -1,0 +1,27 @@
+/* src/features/ComponentBrowser/SnippetModal.module.css */
+
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+    padding: var(--spacing-4);
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.label {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--surface-fg-secondary);
+}
+
+.footerActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-2);
+    width: 100%;
+}

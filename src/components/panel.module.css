@@ -139,6 +139,51 @@
   text-transform: uppercase;
 }
 
+.listGroupTitleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-2);
+}
+
+.listGroupTitleRow .listGroupTitle {
+  margin-bottom: 0;
+}
+
+.listGroupActions {
+  display: flex;
+  gap: var(--spacing-1);
+}
+
+.addGroupButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--control-fg-tertiary);
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+.addGroupButton:hover {
+  background-color: var(--control-bg-tertiary-hover);
+  color: var(--control-fg-tertiary-hover);
+}
+
+.addGroupButton:active {
+  transform: scale(0.95);
+}
+
+.addGroupButton .material-symbols-rounded {
+  font-size: 18px;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 18;
+}
+
 .dataNavItem {
   height: auto;
   min-height: 38px;

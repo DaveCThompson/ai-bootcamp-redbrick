@@ -7,7 +7,8 @@ import { DraggableComponent } from '../../types';
 import { PanelHeader } from '../../components/PanelHeader';
 import { DraggableComponentItem } from './DraggableComponentItem';
 import panelStyles from '../../components/panel.module.css';
-
+import { SnippetsSection } from './SnippetsSection';
+import { SnippetModal } from './SnippetModal';
 
 
 export const GeneralComponentsBrowser = () => {
@@ -29,6 +30,7 @@ export const GeneralComponentsBrowser = () => {
       <PanelHeader title="Prompt Elements" onClose={handleClosePanel} />
       <div className={panelStyles.componentListContainer}>
         <ul className={panelStyles.componentList}>
+          <SnippetsSection />
           {templateComponents.length > 0 && (
             <li className={panelStyles.componentListGroup}>
               <h5 className={panelStyles.listGroupTitle}>Templates</h5>
@@ -51,6 +53,7 @@ export const GeneralComponentsBrowser = () => {
           ))}
         </ul>
       </div>
+      <SnippetModal />
     </div>
   );
 };

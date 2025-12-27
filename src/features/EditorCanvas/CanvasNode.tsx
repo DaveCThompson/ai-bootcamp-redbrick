@@ -8,6 +8,7 @@ import { PlainTextRenderer } from './renderers/PlainTextRenderer';
 import { LayoutRenderer } from './renderers/LayoutRenderer';
 import { RoleRenderer } from './renderers/RoleRenderer';
 import { TemplateContainerRenderer } from './renderers/TemplateContainerRenderer';
+import { SnippetInstanceRenderer } from './renderers/SnippetInstanceRenderer';
 
 /**
  * ARCHITECTURE: This is the central "Renderer Router" for the canvas.
@@ -34,6 +35,8 @@ export const CanvasNode = ({ componentId }: { componentId: string }) => {
         }
         // Otherwise, use the default layout renderer.
         return <LayoutRenderer component={comp} mode="canvas" />;
+      case 'snippet-instance':
+        return <SnippetInstanceRenderer component={comp} mode="canvas" />;
       case 'dynamic':
         if (comp.dynamicType === 'role') {
           return <RoleRenderer component={comp} mode="canvas" />;

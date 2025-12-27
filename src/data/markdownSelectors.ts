@@ -32,9 +32,9 @@ const generateMarkdownRecursive = (
             return `${question}\n${answer}`;
           })
           .join('\n\n');
-        
+
         output += `\n${childMarkdown}`;
-        
+
         return output; // Return early to prevent default child processing
       }
 
@@ -75,6 +75,10 @@ const generateMarkdownRecursive = (
         default:
           break;
       }
+      break;
+
+    case 'snippet-instance':
+      output = component.properties.content || '';
       break;
   }
 

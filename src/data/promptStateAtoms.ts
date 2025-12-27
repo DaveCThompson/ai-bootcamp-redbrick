@@ -1,7 +1,7 @@
 // src/data/promptStateAtoms.ts
 import { atom } from 'jotai';
 import { produce, Draft } from 'immer';
-import { ContainerComponent, WidgetComponent, DynamicComponent, CanvasComponent, NormalizedCanvasComponents } from '../types';
+import { ContainerComponent, WidgetComponent, DynamicComponent, SnippetInstanceComponent, CanvasComponent, NormalizedCanvasComponents } from '../types';
 import {
   canvasInteractionAtom,
   CanvasInteractionState,
@@ -53,6 +53,9 @@ export type HistoryAction =
   | { type: 'COMPONENT_UPDATE_PROPERTIES'; payload: { componentId: string; newProperties: Partial<ContainerComponent['properties']>; } }
   | { type: 'COMPONENT_UPDATE_WIDGET_PROPERTIES'; payload: { componentId: string; newProperties: Partial<WidgetComponent['properties']> } }
   | { type: 'COMPONENT_UPDATE_DYNAMIC_PROPERTIES'; payload: { componentId: string; newProperties: Partial<DynamicComponent['properties']> } }
+  | { type: 'SNIPPET_INSTANCE_ADD'; payload: { snippetId: string; snippetName: string; snippetContent: string; parentId: string; index: number } }
+  | { type: 'SNIPPET_UNLINK'; payload: { componentId: string } }
+  | { type: 'SNIPPET_TOGGLE_EXPAND'; payload: { componentId: string } }
   | { type: 'PROMPT_RENAME'; payload: { newName: string } };
 
 // 3. CREATE THE CORE ATOMS
@@ -294,6 +297,65 @@ export const commitActionAtom = atom(
           }
           case 'PROMPT_RENAME': {
             presentState.promptName = action.action.payload.newName;
+            break;
+          }
+          case 'SNIPPET_INSTANCE_ADD': {
+            const { snippetId, snippetName, snippetContent, parentId, index } = action.action.payload;
+            const newSnippetId = crypto.randomUUID();
+            const newSnippet: SnippetInstanceComponent = {
+              id: newSnippetId,
+              parentId,
+              name: snippetName,
+              componentType: 'snippet-instance',
+              properties: {
+                snippetId,
+                content: snippetContent,
+                isExpanded: false,
+              },
+            };
+
+            presentState.components[newSnippet.id] = newSnippet;
+            const parent = presentState.components[parentId];
+            if (parent && parent.componentType === 'layout') {
+              parent.children.splice(index, 0, newSnippet.id);
+            }
+            break;
+          }
+          case 'SNIPPET_UNLINK': {
+            const { componentId } = action.action.payload;
+            const existing = presentState.components[componentId] as SnippetInstanceComponent;
+            if (!existing || existing.componentType !== 'snippet-instance') break;
+
+            const newId = crypto.randomUUID();
+            const newComponent: WidgetComponent = {
+              id: newId,
+              parentId: existing.parentId,
+              componentType: 'widget',
+              properties: {
+                controlType: 'plain-text',
+                textElement: 'p',
+                content: existing.properties.content,
+                label: existing.name,
+              },
+            };
+
+            presentState.components[newComponent.id] = newComponent;
+            const parent = presentState.components[existing.parentId];
+            if (parent && parent.componentType === 'layout') {
+              const idx = parent.children.indexOf(componentId);
+              if (idx !== -1) {
+                parent.children.splice(idx, 1, newComponent.id);
+              }
+            }
+            delete presentState.components[componentId];
+            break;
+          }
+          case 'SNIPPET_TOGGLE_EXPAND': {
+            const { componentId } = action.action.payload;
+            const component = presentState.components[componentId] as SnippetInstanceComponent;
+            if (component && component.componentType === 'snippet-instance') {
+              component.properties.isExpanded = !component.properties.isExpanded;
+            }
             break;
           }
         }

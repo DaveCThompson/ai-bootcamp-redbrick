@@ -100,7 +100,7 @@ export const useCanvasActions = (selectedIds: string[]) => {
       });
     }
   };
-  
+
   const handleCopySnippet = () => {
     if (selectedIds.length !== 1) return;
     const snippet = getComponentSnippet(selectedIds[0]);
@@ -110,6 +110,15 @@ export const useCanvasActions = (selectedIds: string[]) => {
     }
   };
 
+  const handleUnlink = () => {
+    if (selectedIds.length !== 1) return;
+    commitAction({
+      action: { type: 'SNIPPET_UNLINK', payload: { componentId: selectedIds[0] } },
+      message: 'Unlink snippet',
+    });
+    addToast({ message: 'Snippet unlinked', icon: 'link_off' });
+  };
+
   return {
     handleDelete,
     handleRename,
@@ -117,5 +126,6 @@ export const useCanvasActions = (selectedIds: string[]) => {
     handleUnwrap,
     handleNudge,
     handleCopySnippet,
+    handleUnlink,
   };
 };

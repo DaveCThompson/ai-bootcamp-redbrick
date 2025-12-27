@@ -7,7 +7,7 @@ import { templates, TemplateItem } from './templatesMock';
  * Used by the Component Browser to enable "Copy Snippet" functionality.
  */
 export function generateDefaultSnippet(
-    componentType: 'layout' | 'dynamic' | 'widget' | 'template',
+    componentType: 'layout' | 'dynamic' | 'widget' | 'template' | 'snippet',
     options?: {
         dynamicType?: 'role';
         controlType?: 'plain-text' | 'text-input';
@@ -16,6 +16,8 @@ export function generateDefaultSnippet(
     }
 ): string {
     switch (componentType) {
+        case 'snippet':
+            return ''; // Snippets are managed separately
         case 'dynamic':
             if (options?.dynamicType === 'role') {
                 // Default to the first role

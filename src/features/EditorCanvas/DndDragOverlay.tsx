@@ -8,6 +8,7 @@ import { DndData, CanvasComponent } from '../../types';
 import { TextInputRenderer } from './renderers/TextInputRenderer';
 import { PlainTextRenderer } from './renderers/PlainTextRenderer';
 import { RoleRenderer } from './renderers/RoleRenderer';
+import { SnippetInstanceRenderer } from './renderers/SnippetInstanceRenderer';
 
 // --- REPLACEMENTS FOR DELETED PREVIEW COMPONENTS ---
 const BrowserItemPreview = ({ name, icon }: { name: string; icon: string }) => (
@@ -69,6 +70,8 @@ export const DndDragOverlay = ({ activeItem }: DndDragOverlayProps) => {
     switch (comp.componentType) {
       case 'layout':
         return <ContainerPreview component={comp} />;
+      case 'snippet-instance':
+        return <SnippetInstanceRenderer component={comp} mode="preview" />;
       case 'dynamic':
         return <RoleRenderer component={comp} mode="preview" />;
       case 'widget':

@@ -13,7 +13,7 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
 
   const defaultState = {
     canRename: false, canDelete: false, canWrap: false, canUnwrap: false,
-    canNudgeUp: false, canNudgeDown: false, canSelectParent: false,
+    canNudgeUp: false, canNudgeDown: false, canSelectParent: false, canUnlink: false,
   };
 
   if (selectedIds.length === 0) {
@@ -23,9 +23,9 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
   const isSingleSelection = selectedIds.length === 1;
   const primaryComponent = allComponents[selectedIds[0]];
   if (!primaryComponent) {
-      return defaultState;
+    return defaultState;
   }
-  
+
   const isRootSelected = selectedIds.includes(rootId);
   const parent = allComponents[primaryComponent.parentId];
 
@@ -51,7 +51,7 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
 
   const canDelete = !isRootSelected;
   const canWrap = !isRootSelected;
-  
+
   const canUnwrap = isSingleSelection &&
     primaryComponent.componentType === 'layout' &&
     !isRootSelected &&
@@ -70,6 +70,8 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
     canNudgeDown = index < parent.children.length - 1;
   }
 
+  const canUnlink = isSingleSelection && primaryComponent.componentType === 'snippet-instance';
+
   return {
     canRename,
     canDelete,
@@ -78,5 +80,6 @@ export const useComponentCapabilities = (selectedIds: string[]) => {
     canNudgeUp,
     canNudgeDown,
     canSelectParent,
+    canUnlink,
   };
 };

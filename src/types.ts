@@ -52,10 +52,30 @@ export interface DynamicComponent extends BaseCanvasComponent {
   };
 }
 
-export type CanvasComponent = ContainerComponent | WidgetComponent | DynamicComponent;
+// A new component type for snippet instances on canvas
+export interface SnippetInstanceComponent extends BaseCanvasComponent {
+  componentType: 'snippet-instance';
+  name: string; // Displayed in accordion header
+  properties: {
+    snippetId: string; // Reference to source snippet (for potential future sync)
+    content: string; // Snapshot of content at time of creation
+    isExpanded: boolean; // UI state for accordion
+  };
+}
+
+export type CanvasComponent = ContainerComponent | WidgetComponent | DynamicComponent | SnippetInstanceComponent;
 
 // A map of component IDs to their data, for efficient lookups
 export type NormalizedCanvasComponents = Record<string, CanvasComponent>;
+
+// A snippet definition in the library
+export interface Snippet {
+  id: string; // UUID
+  name: string; // User-provided name
+  content: string; // Snippet content
+  createdAt: string; // ISO timestamp
+  updatedAt: string; // ISO timestamp
+}
 
 
 // =================================================================
@@ -66,7 +86,7 @@ export type NormalizedCanvasComponents = Record<string, CanvasComponent>;
 export interface DraggableComponent {
   id: string;
   name: string;
-  type: 'layout' | 'widget' | 'dynamic' | 'template';
+  type: 'layout' | 'widget' | 'dynamic' | 'template' | 'snippet';
   icon: string;
 }
 
@@ -79,10 +99,13 @@ export interface ComponentGroup {
 export interface DndData {
   id: string;
   name: string;
-  type: 'layout' | 'widget' | 'field' | 'dynamic' | 'template';
+  type: 'layout' | 'widget' | 'field' | 'dynamic' | 'template' | 'snippet' | 'snippet-instance';
   icon: string;
   isNew: boolean;
   isTemplate?: boolean;
+  isSnippet?: boolean;
+  snippetId?: string;
+  snippetContent?: string;
   controlType?: WidgetComponent['properties']['controlType'];
   controlTypeProps?: Partial<WidgetComponent['properties']>;
   dynamicType?: DynamicComponent['dynamicType'];
