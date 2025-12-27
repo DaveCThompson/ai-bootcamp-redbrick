@@ -4,7 +4,8 @@ import { isComponentBrowserVisibleAtom } from '../../data/atoms';
 import { promptElements } from '../../data/promptElementsMock';
 import { templates } from '../../data/templatesMock';
 import { DraggableComponent } from '../../types';
-import { PanelHeader } from '../../components/PanelHeader';
+import { Tooltip } from '../../components/Tooltip';
+import { Button } from '../../components/Button';
 import { DraggableComponentItem } from './DraggableComponentItem';
 import panelStyles from '../../components/panel.module.css';
 import { SnippetsSection } from './SnippetsSection';
@@ -36,31 +37,49 @@ export const GeneralComponentsBrowser = ({ labId = 'lab-1' }: GeneralComponentsB
 
   return (
     <div className={panelStyles.componentBrowserContainer}>
-      <PanelHeader title="Prompt Elements" onClose={handleClosePanel} />
-      <div className={panelStyles.componentListContainer}>
-        <ul className={panelStyles.componentList}>
-          {showSnippetsAndTemplates && <SnippetsSection />}
-          {showSnippetsAndTemplates && templateComponents.length > 0 && (
-            <li className={panelStyles.componentListGroup}>
-              <h5 className={panelStyles.listGroupTitle}>Templates</h5>
-              <ul className={panelStyles.componentListGroupItems}>
-                {templateComponents.map((component) => (
-                  <DraggableComponentItem key={component.id} component={component} isTemplate={true} />
-                ))}
-              </ul>
-            </li>
-          )}
-          {filteredGroups.map((group) => (
-            <li key={group.title} className={panelStyles.componentListGroup}>
-              <h5 className={panelStyles.listGroupTitle}>{group.title}</h5>
-              <ul className={panelStyles.componentListGroupItems}>
-                {group.components.map((component) => (
-                  <DraggableComponentItem key={component.id} component={component} />
-                ))}
-              </ul>
-            </li>
-          ))}
-        </ul>
+      <div className={`${panelStyles.scrollFadeContainer}`}>
+        <div className={panelStyles.scrollableContent}>
+          {/* Floating header inside scroll container for sticky behavior */}
+          <div className={panelStyles.floatingPanelHeader}>
+            <h4>Prompt Elements</h4>
+            <div className={panelStyles.floatingHeaderActions}>
+              <Tooltip content="Close Panel">
+                <Button
+                  variant="quaternary"
+                  size="s"
+                  iconOnly
+                  aria-label="Close Panel"
+                  onClick={handleClosePanel}
+                >
+                  <span className="material-symbols-rounded">close</span>
+                </Button>
+              </Tooltip>
+            </div>
+          </div>
+          <ul className={panelStyles.componentList}>
+            {showSnippetsAndTemplates && <SnippetsSection />}
+            {showSnippetsAndTemplates && templateComponents.length > 0 && (
+              <li className={panelStyles.componentListGroup}>
+                <h5 className={panelStyles.listGroupTitle}>Templates</h5>
+                <ul className={panelStyles.componentListGroupItems}>
+                  {templateComponents.map((component) => (
+                    <DraggableComponentItem key={component.id} component={component} isTemplate={true} />
+                  ))}
+                </ul>
+              </li>
+            )}
+            {filteredGroups.map((group) => (
+              <li key={group.title} className={panelStyles.componentListGroup}>
+                <h5 className={panelStyles.listGroupTitle}>{group.title}</h5>
+                <ul className={panelStyles.componentListGroupItems}>
+                  {group.components.map((component) => (
+                    <DraggableComponentItem key={component.id} component={component} />
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
       {showSnippetsAndTemplates && <SnippetModal />}
     </div>

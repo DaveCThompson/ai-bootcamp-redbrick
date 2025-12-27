@@ -1,0 +1,89 @@
+/* src/features/EditorCanvas/AccordionHeader.module.css */
+
+.accordionHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    height: var(--panel-header-height);
+    padding: 0 var(--spacing-3);
+    border-radius: var(--radius-lg);
+    user-select: none;
+    transition: background-color 0.15s ease-out, border-radius 0.15s ease-out;
+}
+
+/* When expanded, flatten bottom corners */
+.accordionHeader.expanded {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+/* Interactive headers (clickable for toggle) */
+.accordionHeader.interactive {
+    cursor: pointer;
+}
+
+.accordionHeader.interactive:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Focus-visible for keyboard navigation */
+.accordionHeader.interactive:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--control-focus-ring-standard);
+}
+
+/* Icon - 20px Material Symbol */
+.headerIcon {
+    font-size: 20px;
+    color: var(--surface-fg-secondary);
+    flex-shrink: 0;
+    /* Ensure all font-variation-settings axes are defined */
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+}
+
+/* Label - flexible, supports inline content */
+.headerLabel {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: 0.95em;
+    font-weight: 600;
+    color: var(--surface-fg-primary);
+}
+
+/* Actions container - for buttons like copy, etc. */
+.headerActions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    flex-shrink: 0;
+}
+
+/* Chevron - 18px with rotation animation */
+.chevron {
+    font-size: 18px;
+    color: var(--surface-fg-tertiary);
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+    /* Ensure all font-variation-settings axes are defined */
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 18;
+}
+
+.chevronExpanded {
+    transform: rotate(180deg);
+}
+
+/* Sticky behavior when inside an expanded accordion */
+.stickyHeader {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background-color: var(--surface-bg-secondary-translucent);
+    backdrop-filter: blur(var(--blur-glass));
+    -webkit-backdrop-filter: blur(var(--blur-glass));
+    margin: 0 calc(var(--spacing-3) * -1);
+    padding: 0 var(--spacing-3);
+    border-radius: 0;
+}

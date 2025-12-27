@@ -2,11 +2,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import TextareaAutosize from 'react-textarea-autosize';
+import * as Collapsible from '@radix-ui/react-collapsible';
 import { canvasComponentsByIdAtom, commitActionAtom } from '../../../data/promptStateAtoms';
 import { ContainerComponent, WidgetComponent } from '../../../types';
 import { RendererProps } from './types';
 import { useEditorInteractions } from '../useEditorInteractions';
 import { CanvasSelectionToolbar } from '../CanvasSelectionToolbar';
+import { AccordionHeader } from '../AccordionHeader';
 import styles from '../EditorCanvas.module.css';
 
 /**
@@ -64,10 +66,16 @@ export const TemplateContainerRenderer = ({ component }: RendererProps<Container
   const { isSelected, isDragging, isOnlySelection, sortableProps, selectionProps, contextMenuProps, dndListeners } = useEditorInteractions(component);
   const allComponents = useAtomValue(canvasComponentsByIdAtom);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  // Local expand state (ephemeral, not undo-able)
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const setMergedRefs = (node: HTMLDivElement | null) => {
     wrapperRef.current = node;
     sortableProps.ref(node);
+  };
+
+  const handleToggle = () => {
+    setIsExpanded(prev => !prev);
   };
 
   const wrapperClasses = `${styles.sortableItem} ${isDragging ? styles.isDragging : ''}`;
@@ -78,14 +86,27 @@ export const TemplateContainerRenderer = ({ component }: RendererProps<Container
       <div className={selectionClasses} {...selectionProps} {...contextMenuProps} {...dndListeners}>
         {isOnlySelection && <CanvasSelectionToolbar componentId={component.id} referenceElement={wrapperRef.current} dndListeners={dndListeners} />}
 
-
         <div className={styles.templateContainer}>
-          <h2 className={styles.panelTitle}>{component.name}</h2>
-          {component.children.map(childId => {
-            const childComponent = allComponents[childId] as WidgetComponent | undefined;
-            if (!childComponent) return null;
-            return <TemplateFormItem key={childId} component={childComponent} />;
-          })}
+          <Collapsible.Root open={isExpanded} onOpenChange={setIsExpanded}>
+            <Collapsible.Trigger asChild>
+              <div>
+                <AccordionHeader
+                  icon="assignment"
+                  label={component.name}
+                  isExpanded={isExpanded}
+                  onToggle={handleToggle}
+                />
+              </div>
+            </Collapsible.Trigger>
+
+            <Collapsible.Content className={styles.accordionContent}>
+              {component.children.map(childId => {
+                const childComponent = allComponents[childId] as WidgetComponent | undefined;
+                if (!childComponent) return null;
+                return <TemplateFormItem key={childId} component={childComponent} />;
+              })}
+            </Collapsible.Content>
+          </Collapsible.Root>
         </div>
       </div>
     </div>

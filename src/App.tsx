@@ -1,5 +1,4 @@
 // src/App.tsx
-import { useEffect, useRef, useState } from 'react';
 import { useAtomValue } from 'jotai';
 import { DndContext, DragOverlay, DropAnimation, defaultDropAnimationSideEffects, PointerSensor, useSensor, useSensors, rectIntersection } from '@dnd-kit/core';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
@@ -27,29 +26,26 @@ import {
   shouldShowPanelsAtom,
   activeDndIdAtom,
   SidebarNavItem,
-  PrimaryNavMode,
 } from './data/atoms';
 
 // Styles
 import styles from './App.module.css';
 
-// --- Slide Animation Variants ---
-const slideVariants: Variants = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? '100%' : '-100%',
+// --- Crossfade Animation Variants (for page transitions) ---
+const crossfadeVariants: Variants = {
+  enter: {
     opacity: 0,
-  }),
+  },
   center: {
-    x: 0,
     opacity: 1,
   },
-  exit: (direction: number) => ({
-    x: direction > 0 ? '-100%' : '100%',
+  exit: {
     opacity: 0,
-  }),
+  },
 };
 
-const slideTransition = { type: 'tween', duration: 0.3, ease: 'easeOut' };
+// Simple crossfade transition for page changes
+const crossfadeTransition = { type: 'tween', duration: 0.2, ease: 'easeOut' };
 
 const dropAnimation: DropAnimation = {
   duration: 0,
@@ -71,20 +67,6 @@ function App() {
   const activeNavItem = useAtomValue(sidebarNavItemAtom);
   const shouldShowPanels = useAtomValue(shouldShowPanelsAtom);
   const activeDndId = useAtomValue(activeDndIdAtom);
-
-  // Track slide direction: -1 = left (to Reference), 1 = right (to Builder)
-  const prevModeRef = useRef<PrimaryNavMode>(primaryMode);
-  const [slideDirection, setSlideDirection] = useState(0);
-
-  useEffect(() => {
-    if (prevModeRef.current !== primaryMode) {
-      // Reference is "left" of Builder in the toggle, so:
-      // Going TO reference = slide left (direction -1)
-      // Going TO builder = slide right (direction 1)
-      setSlideDirection(primaryMode === 'reference' ? -1 : 1);
-      prevModeRef.current = primaryMode;
-    }
-  }, [primaryMode]);
 
   const { activeDndItem, handleDragStart, handleDragOver, handleDragEnd } = useCanvasDnd();
 
@@ -123,12 +105,11 @@ function App() {
           <motion.div
             key="reference"
             className={styles.fullWorkspaceContent}
-            variants={slideVariants}
+            variants={crossfadeVariants}
             initial="enter"
             animate="center"
             exit="exit"
-            custom={slideDirection}
-            transition={slideTransition}
+            transition={crossfadeTransition}
           >
             <ReferencesPage />
           </motion.div>
@@ -143,12 +124,11 @@ function App() {
           <motion.div
             key="welcome"
             className={styles.fullWorkspaceContent}
-            variants={slideVariants}
+            variants={crossfadeVariants}
             initial="enter"
             animate="center"
             exit="exit"
-            custom={slideDirection}
-            transition={slideTransition}
+            transition={crossfadeTransition}
           >
             <WelcomePage />
           </motion.div>
@@ -163,12 +143,11 @@ function App() {
         <motion.div
           key={`builder-${activeNavItem}`}
           className={styles.threePaneLayout}
-          variants={slideVariants}
+          variants={crossfadeVariants}
           initial="enter"
           animate="center"
           exit="exit"
-          custom={slideDirection}
-          transition={slideTransition}
+          transition={crossfadeTransition}
         >
           <ResizablePanel
             initialWidth={INITIAL_PANEL_WIDTH}
@@ -210,7 +189,7 @@ function App() {
       <div className={styles.appContainer}>
         <Sidebar />
         <div className={styles.workspaceContainer}>
-          <AnimatePresence initial={false} custom={slideDirection}>
+          <AnimatePresence initial={false}>
             {workspaceView.content}
           </AnimatePresence>
         </div>

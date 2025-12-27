@@ -45,6 +45,22 @@ Button (--radius-lg, 10px) + Padding (--spacing-1, 4px) = Container (--radius-xl
 - `ActionToolbar.module.css`
 - `SelectionToolbar.module.css`
 - `menu.css` (.menu-popover)
+- `Select` Dropdown (Container: `lg`, Input: `sm`)
+- Canvas Inputs (Wrapper: `lg`, Input: `sm`)
+
+---
+
+## Canvas Typography Hierarchy
+
+Strict typography rules for canvas child content to ensure legibility and hierarchy.
+
+| Element | Size | Weight | Line-Height | Color | Note |
+|---------|------|--------|-------------|-------|------|
+| **AccordionHeader Label** | 0.95em | 600 | — | Primary | Main section title |
+| **Field Label** | 0.85em | 600 | — | Secondary | `templateItemLabel`, `promptElementLabel` |
+| **Content Text** | 0.95em | 400 | 1.5 | Secondary | `snippetContent`, `rolePromptText` |
+| **Input Text** | 1.0em | 400 | — | Primary | User-editable text |
+| **Placeholder** | 0.95em | 400 | — | Tertiary | Empty state text |
 
 ---
 
@@ -136,3 +152,81 @@ Action buttons that appear on hover within Component Browser draggable items.
 | Rest Color | `--control-fg-tertiary` | |
 | Hover Color | `--control-fg-tertiary-hover` | |
 | Hover Background | `--control-bg-tertiary-hover` | |
+
+---
+
+## Panel Header Tokens
+
+Tokens for the floating panel header system:
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--blur-glass` | 16px | Backdrop blur for translucent surfaces |
+| `--panel-header-height` | 44px | Consistent height for all panel headers |
+| `--surface-bg-secondary-translucent` | rgba(249, 249, 249, 0.80) | Translucent grey (for secondary bg panels) |
+| `--surface-bg-primary-translucent` | rgba(255, 255, 255, 0.80) | Translucent white (for primary bg panels) |
+
+---
+
+## Floating Panel Header Specifications
+
+| Property | Value | Notes |
+|----------|-------|-------|
+| Position | `sticky` with `top: 0` | Enables scroll-under effect |
+| Height | `var(--panel-header-height)` (44px) | Consistent across all panels |
+| Z-index | 10 | Above scrolling content, below modals |
+| Padding | `0 var(--spacing-4)` | 16px horizontal |
+| Background | Translucent variant | Depends on parent panel background |
+| Backdrop Filter | `blur(var(--blur-glass))` | 16px glassmorphism blur |
+| Border | `1px solid var(--surface-border-secondary)` | Bottom only |
+| Typography | 14px, 600 weight, -0.21px letter-spacing | Matches other panel headers |
+
+### Scroll-Fade Gradient
+
+| Property | Value | Notes |
+|----------|-------|-------|
+| Height | 48px | Visible fade zone |
+| Position | Absolute, bottom: 0 | Overlays bottom of scroll container |
+| Z-index | 5 | Above content, below header |
+| Pointer Events | none | Allows clicking through gradient |
+
+---
+
+## Accordion Block Specifications
+
+Specifications for canvas accordion components.
+
+### AccordionHeader Layout
+
+| Property | Value | Notes |
+|----------|-------|-------|
+| Height | `var(--panel-header-height)` | 44px |
+| Padding | `0 var(--spacing-3)` | 12px horizontal |
+| Gap | `var(--spacing-2)` | 8px between elements |
+| Border Radius | `var(--radius-lg)` | 10px (0 bottom when expanded) |
+
+### AccordionHeader States
+
+| State | Background | Cursor |
+|-------|------------|--------|
+| Rest | `transparent` | pointer |
+| Hover | `rgba(0, 0, 0, 0.04)` | pointer |
+| Expanded | Bottom radius 0 | Smooth radius transition |
+| Focus-visible | Pink Theme Ring | `--control-focus-ring-standard` |
+
+### Chevron
+
+| Property | Value | Notes |
+|----------|-------|-------|
+| Icon | `expand_more` | Material Symbol |
+| Size | 18px | `font-size` and `opsz` |
+| Color | `--surface-fg-tertiary` | |
+| Rotation | 180deg when expanded | 0.2s ease transition |
+
+### Content Animation
+
+| Property | Value | Notes |
+|----------|-------|-------|
+| Method | `grid-template-rows` | 0fr → 1fr |
+| Duration | 0.25s | ease timing |
+| Overflow | hidden | Required for animation |

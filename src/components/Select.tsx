@@ -43,8 +43,6 @@ export const Select = ({ children, value, onValueChange, placeholder }: SelectPr
         className={styles.selectTrigger}
         aria-label={placeholder}
         data-focused={isOpen}
-        onPointerDownCapture={e => e.stopPropagation()}
-        onClickCapture={e => e.stopPropagation()}
       >
 
         <RadixSelect.Value placeholder={placeholder} />

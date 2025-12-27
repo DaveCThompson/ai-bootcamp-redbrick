@@ -103,3 +103,85 @@ Draggable items in the Component Browser use a consistent pattern for hover-reve
 4.  **Button Stops:** Action buttons use `onPointerDown={e => e.stopPropagation()}` to prevent drag initiation.
 
 **Why This Pattern:** Enables both dragging (via the item body) and quick actions (via dedicated buttons) without conflicting interactions.
+
+### The Floating Panel Header Pattern
+
+Panel headers use a translucent, sticky design that allows content to scroll underneath while maintaining visual context.
+
+**Key Elements:**
+1.  **Sticky Positioning:** Header uses `position: sticky; top: 0` to remain fixed while content scrolls.
+2.  **Translucent Background:** 80% opacity with `backdrop-filter: blur(var(--blur-glass))` for glassmorphism effect.
+3.  **Subtle Separation:** A faint `border-bottom` provides visual separation without heavy styling.
+4.  **Consistent Height:** All panel headers use `var(--panel-header-height)` (44px) for visual harmony.
+
+**Variants:**
+-   **Secondary (default):** `--surface-bg-secondary-translucent` - For panels on secondary backgrounds.
+-   **Primary:** `--surface-bg-primary-translucent` - For panels on white backgrounds (e.g., Output Panel).
+
+**Scroll-Fade Gradient:**
+Add a 48px gradient overlay at the bottom of scrollable containers to indicate more content below. This is achieved via `::after` pseudo-element with `pointer-events: none`.
+
+**Class References:**
+-   `panel.module.css`: `.floatingPanelHeader`, `.scrollFadeContainer`, `.scrollableContent`
+
+### Page Transition Pattern
+
+View transitions (e.g., Builder ↔ Reference) use a simple **crossfade** animation:
+-   **Duration:** 0.2s
+-   **Easing:** `easeOut`
+-   **Variants:** `enter` (opacity: 0) → `center` (opacity: 1) → `exit` (opacity: 0)
+
+This provides clean, unobtrusive transitions without directional movement.
+
+### The Canvas Accordion Block Pattern
+
+Canvas components that can expand/collapse use a unified accordion architecture:
+
+**Structure:**
+1. **AccordionHeader Component:** Shared header with icon, label, actions, and rotating chevron.
+2. **Radix Collapsible:** For accessible expand/collapse state management.
+3. **CSS Grid Animation:** Smooth expand/collapse via `grid-template-rows`.
+
+**Key Behaviors:**
+- **Header:** 44px height, full-width clickable area, hover background state.
+- **Chevron:** 18px Material Symbol, rotates 180° when expanded.
+- **Event Isolation:** Header click toggles collapse, stops propagation to parent selection.
+- **State Management:**
+  - Global state (undo-able) for content-critical accordions (e.g., Snippets).
+  - Local React state for ephemeral UI accordions (e.g., Role, Template).
+
+**Components Using This Pattern:**
+- `SnippetInstanceRenderer` — Collapsible snippet content
+- `RoleRenderer` — Collapsible role prompt text
+- `TemplateContainerRenderer` — Collapsible form fields
+- `LayoutRenderer` (non-root) — Non-collapsible header only
+
+- `AccordionHeader.tsx` + `AccordionHeader.module.css`
+- `.accordionContent` in `EditorCanvas.module.css`
+
+### The Radix inside Draggable Pattern
+
+When placing a Radix UI component (Select, Dropdown, Menu) inside a `dnd-kit` draggable item, a conflict occurs because both systems use pointer event capture.
+
+**The Conflict:**
+- `dnd-kit` needs `mousedown`/`pointerdown` to initiate drag.
+- Radix triggers need `pointerdown` (capture phase) to open.
+- Adding `e.stopPropagation()` to the Radix trigger prevents DnD, but also prevents Radix's own internal handlers if incorrect phase is used.
+
+**The Solution:**
+1.  **Do NOT** put `stopPropagation` on the Radix Trigger itself (especially capture phase).
+2.  **DO** put `onPointerDown={e => e.stopPropagation()}` (bubble phase) on the direct wrapper of the interactive element.
+3.  **DO** use `data-no-dnd="true"` attributes if using the `dnd-kit` sensor filtering strategy.
+
+This ensures the user can click the dropdown without dragging the item, and Radix receives the events it needs to function.
+
+### Pink Theme Alignment Strategy
+
+The application uses a "Warm & Capable" aesthetic defined by the Pink/Red theme. To maintain brand consistency, all interactive focus states must align with this theme, avoiding generic browser blue.
+
+**Global Mandate:**
+- **Focus Rings:** MUST use `--control-focus-ring-standard` which maps to `theme-300` (Pink).
+- **Selection Borders:** MUST use `theme-500` for strong selection states.
+- **Tinted Backgrounds:** Use `theme-25` or `theme-50` for subtle active states (like toolbars or active inputs).
+
+**Avoid:** Hardcoded `#3b82f6` or `blue-500` values for focus or selection.

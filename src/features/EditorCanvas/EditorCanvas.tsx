@@ -48,18 +48,20 @@ const CanvasView = () => {
 
   return (
     <div className={styles.canvasContainer}>
-      <div className={styles.promptCardHeader}>
-        <h2 className={styles.panelTitle}>Prompt Builder</h2>
-      </div>
-      <CanvasContextMenu>
-        <div
-          ref={setBackgroundNodeRef}
-          className={promptCardClasses}
-          onClick={handleCanvasClick}
-        >
-          {rootId && <CanvasNode componentId={rootId} />}
+      <div className={styles.canvasScrollContent}>
+        <div className={styles.promptCardHeader}>
+          <h2 className={styles.panelTitle}>Prompt Builder</h2>
         </div>
-      </CanvasContextMenu>
+        <CanvasContextMenu>
+          <div
+            ref={setBackgroundNodeRef}
+            className={promptCardClasses}
+            onClick={handleCanvasClick}
+          >
+            {rootId && <CanvasNode componentId={rootId} />}
+          </div>
+        </CanvasContextMenu>
+      </div>
       <FloatingMultiSelectToolbar />
     </div>
   );

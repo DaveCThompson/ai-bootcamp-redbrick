@@ -10,7 +10,7 @@
   height: 38px;
   padding: var(--spacing-2) var(--spacing-3);
   border: 1px solid var(--surface-border-primary);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 0.9em;
   background-color: var(--surface-bg-primary);
   color: var(--surface-fg-primary);
@@ -34,10 +34,15 @@
 }
 
 .selectIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--surface-fg-tertiary);
+  font-size: 18px;
+  flex-shrink: 0;
   transition: transform 0.2s ease;
-  margin-top: 2px;
-  /* Optical vertical centering */
+  /* Ensure all font-variation-settings axes are defined for optical sizing */
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 18;
 }
 
 .selectTrigger[data-state='open'] .selectIcon {

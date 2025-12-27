@@ -8,21 +8,58 @@
     font-family: var(--font-family-sans);
 }
 
-/* Custom header without bottom border for continuity */
+/* --- SCROLL FADE CONTAINER --- */
+.scrollFadeContainer {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.scrollFadeContainer::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+    background: linear-gradient(to bottom,
+            transparent 0%,
+            var(--surface-bg-primary) 100%);
+    pointer-events: none;
+    z-index: 5;
+}
+
+.scrollableContent {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 48px;
+    /* Space for fade gradient */
+}
+
+/* --- FLOATING HEADER (Primary/White variant) --- */
 .outputHeader {
+    position: sticky;
+    top: 0;
+    z-index: 10;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height: var(--panel-header-height);
     padding: 0 var(--spacing-4);
-    height: 44px;
+    background-color: var(--surface-bg-primary-translucent);
+    backdrop-filter: blur(var(--blur-glass));
+    -webkit-backdrop-filter: blur(var(--blur-glass));
+    border-bottom: 1px solid var(--surface-border-secondary);
     flex-shrink: 0;
-    /* No border-bottom for continuous look */
 }
 
 .outputHeader h4 {
     margin: 0;
     color: var(--surface-fg-primary);
-    font-family: var(--font-family-sans);
+    font-family: 'Inter', sans-serif;
     font-size: 14px;
     font-weight: 600;
     line-height: 20px;
@@ -30,8 +67,6 @@
 }
 
 .panelContent {
-    flex: 1;
-    overflow-y: auto;
     padding: var(--spacing-4);
 }
 

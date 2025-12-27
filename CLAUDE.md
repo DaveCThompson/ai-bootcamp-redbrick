@@ -95,13 +95,26 @@ These are non-negotiable rules learned from the project's history. Violating the
     -   **Pattern:** `<div {...selectionProps} {...contextMenuProps} {...dndListeners}>`
     -   **Failure Mode:** Without this, context menu operates on previously selected item, not the right-clicked one.
 
-22. **Radix Select Must Capture Events.** When using Radix Select inside canvas components, the trigger must capture pointer and click events to prevent bubbling to parent deselection handlers.
-    -   **Required Handlers:** `onPointerDownCapture={e => e.stopPropagation()}` and `onClickCapture={e => e.stopPropagation()}`
-    -   **Required Handlers:** `onPointerDownCapture={e => e.stopPropagation()}` and `onClickCapture={e => e.stopPropagation()}`
-    -   **Failure Mode:** Dropdown opens then immediately closes as parent click handler fires.
+22. **Manage Radix Events Correctly (Bubble-Wrap Pattern).** When using Radix UI components (Select, Dropdown) inside interactive or draggable areas:
+    -   **NEVER** use `stopPropagation` on the Radix *Trigger* (especially capture phase), as this breaks Radix's internal handlers.
+    -   **ALWAYS** wrap the component in a `div` and use `onPointerDown={e => e.stopPropagation()}` and `onClick={e => e.stopPropagation()}` (Bubble Phase) on the wrapper. This isolates the event from parent handlers (like drag or deselection) without breaking the component.
 
-23. **Respect Layout Background Hierarchy.** Follow the strict background color pattern for the app layout:
+23. **Align Focus Rings to Theme.** Do not use generic blue focus rings. Use `--control-focus-ring-standard` which maps to the application's theme color (`theme-300`, `#ffb6b6`).
+
+24. **Canvas Typography Hierarchy.** Strict adherence to canvas child content typography:
+    -   **Labels:** `0.85em`, `font-weight: 600`, Secondary color.
+    -   **Content:** `0.95em`, `font-weight: 400`, `line-height: 1.5`.
+    -   **Inputs:** `radius-sm` (6px) to match concentric wrapper (`radius-lg`).
+
+25. **Respect Layout Background Hierarchy.** Follow the strict background color pattern for the app layout:
     -   **App Wrapper:** `--surface-bg-tertiary` (Darker frame)
     -   **Workspace/Canvas/Elements Panel:** `--surface-bg-secondary` (Flat, no floating cards)
     -   **Output/Content:** `--surface-bg-primary` (White, high contrast)
     -   **Violation:** Wrapping the canvas in a white card or making the side panel white breaks the desired depth hierarchy.
+
+26. **Use Floating Panel Headers for Scroll-Under Effect.** Panel headers must use `position: sticky` with translucent backgrounds and `backdrop-filter: blur(var(--blur-glass))` to enable content scrolling underneath. This creates depth and maintains context.
+    -   **Pattern:** Wrap scroll content in `.scrollFadeContainer` > `.scrollableContent`, place `.floatingPanelHeader` inside `.scrollableContent` at top.
+    -   **Required Styles:** `position: sticky; top: 0; z-index: 10; background-color: var(--surface-bg-*-translucent); backdrop-filter: blur(var(--blur-glass));`
+    -   **Scroll Fade:** Add `::after` pseudo-element with 48px gradient to indicate scrollable content.
+    -   **Class References:** See `panel.module.css` for `.floatingPanelHeader`, `.scrollFadeContainer`, `.scrollableContent`.
+

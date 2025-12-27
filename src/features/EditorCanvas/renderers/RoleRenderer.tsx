@@ -1,23 +1,27 @@
 // src/features/EditorCanvas/renderers/RoleRenderer.tsx
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useSetAtom } from 'jotai';
+import * as Collapsible from '@radix-ui/react-collapsible';
 import { DynamicComponent } from '../../../types';
 import { RendererProps } from './types';
 import { useEditorInteractions } from '../useEditorInteractions';
 import { CanvasSelectionToolbar } from '../CanvasSelectionToolbar';
+import { AccordionHeader } from '../AccordionHeader';
 import { commitActionAtom } from '../../../data/promptStateAtoms';
 import { roles } from '../../../data/rolesMock';
 import { Select, SelectItem } from '../../../components/Select';
 import styles from '../EditorCanvas.module.css';
 
 /**
- * Renders the "Role" component with a clean, title-like design.
- * Uses the design system Select component for high-craft dropdown.
+ * Renders the "Role" component as a collapsible accordion.
+ * Uses AccordionHeader with inline Select for role type selection.
  */
 export const RoleRenderer = ({ component, mode }: RendererProps<DynamicComponent>) => {
   const { isSelected, isDragging, isOnlySelection, sortableProps, selectionProps, contextMenuProps, dndListeners } = useEditorInteractions(component);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const commitAction = useSetAtom(commitActionAtom);
+  // Local expand state (ephemeral, not undo-able)
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const roleInfo = roles[component.properties.roleType];
 
@@ -36,38 +40,50 @@ export const RoleRenderer = ({ component, mode }: RendererProps<DynamicComponent
     });
   };
 
-  // Clean, title-like view with actual role content
-  const RoleView = () => (
-    <div className={styles.roleBlock}>
-      {/* Title row with design system Select on canvas */}
-      <div className={styles.roleTitle}>
-        <span className="material-symbols-rounded">person</span>
-        {mode === 'canvas' ? (
-          <div className={styles.roleSelectWrapper} onClick={e => e.stopPropagation()}>
-            <Select
-              value={component.properties.roleType}
-              onValueChange={handleRoleChange}
-              placeholder="Select a role..."
-            >
-              {Object.entries(roles).map(([key, roleDef]) => (
-                <SelectItem key={key} value={key}>
-                  {roleDef.label}
-                </SelectItem>
-              ))}
-            </Select>
-          </div>
-        ) : (
-          <span className={styles.roleTitleText}>{roleInfo?.label || 'Role'}</span>
-        )}
-      </div>
+  const handleToggle = () => {
+    setIsExpanded(prev => !prev);
+  };
 
-      {/* Actual role prompt text */}
-      <p className={styles.rolePromptText}>{roleInfo?.promptSnippet}</p>
-    </div>
+  // Inline Select as the label for canvas mode
+  // Layout: "Role" [gap] [dropdown]
+  const labelContent = mode === 'canvas' ? (
+    <>
+      <span style={{ fontWeight: 600, marginRight: 'var(--spacing-2)' }}>Role</span>
+      <div
+        className={styles.roleSelectWrapper}
+        data-no-toggle
+        onPointerDown={e => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
+      >
+        <Select
+          value={component.properties.roleType}
+          onValueChange={handleRoleChange}
+          placeholder="Select a role..."
+        >
+          {Object.entries(roles).map(([key, roleDef]) => (
+            <SelectItem key={key} value={key}>
+              {roleDef.label}
+            </SelectItem>
+          ))}
+        </Select>
+      </div>
+    </>
+  ) : (
+    <span className={styles.roleTitleText}>{roleInfo?.label || 'Role'}</span>
   );
 
   if (mode === 'preview') {
-    return <RoleView />;
+    return (
+      <div className={styles.sortableItem}>
+        <AccordionHeader
+          icon="person"
+          label={roleInfo?.label || 'Role'}
+          showChevron={false}
+          interactive={false}
+        />
+        <p className={styles.rolePromptText}>{roleInfo?.promptSnippet}</p>
+      </div>
+    );
   }
 
   const wrapperClasses = `${styles.sortableItem} ${isDragging ? styles.isDragging : ''}`;
@@ -78,7 +94,20 @@ export const RoleRenderer = ({ component, mode }: RendererProps<DynamicComponent
       <div className={selectionClasses} {...selectionProps} {...contextMenuProps} {...dndListeners}>
         {isOnlySelection && <CanvasSelectionToolbar componentId={component.id} referenceElement={wrapperRef.current} dndListeners={dndListeners} />}
 
-        <RoleView />
+        <div className={styles.roleBlock}>
+          <Collapsible.Root open={isExpanded} onOpenChange={setIsExpanded}>
+            <AccordionHeader
+              icon="person"
+              label={labelContent}
+              isExpanded={isExpanded}
+              onToggle={handleToggle}
+            />
+
+            <Collapsible.Content className={styles.accordionContent}>
+              <p className={styles.rolePromptText}>{roleInfo?.promptSnippet}</p>
+            </Collapsible.Content>
+          </Collapsible.Root>
+        </div>
       </div>
     </div>
   );

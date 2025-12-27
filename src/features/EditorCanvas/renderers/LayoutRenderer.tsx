@@ -11,6 +11,7 @@ import { CanvasEmptyState } from '../CanvasEmptyState';
 import { DropPlaceholder } from '../CanvasUI';
 import { useEditorInteractions } from '../useEditorInteractions';
 import { CanvasSelectionToolbar } from '../CanvasSelectionToolbar';
+import { AccordionHeader } from '../AccordionHeader';
 import styles from '../EditorCanvas.module.css';
 
 // --- Pure View Component ---
@@ -80,6 +81,15 @@ export const LayoutRenderer = ({ component, mode }: RendererProps<ContainerCompo
       <div className={selectionClasses} {...(isRoot ? {} : { ...selectionProps, ...contextMenuProps, ...dndListeners })}>
         {isOnlySelection && !isRoot && <CanvasSelectionToolbar componentId={component.id} referenceElement={wrapperRef.current} dndListeners={dndListeners} />}
 
+        {/* AccordionHeader for non-root containers (no collapse, just visual header) */}
+        {!isRoot && (
+          <AccordionHeader
+            icon="layers"
+            label={component.name}
+            showChevron={false}
+            interactive={false}
+          />
+        )}
 
         <div className={containerClasses} data-is-root={isRoot}>
           <div ref={setMergedRefsForDroppable} className={styles.layoutContainerContent}>

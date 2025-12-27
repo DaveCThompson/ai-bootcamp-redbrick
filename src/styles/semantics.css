@@ -19,6 +19,9 @@
   --surface-bg-secondary-solid: var(--primitives-grey-600);
   /* The translucent, blurred background for main app surfaces. */
   --surface-bg-header-translucent: rgba(249, 249, 249, 0.75);
+  /* Translucent backgrounds (80% opacity for floating headers) */
+  --surface-bg-secondary-translucent: rgba(249, 249, 249, 0.80);
+  --surface-bg-primary-translucent: rgba(255, 255, 255, 0.80);
   --surface-bg-brand-primary: var(--primitives-theme-50);
   --surface-bg-brand-solid: var(--primitives-theme-600);
   --surface-bg-brand-solid_hover: var(--primitives-theme-700);
@@ -100,8 +103,8 @@
   --surface-shadow-3xl: 0 32px 64px -16px #0A0C1223, 0 0 1px 0 #0A0C120A;
 
   /* Canvas Block States */
-  --canvas-block-border-idle: transparent;
-  --canvas-block-border-hover: var(--surface-border-tertiary);
+  --canvas-block-border-idle: var(--surface-border-secondary);
+  --canvas-block-border-hover: var(--surface-border-primary);
   --canvas-block-border-selected: var(--surface-border-theme);
 
   /* Input Attention (draws user focus to editable fields) */
@@ -217,6 +220,6 @@
   --control-border-info-pressed: var(--primitives-blue-800);
 
   /* Focus Rings */
-  --control-focus-ring-standard: var(--primitives-blue-500);
+  --control-focus-ring-standard: var(--primitives-theme-300);
   --control-focus-ring-error: var(--primitives-red-500);
 }

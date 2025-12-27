@@ -19,21 +19,25 @@ export const OutputPanel = () => {
 
     return (
         <div className={styles.outputPanelContainer}>
-            {/* Custom header without border for continuity */}
-            <div className={styles.outputHeader}>
-                <h4>Output</h4>
-                <Button
-                    variant="primary"
-                    size="s"
-                    onClick={handleCopy}
-                    aria-label="Copy Full Prompt"
-                >
-                    <span className="material-symbols-rounded">content_copy</span>
-                    Copy
-                </Button>
-            </div>
-            <div className={styles.panelContent}>
-                <pre className={styles.markdownOutput}>{markdown}</pre>
+            <div className={styles.scrollFadeContainer}>
+                <div className={styles.scrollableContent}>
+                    {/* Floating header with primary (white) translucent bg */}
+                    <div className={styles.outputHeader}>
+                        <h4>Output</h4>
+                        <Button
+                            variant="primary"
+                            size="s"
+                            onClick={handleCopy}
+                            aria-label="Copy Full Prompt"
+                        >
+                            <span className="material-symbols-rounded">content_copy</span>
+                            Copy
+                        </Button>
+                    </div>
+                    <div className={styles.panelContent}>
+                        <pre className={styles.markdownOutput}>{markdown}</pre>
+                    </div>
+                </div>
             </div>
         </div>
     );

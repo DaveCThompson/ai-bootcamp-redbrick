@@ -263,3 +263,80 @@
   background-color: var(--surface-border-secondary);
   margin: 0 var(--spacing-2);
 }
+
+/* --- FLOATING PANEL HEADER (Translucent Scroll-Under) --- */
+.floatingPanelHeader {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--panel-header-height);
+  padding: 0 var(--spacing-4);
+  background-color: var(--surface-bg-secondary-translucent);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border-bottom: 1px solid var(--surface-border-secondary);
+  flex-shrink: 0;
+}
+
+.floatingPanelHeader h4 {
+  margin: 0;
+  color: var(--surface-fg-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: -0.21px;
+}
+
+/* Primary variant for output panel (white bg) */
+.floatingPanelHeader.primary {
+  background-color: var(--surface-bg-primary-translucent);
+}
+
+/* Header actions container */
+.floatingHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+/* --- SCROLL FADE GRADIENT --- */
+.scrollFadeContainer {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.scrollFadeContainer::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: linear-gradient(to bottom,
+      transparent 0%,
+      var(--surface-bg-secondary) 100%);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.scrollFadeContainer.primary::after {
+  background: linear-gradient(to bottom,
+      transparent 0%,
+      var(--surface-bg-primary) 100%);
+}
+
+/* Scrollable inner content */
+.scrollableContent {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 48px;
+  /* Space for fade gradient */
+}
