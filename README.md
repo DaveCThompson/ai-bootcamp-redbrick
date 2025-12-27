@@ -53,7 +53,7 @@ The canvas is built for intuitive interaction with a small, focused set of compo
 -   **Section Header:** A simple text element for creating titles and subtitles.
 -   **Text Block:** A simple multi-line text element for descriptive content.
 -   **Variables (Text Input, Role, etc.):** Simple input placeholders that represent data collection points (variables) in a prompt or workflow.
-    -   **Role:** A special variable that inserts a predefined persona and prompt snippet. Like the Template Container, it is treated as an **atomic, non-nestable block** on the canvas. It has a custom editor in the Properties Panel for selecting the desired role.
+    -   **Role:** A special variable that inserts a predefined persona and prompt snippet. It features an **inline dropdown** directly on the canvas for selecting the desired role, displaying the full prompt text below.
 
 ### Unified Rendering Pattern
 All canvas components are rendered through a unified set of renderer components located in `src/features/EditorCanvas/renderers/`. Each renderer accepts a `mode: 'canvas' | 'preview'` prop to separate its interactive editor appearance from its clean "final" appearance.
@@ -79,7 +79,7 @@ The editor uses an industry-standard selection model:
     *   `EditorCanvas.tsx`: The main container component with core event handlers.
     *   `CanvasNode.tsx`: The orchestrator that routes component data to the correct renderer.
     *   `renderers/`: The directory containing the single source of truth for component rendering.
+        *   `RoleRenderer.tsx`: Renders the Role component with inline dropdown for role selection.
         *   `TemplateContainerRenderer.tsx`: A specialized renderer for the form-like template block.
-*   **`PropertiesPanel/`**: The right-hand panel for editing component properties.
-    *   `RoleEditor.tsx`: A custom properties editor for the "Role" component.
-*   **`ComponentBrowser/`**: The left-hand panel for adding new components.
+*   **`OutputPanel/`**: The right-hand panel displaying the compiled prompt markdown with copy functionality.
+*   **`ComponentBrowser/`**: The left-hand panel for adding new components, with copy-to-clipboard snippet support.

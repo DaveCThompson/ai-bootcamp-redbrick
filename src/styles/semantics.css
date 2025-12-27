@@ -93,6 +93,15 @@
   --surface-shadow-2xl: 0 20px 24px -8px #0A0C122D, 0 0 1px 0 #0A0C120A;
   --surface-shadow-3xl: 0 32px 64px -16px #0A0C1223, 0 0 1px 0 #0A0C120A;
 
+  /* Canvas Block States */
+  --canvas-block-border-idle: transparent;
+  --canvas-block-border-hover: var(--surface-border-tertiary);
+  --canvas-block-border-selected: var(--surface-border-theme);
+
+  /* Input Attention (draws user focus to editable fields) */
+  --input-bg-attention: var(--primitives-theme-25);
+  --input-bg-attention-hover: var(--primitives-theme-50);
+
   /* ----------------------------------------- */
   /*             SEMANTIC - CONTROL            */
   /* ----------------------------------------- */

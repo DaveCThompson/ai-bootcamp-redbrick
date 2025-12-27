@@ -63,3 +63,9 @@ These are non-negotiable rules learned from the project's history. Violating the
     -   **INCORRECT (Destructive):** `font-variation-settings: 'opsz' 24;`
     -   **CORRECT (Safe):** `font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;`
     -   **The Rule:** Any rule that modifies this property should redefine all four primary axes to ensure a predictable and stable result.
+
+12. **Apply Concentric Radii to Wrapped Containers.** When a container wraps interactive elements (buttons, menu items), its `border-radius` must equal the inner element's radius plus the container's padding. This creates visually harmonious, concentric rounded corners.
+    -   **Formula:** `container_radius = inner_element_radius + padding`
+    -   **Current Implementation:** Button (`--radius-lg`, 10px) + padding (`--spacing-1`, 4px) = Container (`--radius-xl`, 12px)
+    -   **Applies To:** `ActionToolbar`, `SelectionToolbar`, `.menu-popover`
+    -   **Common Error:** Using an arbitrary container radius (e.g., `--radius-2xl`) without considering internal element radii creates a visually unbalanced UI.

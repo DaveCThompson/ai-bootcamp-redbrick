@@ -29,16 +29,16 @@ export const ActionToolbar = ({
     refs,
     floatingStyles,
   } = useFloating({
-    placement: 'top',
+    placement: 'top-end',
     open: true,
     middleware:
       mode === 'element-relative'
         ? [
-            offset(12),
-            flip({ padding: 8 }),
-            shift({ padding: 8 }),
-            arrow({ element: arrowRef }),
-          ]
+          offset(12),
+          flip({ padding: 8 }),
+          shift({ padding: 8 }),
+          arrow({ element: arrowRef }),
+        ]
         : [],
     whileElementsMounted:
       mode === 'element-relative' ? autoUpdate : undefined,
@@ -47,15 +47,14 @@ export const ActionToolbar = ({
   // Conditionally apply floating styles only when needed.
   // This prevents conflicts with other positioning modes like 'fixed'.
   const finalStyles = mode === 'element-relative' ? floatingStyles : {};
-  
+
   if (mode === 'element-relative' && referenceElement) {
     refs.setReference(referenceElement);
   }
 
   const isHidden = mode === 'element-relative' && !referenceElement;
-  const toolbarClasses = `${styles.actionToolbar} ${
-    mode === 'fixed' ? styles.fixed : ''
-  } ${isHidden ? styles.hidden : ''}`;
+  const toolbarClasses = `${styles.actionToolbar} ${mode === 'fixed' ? styles.fixed : ''
+    } ${isHidden ? styles.hidden : ''}`;
 
   return (
     <div

@@ -1,0 +1,28 @@
+/* src/features/OutputPanel/OutputPanel.module.css */
+.outputPanelContainer {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--surface-bg-primary);
+    height: 100%;
+    border-left: 1px solid var(--surface-border-secondary);
+    font-family: var(--font-family-sans);
+}
+
+.panelContent {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-4);
+}
+
+.markdownOutput {
+    background-color: var(--surface-bg-secondary_subtle);
+    border: 1px solid var(--surface-border-secondary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-3);
+    font-family: var(--font-family-mono);
+    font-size: 0.85em;
+    color: var(--surface-fg-secondary);
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 0;
+}

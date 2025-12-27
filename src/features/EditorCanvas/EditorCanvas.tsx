@@ -1,12 +1,12 @@
 // src/features/EditorCanvas/EditorCanvas.tsx
 import { useRef, useEffect } from 'react';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useDroppable } from '@dnd-kit/core';
 import {
   overDndIdAtom,
   selectedCanvasComponentIdsAtom,
-  isPreviewPaneVisibleAtom,
   copyAnimationStateAtom,
+  canvasInteractionAtom,
 } from '../../data/atoms';
 import { rootComponentIdAtom } from '../../data/promptStateAtoms';
 import { useAutoScroller } from '../../data/useAutoScroller';
@@ -14,8 +14,6 @@ import { useAutoScroller } from '../../data/useAutoScroller';
 import { CanvasNode } from './CanvasNode';
 import { FloatingMultiSelectToolbar } from './CanvasUI';
 import { CanvasContextMenu } from './CanvasContextMenu';
-import { PromptPreviewPanel } from './PromptPreviewPanel';
-import { EditorControlsPill } from './EditorControlsPill';
 
 import styles from './EditorCanvas.module.css';
 
@@ -25,11 +23,12 @@ const CanvasView = () => {
   const rootId = useAtomValue(rootComponentIdAtom);
   const overId = useAtomValue(overDndIdAtom);
   const selectedIds = useAtomValue(selectedCanvasComponentIdsAtom);
+  const setInteractionState = useSetAtom(canvasInteractionAtom);
   const { setNodeRef: setBackgroundNodeRef } = useDroppable({ id: CANVAS_BACKGROUND_ID });
 
-  // Event handlers for canvas background interactions
+  // Click on background deselects all
   const handleCanvasClick = () => {
-    // Logic handled by interaction hooks, this is just a surface
+    setInteractionState({ mode: 'idle' });
   };
 
   const isOverBackground = overId === CANVAS_BACKGROUND_ID;
@@ -61,8 +60,8 @@ const CanvasView = () => {
 }
 
 export const EditorCanvas = () => {
-  const isPreviewVisible = useAtomValue(isPreviewPaneVisibleAtom);
   const [copyAnimState, setCopyAnimState] = useAtom(copyAnimationStateAtom);
+  const setInteractionState = useSetAtom(canvasInteractionAtom);
   const editorContainerRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll capability for drag-and-drop
@@ -78,24 +77,35 @@ export const EditorCanvas = () => {
     }
   }, [copyAnimState, setCopyAnimState]);
 
+  // Document-level click listener for reliable deselection
+  useEffect(() => {
+    const handleDocumentClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+
+      // Check if click is inside a selectable wrapper
+      const isInsideSelectable = target.closest('[data-id]');
+      // Check if click is inside a popover, menu, select, or toolbar
+      const isInsideOverlay = target.closest(
+        '[data-radix-popper-content-wrapper], [data-radix-select-content], [data-radix-portal], .menu-popover, [data-floating-ui-portal]'
+      );
+
+      if (!isInsideSelectable && !isInsideOverlay) {
+        setInteractionState({ mode: 'idle' });
+      }
+    };
+
+    document.addEventListener('click', handleDocumentClick);
+    return () => document.removeEventListener('click', handleDocumentClick);
+  }, [setInteractionState]);
+
   return (
     <div
       className={styles.editorViewContainer}
       data-copy-animation-state={copyAnimState}
       ref={editorContainerRef}
     >
-      {/* Floating Controls Pill - Positioned absolute top center */}
-      <EditorControlsPill />
-
-      {/* Main Split Layout */}
-      <div
-        className={styles.contentWrapper}
-        data-preview-visible={isPreviewVisible}
-      >
+      <div className={styles.canvasCard}>
         <CanvasView />
-        <div className={styles.previewGridCell}>
-          <PromptPreviewPanel />
-        </div>
       </div>
     </div>
   );

@@ -1,14 +1,14 @@
 # Agent Charter & Execution Protocol
 
-This document defines the operating protocol for AI agents working on the Screen Studio codebase. Its purpose is to maximize the probability of a correct, complete, and architecturally sound "one-shot" outcome for any given task.
+This document defines the operating protocol for AI agents working on the AI Bootcamp codebase. Its purpose is to maximize the probability of a correct, complete, and architecturally sound "one-shot" outcome for any given task.
 
 ## Prime Directive: One-Shot Excellence
 
 The agent's primary goal is to deliver a complete and correct solution in a single response, minimizing the need for iterative correction. This is achieved by adhering to three pillars:
 
-1.  **Holistic Analysis:** Before writing code, the agent must ingest and synthesize **all** provided context: the user's request, the PRD, the project `README.md`, `CSS-PRINCIPLES.md`, and all relevant existing code files. The agent must build a complete mental model of the system's current state and the desired future state.
-2.  **Internal Simulation:** The agent must mentally "execute" the proposed changes and simulate their impact. This involves walking through the code paths, anticipating cascading effects (e.g., how changing a component's structure will affect its CSS), and pre-emptively identifying potential bugs, race conditions, or architectural violations.
-3.  **Comprehensive Delivery:** A "one-shot" response is not just code. It is a complete solution package, including all necessary file operations, code modifications, documentation updates, and a strategic verification plan.
+1.  **Holistic Analysis:** Before writing code, the agent must ingest and synthesize **all** provided context: the user's request, the PRD, the project `README.md`, `docs/STRATEGY-CSS.md`, and all relevant existing code files. The agent must build a complete mental model of the system's current state and the desired future state.
+2. **Internal Simulation:** The agent must mentally "execute" the proposed changes and simulate their impact. This involves walking through the code paths, anticipating cascading effects (e.g., how changing a component's structure will affect its CSS), and pre-emptively identifying potential bugs, race conditions, or architectural violations.
+3. **Comprehensive Delivery:** A "one-shot" response is not just code. It is a complete solution package, including all necessary file operations, code modifications, documentation updates, and a strategic verification plan.
 
 ## Standard Execution Algorithm (Internal)
 
@@ -63,3 +63,24 @@ These are non-negotiable rules learned from the project's history. Violating the
     -   **INCORRECT (Destructive):** `font-variation-settings: 'opsz' 24;`
     -   **CORRECT (Safe):** `font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;`
     -   **The Rule:** Any rule that modifies this property should redefine all four primary axes to ensure a predictable and stable result.
+
+12. **Apply Concentric Radii to Wrapped Containers.** When a container wraps interactive elements (buttons, menu items), its `border-radius` must equal the inner element's radius plus the container's padding. This creates visually harmonious, concentric rounded corners.
+    -   **Formula:** `container_radius = inner_element_radius + padding`
+    -   **Current Implementation:** Button (`--radius-lg`, 10px) + padding (`--spacing-1`, 4px) = Container (`--radius-xl`, 12px)
+    -   **Applies To:** `ActionToolbar`, `SelectionToolbar`, `.menu-popover`
+    -   **Common Error:** Using an arbitrary container radius (e.g., `--radius-2xl`) without considering internal element radii creates a visually unbalanced UI.
+
+13. **Use CSS `:has()` for Smart Nested Hover.** When nested selectable elements share the same hover style, use the `:has()` pseudo-class to suppress the parent's hover when a child is hovered. This prevents the "double-border" effect on nested components.
+    -   **Pattern:** `.wrapper:hover:has(.wrapper:hover) { border-color: transparent; }`
+    -   **Browser Support:** Chrome 105+, Safari 15.4+, Firefox 121+.
+
+14. **Document-Level Click Handlers Must Exclude Radix Portals.** When implementing click-to-deselect functionality at the document level, the handler must check for clicks inside Radix UI portals (selects, popovers, menus). Failure to do so will cause dropdowns to close and selections to clear unexpectedly.
+    -   **Required Selectors:** `[data-radix-popper-content-wrapper], [data-radix-select-content], [data-radix-portal], .menu-popover, [data-floating-ui-portal]`
+
+15. **Mandate Button Typography.** All button text must be `font-weight: 600` (SemiBold) to ensure legibility and visual weight, especially on smaller screens or lower contrast settings.
+
+16. **Mandate Icon Optical Sizing.** When using Material Symbols at sizes smaller than 20px (e.g., 16px), you **MUST** verify that `index.html` loads the correct `opsz` range (e.g., `15..48`). If the range starts at `20`, the browser will snap the icon to 20px, breaking the layout.
+
+17. **Strict Concentric Radii Calculation.** Do not guess radii. **STOP AND COMPUTE:** `Inner Radius = Outer Radius - Padding`.
+    -   *Example:* A standard menu item has a `10px` radius and `4px` padding. Therefore, any internal button or highlight must have a `6px` radius.
+    -   *Violation:* Using `4px` (too sharp) or `8px` (too round) breaks the visual harmony.

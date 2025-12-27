@@ -8,7 +8,7 @@ import { GeneralComponentsBrowser } from './features/ComponentBrowser/GeneralCom
 import { PlaceholderPanel } from './features/ComponentBrowser/PlaceholderPanel';
 import { EditorCanvas } from './features/EditorCanvas/EditorCanvas';
 import { MainToolbar } from './features/MainToolbar/MainToolbar';
-import { PropertiesPanel } from './features/PropertiesPanel/PropertiesPanel';
+import { OutputPanel } from './features/OutputPanel/OutputPanel';
 import { DndDragOverlay } from './features/EditorCanvas/DndDragOverlay';
 import { ReferencesPage } from './features/References/ReferencesPage';
 import { WelcomePage } from './features/Welcome/WelcomePage';
@@ -24,7 +24,6 @@ import {
   isComponentBrowserVisibleAtom,
   activeToolbarTabAtom,
   appViewModeAtom,
-  isPropertiesPanelVisibleAtom,
   activeDndIdAtom,
 } from './data/atoms';
 
@@ -45,13 +44,12 @@ const MAX_PANEL_WIDTH = 600;
 
 function App() {
   const isLeftPanelVisible = useAtomValue(isComponentBrowserVisibleAtom);
-  const isRightPanelVisible = useAtomValue(isPropertiesPanelVisibleAtom);
   const activeTabId = useAtomValue(activeToolbarTabAtom);
   const viewMode = useAtomValue(appViewModeAtom);
   const activeDndId = useAtomValue(activeDndIdAtom);
-  
+
   const { activeDndItem, handleDragStart, handleDragOver, handleDragEnd } = useCanvasDnd();
-  
+
   // Centralized hotkey management
   useEditorHotkeys();
 
@@ -97,13 +95,13 @@ function App() {
               <EditorCanvas />
             </div>
             <ResizablePanel
-                initialWidth={300}
-                minWidth={280}
-                maxWidth={MAX_PANEL_WIDTH}
-                position="right"
-                isAnimatedVisible={isRightPanelVisible}
+              initialWidth={300}
+              minWidth={280}
+              maxWidth={MAX_PANEL_WIDTH}
+              position="right"
+              isAnimatedVisible={true}
             >
-              <PropertiesPanel />
+              <OutputPanel />
             </ResizablePanel>
           </div>
         );
@@ -111,11 +109,11 @@ function App() {
   };
 
   return (
-    <DndContext 
-      sensors={sensors} 
-      onDragStart={handleDragStart} 
-      onDragOver={handleDragOver} 
-      onDragEnd={handleDragEnd} 
+    <DndContext
+      sensors={sensors}
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDragEnd={handleDragEnd}
       autoScroll={true}
       collisionDetection={rectIntersection}
     >
@@ -124,7 +122,7 @@ function App() {
         {renderMainContent()}
         <ToastContainer />
       </div>
-       <DragOverlay dropAnimation={dropAnimation}>
+      <DragOverlay dropAnimation={dropAnimation}>
         {activeDndId ? <DndDragOverlay activeItem={activeDndItem} /> : null}
       </DragOverlay>
     </DndContext>

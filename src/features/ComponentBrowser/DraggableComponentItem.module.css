@@ -1,0 +1,57 @@
+/* src/features/ComponentBrowser/DraggableComponentItem.module.css */
+.draggableItem {
+    position: relative;
+}
+
+.actionButtons {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease-in-out;
+}
+
+.draggableItem:hover .actionButtons {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.actionButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 24px;
+    height: 24px;
+    padding: 0;
+
+    background-color: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+
+    color: var(--control-fg-tertiary);
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+.actionButton:hover {
+    background-color: var(--control-bg-tertiary-hover);
+    /* This should be darker as requested */
+    color: var(--control-fg-tertiary-hover);
+}
+
+.actionButton:active {
+    transform: scale(0.95);
+}
+
+.actionButton .material-symbols-rounded {
+    font-size: 16px;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 16;
+}

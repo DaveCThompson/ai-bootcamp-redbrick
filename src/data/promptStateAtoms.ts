@@ -2,11 +2,10 @@
 import { atom } from 'jotai';
 import { produce, Draft } from 'immer';
 import { ContainerComponent, WidgetComponent, DynamicComponent, CanvasComponent, NormalizedCanvasComponents } from '../types';
-import { 
-  canvasInteractionAtom, 
-  CanvasInteractionState, 
+import {
+  canvasInteractionAtom,
+  CanvasInteractionState,
   scrollRequestAtom,
-  isPropertiesPanelVisibleAtom,
   activeToolbarTabAtom,
   isComponentBrowserVisibleAtom,
 } from './atoms';
@@ -33,15 +32,17 @@ type HistoryData = {
 
 // 2. DEFINE THE ACTION CONTRACT (REDUCER PATTERN)
 export type HistoryAction =
-  | { type: 'COMPONENT_ADD'; payload: { 
-      componentType: 'layout' | 'widget' | 'field' | 'dynamic'; 
+  | {
+    type: 'COMPONENT_ADD'; payload: {
+      componentType: 'layout' | 'widget' | 'field' | 'dynamic';
       name: string;
-      parentId: string; 
-      index: number; 
+      parentId: string;
+      index: number;
       controlType?: WidgetComponent['properties']['controlType'];
       controlTypeProps?: Partial<WidgetComponent['properties']>;
       dynamicType?: DynamicComponent['dynamicType'];
-    } }
+    }
+  }
   | { type: 'TEMPLATE_ADD'; payload: { templateId: string; parentId: string; index: number; } }
   | { type: 'COMPONENT_DELETE'; payload: { componentId: string } }
   | { type: 'COMPONENTS_DELETE_BULK'; payload: { componentIds: string[] } }
@@ -67,7 +68,7 @@ const historyAtom = atom<HistoryData>({
         name: 'Root',
         componentType: 'layout',
         children: [],
-        properties: { 
+        properties: {
           arrangement: 'stack',
         },
       }
@@ -121,7 +122,7 @@ export const commitActionAtom = atom(
             } else {
               newComponent = createWidgetComponent({ parentId, ...rest });
             }
-            
+
             presentState.components[newComponent.id] = newComponent;
             const parent = presentState.components[parentId];
             if (parent && parent.componentType === 'layout') {
@@ -232,7 +233,7 @@ export const commitActionAtom = atom(
             const { componentIds, parentId } = action.action.payload;
             const parent = presentState.components[parentId];
             if (!parent || parent.componentType !== 'layout') break;
-            
+
             const newContainer = createLayoutComponent(parentId);
             newContainer.children = componentIds;
 
@@ -251,7 +252,7 @@ export const commitActionAtom = atom(
             const { componentId } = action.action.payload;
             const container = presentState.components[componentId];
             if (!container || container.componentType !== 'layout') break;
-            
+
             const parent = presentState.components[container.parentId];
             if (!parent || parent.componentType !== 'layout') break;
 
@@ -368,7 +369,6 @@ export const canRedoAtom = atom<boolean>((get) => get(historyAtom).future.length
 export const startEditingOnEmptyCanvasAtom = atom(null, (get, set) => {
   const rootId = get(rootComponentIdAtom);
   set(canvasInteractionAtom, { mode: 'selecting', ids: [rootId] });
-  set(isPropertiesPanelVisibleAtom, true);
   set(activeToolbarTabAtom, 'lab-1');
   set(isComponentBrowserVisibleAtom, true);
 });

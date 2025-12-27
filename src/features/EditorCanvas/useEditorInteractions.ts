@@ -1,10 +1,9 @@
 // src/features/EditorCanvas/useEditorInteractions.ts
 import { useSortable } from '@dnd-kit/sortable';
-import { useAtom, useSetAtom, useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import {
   appViewModeAtom,
   canvasInteractionAtom,
-  isPropertiesPanelVisibleAtom,
   selectionAnchorIdAtom,
   CanvasInteractionState,
 } from '../../data/atoms';
@@ -23,7 +22,7 @@ export const useEditorInteractions = (component: CanvasComponent) => {
   const [anchorId, setAnchorId] = useAtom(selectionAnchorIdAtom);
   const allComponents = useAtomValue(canvasComponentsByIdAtom);
   const rootId = useAtomValue(rootComponentIdAtom);
-  const setIsPropertiesPanelVisible = useSetAtom(isPropertiesPanelVisibleAtom);
+
 
   const isRoot = component.id === rootId;
   const isSelected = (interactionState.mode === 'selecting' && interactionState.ids.includes(component.id)) || (interactionState.mode === 'editing' && interactionState.id === component.id);
@@ -50,13 +49,13 @@ export const useEditorInteractions = (component: CanvasComponent) => {
 
     if (isRoot) return;
     e.stopPropagation();
-    setIsPropertiesPanelVisible(true);
+
 
     const isEditableOnCanvas =
       (component.componentType === 'widget' || component.componentType === 'field') &&
       (component.properties.controlType === 'text-input' ||
         component.properties.controlType === 'plain-text');
-    
+
     if ((e.altKey && isEditableOnCanvas) || (e.detail === 2 && isEditableOnCanvas)) {
       setInteractionState({ mode: 'editing', id: component.id });
       return;
@@ -68,7 +67,6 @@ export const useEditorInteractions = (component: CanvasComponent) => {
       const newIds = currentIds.includes(component.id) ? currentIds.filter(id => id !== component.id) : [...currentIds, component.id];
       const newInteractionState: CanvasInteractionState = newIds.length > 0 ? { mode: 'selecting', ids: newIds } : { mode: 'idle' };
       if (newIds.length === 0) {
-        setIsPropertiesPanelVisible(false);
         setAnchorId(null);
       } else {
         setAnchorId(component.id);
@@ -95,7 +93,7 @@ export const useEditorInteractions = (component: CanvasComponent) => {
       setAnchorId(component.id);
     }
   };
-  
+
   const sortableStyle: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,

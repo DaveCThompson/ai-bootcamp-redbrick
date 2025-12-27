@@ -1,0 +1,39 @@
+/* Role selector styles for inline editing */
+.roleSelector {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    margin-bottom: var(--spacing-3);
+    padding: var(--spacing-2);
+    background-color: var(--surface-bg-primary);
+    border-radius: var(--radius-md);
+}
+
+.roleSelector label {
+    font-size: 0.9em;
+    font-weight: 500;
+    color: var(--surface-fg-secondary);
+    white-space: nowrap;
+}
+
+.roleSelect {
+    flex: 1;
+    padding: var(--spacing-1p5) var(--spacing-2);
+    border: 1px solid var(--surface-border-primary);
+    border-radius: var(--radius-md);
+    font-size: 0.9em;
+    font-family: var(--font-family-sans);
+    background-color: var(--surface-bg-primary);
+    color: var(--surface-fg-primary);
+    cursor: pointer;
+    outline: none;
+}
+
+.roleSelect:focus {
+    border-color: var(--surface-border-theme);
+    box-shadow: 0 0 0 2px var(--control-focus-ring-standard);
+}
+
+.roleSelect:hover {
+    border-color: var(--surface-border-secondary);
+}

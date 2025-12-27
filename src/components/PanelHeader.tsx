@@ -6,24 +6,30 @@ import panelStyles from './panel.module.css'; // Uses shared panel styles
 
 interface PanelHeaderProps {
   title: string;
-  onClose: () => void;
+  onClose?: () => void;
+  actions?: React.ReactNode;
 }
 
-export const PanelHeader: React.FC<PanelHeaderProps> = ({ title, onClose }) => {
+export const PanelHeader: React.FC<PanelHeaderProps> = ({ title, onClose, actions }) => {
   return (
     <div className={panelStyles.componentBrowserHeader}>
       <h4>{title}</h4>
-      <Tooltip content="Close Panel">
-        <Button 
-          variant="quaternary"
-          size="s"
-          iconOnly
-          aria-label="Close Panel"
-          onClick={onClose}
-        >
-          <span className="material-symbols-rounded">close</span>
-        </Button>
-      </Tooltip>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)' }}>
+        {actions}
+        {onClose && (
+          <Tooltip content="Close Panel">
+            <Button
+              variant="quaternary"
+              size="s"
+              iconOnly
+              aria-label="Close Panel"
+              onClick={onClose}
+            >
+              <span className="material-symbols-rounded">close</span>
+            </Button>
+          </Tooltip>
+        )}
+      </div>
     </div>
   );
 };

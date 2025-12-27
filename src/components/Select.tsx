@@ -14,24 +14,20 @@ interface SelectItemProps {
   children: React.ReactNode;
   value: string;
   className?: string;
-  icon?: string;
 }
 
 export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
-  ({ children, icon, ...props }, forwardedRef) => {
+  ({ children, ...props }, forwardedRef) => {
     return (
       // Use the global .menu-item class for styling
-      <RadixSelect.Item className="menu-item" {...props} ref={forwardedRef}>
-        {/* Slot A: Fixed-width container for alignment from global menu.css */}
-        <div className="checkmark-container">
-          {/* The checkmark, rendered by Radix when state is 'checked' */}
+      <RadixSelect.Item className={`menu-item ${styles.selectItem}`} {...props} ref={forwardedRef}>
+        {/* Fixed-width checkmark slot for consistent alignment */}
+        <div className={styles.checkmarkSlot}>
           <RadixSelect.ItemIndicator>
             <span className="material-symbols-rounded">check</span>
           </RadixSelect.ItemIndicator>
-          {/* The decorative icon, hidden via CSS when checked */}
-          {icon && <span className={`material-symbols-rounded ${styles.selectItemIcon}`}>{icon}</span>}
         </div>
-        {/* Slot B: Label */}
+        {/* Label */}
         <RadixSelect.ItemText>{children}</RadixSelect.ItemText>
       </RadixSelect.Item>
     );
@@ -43,8 +39,8 @@ export const Select = ({ children, value, onValueChange, placeholder }: SelectPr
 
   return (
     <RadixSelect.Root value={value} onValueChange={onValueChange} open={isOpen} onOpenChange={setIsOpen}>
-      <RadixSelect.Trigger 
-        className={styles.selectTrigger} 
+      <RadixSelect.Trigger
+        className={styles.selectTrigger}
         aria-label={placeholder}
         data-focused={isOpen} // Add data attribute for focus styling
       >

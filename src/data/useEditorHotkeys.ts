@@ -1,11 +1,10 @@
 // src/data/useEditorHotkeys.ts
 import { useEffect } from 'react';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import {
   canvasInteractionAtom,
   selectedCanvasComponentIdsAtom,
   appViewModeAtom,
-  isPreviewPaneVisibleAtom,
 } from './atoms';
 import { canvasComponentsByIdAtom } from './promptStateAtoms';
 import { useUndoRedo } from './useUndoRedo';
@@ -18,8 +17,6 @@ export const useEditorHotkeys = () => {
   const { undo, redo } = useUndoRedo();
   const actions = useCanvasActions(selectedIds);
   const viewMode = useAtomValue(appViewModeAtom);
-  const isPreviewVisible = useAtomValue(isPreviewPaneVisibleAtom);
-  const setPreviewVisible = useSetAtom(isPreviewPaneVisibleAtom);
 
 
   useEffect(() => {
@@ -45,12 +42,7 @@ export const useEditorHotkeys = () => {
       const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
       const isCtrlOrCmd = isMac ? event.metaKey : event.ctrlKey;
 
-      // Toggle Preview Panel
-      if (isCtrlOrCmd && event.key === '\\') {
-        event.preventDefault();
-        setPreviewVisible(!isPreviewVisible);
-        return;
-      }
+
 
       // Undo/Redo Logic
       const isUndo = isCtrlOrCmd && event.key === 'z' && !event.shiftKey;
@@ -107,5 +99,5 @@ export const useEditorHotkeys = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [interactionState, selectedIds, allComponents, undo, redo, actions, viewMode, isPreviewVisible, setPreviewVisible]);
+  }, [interactionState, selectedIds, allComponents, undo, redo, actions, viewMode]);
 };

@@ -1,8 +1,8 @@
 // src/data/componentFactory.ts
 import { nanoid } from 'nanoid';
-import { 
-  ContainerComponent, 
-  WidgetComponent, 
+import {
+  ContainerComponent,
+  WidgetComponent,
   DynamicComponent,
 } from '../types';
 
@@ -27,14 +27,26 @@ interface WidgetComponentOptions {
 }
 
 export const createWidgetComponent = (options: WidgetComponentOptions): WidgetComponent => {
-  const { 
-    parentId, 
-    name, 
-    controlType = 'text-input', 
+  const {
+    parentId,
+    name,
+    controlType = 'text-input',
     controlTypeProps,
   } = options;
 
   const isTextual = controlType === 'plain-text';
+
+  // Generate smart, action-oriented placeholder text
+  const generatePlaceholder = (label: string): string => {
+    const lower = label.toLowerCase();
+    if (lower.includes('name')) return 'e.g., John Smith';
+    if (lower.includes('question')) return 'What would you like to know?';
+    if (lower.includes('context')) return 'Describe the situation...';
+    if (lower.includes('goal')) return 'What do you want to achieve?';
+    if (lower.includes('task')) return 'Describe your task...';
+    if (lower.includes('input')) return 'Your input here...';
+    return 'Type here...';
+  };
 
   return {
     id: nanoid(8),
@@ -43,7 +55,7 @@ export const createWidgetComponent = (options: WidgetComponentOptions): WidgetCo
     properties: {
       label: isTextual ? '' : name,
       content: isTextual ? name : undefined,
-      placeholder: `Enter ${name}`, // Simplified placeholder logic
+      placeholder: controlTypeProps?.placeholder || generatePlaceholder(name),
       controlType: controlType,
       ...controlTypeProps,
     },

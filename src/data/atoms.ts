@@ -13,7 +13,6 @@ export const appViewModeAtom = atom<AppViewMode>('editor');
 export const isSettingsMenuOpenAtom = atom(false);
 export const activeToolbarTabAtom = atom<ToolbarTabId>('lab-1');
 export const isComponentBrowserVisibleAtom = atom(false);
-export const isPropertiesPanelVisibleAtom = atom(true);
 
 // =================================================================
 //                         View Preferences
@@ -31,10 +30,7 @@ export const focusIntentAtom = atom<string | null>(null);
 //                         Canvas State
 // =================================================================
 
-// NEW: A simple boolean to control the visibility of the preview pane.
-export const isPreviewPaneVisibleAtom = atom(true);
-
-// NEW: A state machine atom to trigger the background animation on copy.
+// State machine atom to trigger the background animation on copy.
 export const copyAnimationStateAtom = atom<'idle' | 'running'>('idle');
 
 export type CanvasInteractionState =
@@ -48,7 +44,7 @@ export const selectionAnchorIdAtom = atom<string | null>(null);
 
 // --- Context Menu State ---
 export const contextMenuTargetIdAtom = atom<string | null>(null);
-export const isContextMenuOpenAtom = atom(false); 
+export const isContextMenuOpenAtom = atom(false);
 export const contextMenuInstanceKeyAtom = atom(0);
 
 // A write-only "action" atom to safely handle selection changes when a context menu is triggered.
@@ -60,7 +56,7 @@ export const updateSelectionOnContextMenuAtom = atom(
 
     const currentInteraction = get(canvasInteractionAtom);
     const selectedIds = (currentInteraction.mode === 'selecting' ? currentInteraction.ids : (currentInteraction.mode === 'editing' ? [currentInteraction.id] : []));
-        
+
     const isTargetAlreadySelected = selectedIds.includes(targetId);
     if (!isTargetAlreadySelected) {
       set(canvasInteractionAtom, { mode: 'selecting', ids: [targetId] });

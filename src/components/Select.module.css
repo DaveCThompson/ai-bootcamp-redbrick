@@ -26,7 +26,7 @@
 }
 
 /* Use the standard outer box-shadow for focus. */
-.selectTrigger[data-state='open'], 
+.selectTrigger[data-state='open'],
 .selectTrigger:focus-visible,
 .selectTrigger[data-focused='true'] {
   border-color: var(--surface-border-theme);
@@ -36,6 +36,8 @@
 .selectIcon {
   color: var(--surface-fg-tertiary);
   transition: transform 0.2s ease;
+  margin-top: 2px;
+  /* Optical vertical centering */
 }
 
 .selectTrigger[data-state='open'] .selectIcon {
@@ -54,14 +56,21 @@
   max-height: 256px;
 }
 
-/* The decorative icon, rendered when an item is not checked */
-.selectItemIcon {
-  color: var(--surface-fg-secondary);
-  font-size: 18px;
-  font-variation-settings: 'opsz' 18;
+/* Select Item - high-craft spacing */
+.selectItem {
+  gap: var(--spacing-3);
 }
 
-/* When the item is checked, Radix adds an ItemIndicator. We hide our decorative icon. */
-.menu-item[data-state='checked'] .selectItemIcon {
-  display: none;
+.checkmarkSlot {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.checkmarkSlot .material-symbols-rounded {
+  font-size: 18px;
+  color: var(--control-fg-selected);
 }
