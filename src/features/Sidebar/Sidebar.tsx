@@ -1,5 +1,6 @@
 // src/features/Sidebar/Sidebar.tsx
 import { useAtom } from 'jotai';
+import { motion } from 'framer-motion';
 import {
     primaryNavModeAtom,
     sidebarNavItemAtom,
@@ -16,6 +17,11 @@ const navItems: { id: SidebarNavItem; label: string; icon: string }[] = [
     { id: 'lab-2', label: 'Lab 2', icon: 'biotech' },
     { id: 'lab-3', label: 'Lab 3', icon: 'experiment' },
     { id: 'lab-4', label: 'Lab 4', icon: 'labs' },
+];
+
+const toggleOptions: { mode: PrimaryNavMode; label: string }[] = [
+    { mode: 'builder', label: 'Builder' },
+    { mode: 'reference', label: 'Reference' },
 ];
 
 export const Sidebar = () => {
@@ -44,25 +50,27 @@ export const Sidebar = () => {
                 </div>
             </div>
 
-            {/* Custom Toggle: Builder / Reference */}
+            {/* Custom Toggle with Sliding Indicator */}
             <div className={styles.toggleSection}>
                 <div className={styles.toggleTrack} role="radiogroup" aria-label="Primary navigation mode">
-                    <button
-                        className={styles.toggleItem}
-                        role="radio"
-                        aria-pressed={primaryMode === 'builder'}
-                        onClick={() => handleToggle('builder')}
-                    >
-                        Builder
-                    </button>
-                    <button
-                        className={styles.toggleItem}
-                        role="radio"
-                        aria-pressed={primaryMode === 'reference'}
-                        onClick={() => handleToggle('reference')}
-                    >
-                        Reference
-                    </button>
+                    {toggleOptions.map((option) => (
+                        <button
+                            key={option.mode}
+                            className={styles.toggleItem}
+                            role="radio"
+                            aria-pressed={primaryMode === option.mode}
+                            onClick={() => handleToggle(option.mode)}
+                        >
+                            {primaryMode === option.mode && (
+                                <motion.div
+                                    className={styles.toggleIndicator}
+                                    layoutId="toggleIndicator"
+                                    transition={{ type: 'tween', duration: 0.2, ease: 'easeOut' }}
+                                />
+                            )}
+                            <span className={styles.toggleLabel}>{option.label}</span>
+                        </button>
+                    ))}
                 </div>
             </div>
 

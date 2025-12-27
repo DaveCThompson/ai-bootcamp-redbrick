@@ -71,7 +71,7 @@ const ReferencesNav = ({ sections, activeSectionId }: { sections: { id: string, 
           </li>
         ))}
       </ul>
-    </nav> 
+    </nav>
   );
 };
 
@@ -84,8 +84,8 @@ export const ReferencesPage = () => {
 
   const sectionIds = referenceData.map(s => s.id);
   const activeSectionId = useScrollSpy(
-    sectionIds, 
-    { root: scrollContainerRef.current, rootMargin: "-50% 0px -50% 0px" }, 
+    sectionIds,
+    { root: scrollContainerRef.current, rootMargin: "-50% 0px -50% 0px" },
     scrollContainerRef
   );
 

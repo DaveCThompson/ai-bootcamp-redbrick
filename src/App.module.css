@@ -24,6 +24,8 @@
     border: 1px solid var(--primitives-grey-100);
     box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.08);
     overflow: hidden;
+    /* Enable absolute positioning for overlapping slide animation */
+    position: relative;
 }
 
 /* Three-pane workspace layout */
@@ -32,6 +34,9 @@
     display: flex;
     min-height: 0;
     overflow: hidden;
+    /* Absolute positioning for overlapping slide animation */
+    position: absolute;
+    inset: 0;
 }
 
 /* Center pane (canvas) - NO floating effect, just uses parent bg */
@@ -50,4 +55,7 @@
     display: flex;
     min-height: 0;
     overflow: hidden;
+    /* Absolute positioning for overlapping slide animation */
+    position: absolute;
+    inset: 0;
 }

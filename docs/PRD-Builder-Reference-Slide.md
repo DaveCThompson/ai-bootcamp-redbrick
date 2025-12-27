@@ -1,16 +1,22 @@
-# PRD: Animated Builder Reference Slide
+# PRD: Animated Slide Transition for Builder / Reference Toggle
 
 ## Context
 
-The "Builder Reference" tab educates users on AI concepts. Currently static. To elevate craft, we will implement an **Animated Hero Section** using `framer-motion`.
+The application has a **primary navigation toggle** in the Sidebar with two modes:
+-   **Builder:** Three-pane layout (Elements Panel, Canvas, Output Panel).
+-   **Reference:** Single-pane static reference content (`ReferencesPage`).
+
+Currently, switching between these modes results in an **instantaneous swap** with no animation. This feels abrupt and "cheap."
+
+**Goal:** Implement a high-craft **animated slide transition** using `framer-motion` when toggling between Builder and Reference modes.
 
 ---
 
 ## Goals
 
-1.  **High Craft:** Buttery smooth (60fps), physics-based, visually stunning.
-2.  **Utility:** Acts as a navigational TOC, not just eye candy.
-3.  **Performance:** Use `transform`/`opacity` only. Leverage Framer Motion's `layout` prop.
+1.  **High Craft:** Buttery smooth (60fps), physics-based slide animation.
+2.  **Intuitive Direction:** "Reference" slides in from the left (since the toggle button is on the left); "Builder" slides in from the right.
+3.  **Performance:** Use `transform`/`opacity` only. No layout thrashing.
 4.  **Design System Compliance:** All tokens from `SPEC-CSS.md`.
 
 ---
@@ -19,185 +25,144 @@ The "Builder Reference" tab educates users on AI concepts. Currently static. To 
 
 | Option | Description | Pros | Cons |
 | :--- | :--- | :--- | :--- |
-| **1. Cinematic Hero** | Staggered text, glass blur, mouse-reactive background. | Elegant. Premium tone. | Purely aesthetic. No navigation aid. |
-| **2. Interactive Nav Cards** | 3 horizontal cards. Hover expands. Click scrolls to section. | High craft + high utility. Interactive TOC. | More complex state. |
-| **3. Concept Visualizer** | Animated diagram for "Context Window". | High education value. | Too narrow; one concept only. |
+| **1. Horizontal Slide (`AnimatePresence`)** | Builder/Reference content slides left/right based on direction. Uses `AnimatePresence` for exit/enter. | Intuitive (matches toggle position). Classic, expected. | Requires managing direction state. |
+| **2. Crossfade** | Fade out current, fade in new. | Simpler. No direction logic. | Less "spatial" metaphor. Feels less connected to the toggle. |
+| **3. Shared Layout (Hero Effect)** | Elements morph from Builder to Reference (e.g., header title morphs). | Very premium/Apple-esque. | Complex to implement. Requires shared `layoutId`s between unrelated views. |
 
-### **Recommendation: Option 2 (Interactive Nav Cards)**
+### **Recommendation: Option 1 (Horizontal Slide)**
 
-Highest density of craft and utility.
+This provides the clearest spatial metaphor: Reference is "to the left" of Builder, matching the toggle button order. It's also the most expected behavior and easier to implement correctly with `framer-motion`'s `AnimatePresence`.
 
 ---
 
 ## UX Specification
 
-### Initial State
-Three cards side-by-side with equal `flex-grow`. Each displays an icon and title.
+### Animation Direction
 
-### Entrance Animation
--   Cards stagger in from `y: 30, opacity: 0`.
--   `staggerChildren: 0.1`.
--   Spring: `{ type: 'spring', stiffness: 350, damping: 30 }`.
+-   **Toggling to Reference (from Builder):**
+    -   Builder slides **out to the right** (`x: '100%', opacity: 0`).
+    -   Reference slides **in from the left** (`x: '-100%' → 0, opacity: 0 → 1`).
+-   **Toggling to Builder (from Reference):**
+    -   Reference slides **out to the left** (`x: '-100%', opacity: 0`).
+    -   Builder slides **in from the right** (`x: '100%' → 0, opacity: 0 → 1`).
 
-### Hover Interaction
--   **Hovered Card:** `flex-grow: 2`. Background shifts to theme tint.
--   **Other Cards:** `flex-grow: 1`. Smoothly shrink via `layout` prop.
--   A `→` icon fades in, encouraging "Read More".
+### Animation Timing
 
-### Click Interaction
--   Smooth scrolls to the corresponding `#section-id`.
+-   **Duration:** `0.35s` (fast but perceivable).
+-   **Easing:** `{ type: 'spring', stiffness: 400, damping: 35 }` (snappy, minimal oscillation).
+
+### Visual Details
+
+-   During the transition, the outgoing view animates out while the incoming view animates in.
+-   `AnimatePresence mode="wait"` ensures exit animation completes before enter begins (cleaner, no overlap).
+-   Alternative: `mode="popLayout"` with `layout` prop for overlapping but smoother feel.
 
 ---
 
 ## Design System Compliance (from `SPEC-CSS.md`)
 
-### Token Mapping
-
-| Element | Token | Value |
-|---------|-------|-------|
-| Card Border Radius | `--radius-2xl` | 16px |
-| Card Padding | `--spacing-6` (24px) or `--spacing-8` (32px) | |
-| Card Gap | `--spacing-4` | 16px |
-| Card Background (Rest) | `--surface-bg-primary` | White |
-| Card Background (Hover) | `--control-bg-selected` | Theme tint |
-| Card Border (Rest) | `1px solid var(--surface-border-secondary)` | |
-| Card Shadow | `--surface-shadow-md` | |
-| Title Font Weight | `700` | Bold |
-| Title Color | `--surface-fg-primary` | |
-| Subtitle Color | `--surface-fg-secondary` | |
-| Icon Size | 24px | Default |
-| Icon `opsz` | 24 | Matches size |
-| Icon Color (Rest) | `--surface-fg-theme-primary` | Theme color |
-| "Read More" Arrow Color | `--control-fg-selected` | |
-
-### Concentric Radii Check (N/A for this component)
-Cards have no internal buttons, so no concentric radii calculation needed.
+| Concern | Token / Pattern |
+|---------|-----------------|
+| Background during transition | Parent uses `--surface-bg-secondary` (the workspace). |
+| No additional styling needed | The animation uses only `transform` and `opacity`. |
 
 ---
 
 ## Architecture & Implementation Spec
 
-### File Structure
-
-```
-src/features/References/
-├── ReferencesPage.tsx        # MODIFY: Import ReferenceHero
-├── ReferencesPage.module.css # MODIFY: Add hero styles
-├── referenceContent.ts       # READ ONLY
-└── components/
-    └── ReferenceHero/
-        ├── ReferenceHero.tsx      # NEW
-        └── ReferenceHero.module.css # NEW (or colocate in page module)
-```
-
-### `ReferenceHero.tsx` Pseudocode
+### Current Architecture (in `App.tsx`)
 
 ```tsx
-import { motion } from 'framer-motion';
-import { referenceData } from '../referenceContent';
-import styles from './ReferenceHero.module.css'; // Or page module
-
-const cardVariants = {
-  hidden: { y: 30, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { type: 'spring', stiffness: 350, damping: 30 } },
-};
-
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
-};
-
-export const ReferenceHero = () => {
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
-
-  const handleClick = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  return (
-    <motion.div
-      className={styles.heroContainer}
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      {referenceData.map(section => (
-        <motion.div
-          key={section.id}
-          className={styles.heroCard}
-          variants={cardVariants}
-          layout // Enables performant width animation
-          data-hovered={hoveredId === section.id}
-          style={{ flexGrow: hoveredId === section.id ? 2 : 1 }}
-          onMouseEnter={() => setHoveredId(section.id)}
-          onMouseLeave={() => setHoveredId(null)}
-          onClick={() => handleClick(section.id)}
-        >
-          <span className="material-symbols-rounded">{getIconForSection(section.id)}</span>
-          <h3>{section.title}</h3>
-          {hoveredId === section.id && (
-            <motion.span
-              className={styles.arrow}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-            >
-              →
-            </motion.span>
-          )}
-        </motion.div>
-      ))}
-    </motion.div>
-  );
+// Current: Instant switch, no animation
+const renderWorkspaceContent = () => {
+  if (primaryMode === 'reference') {
+    return <div className={styles.fullWorkspaceContent}><ReferencesPage /></div>;
+  }
+  // ... builder content
 };
 ```
 
-### CSS Spec (`ReferenceHero.module.css`)
+### Proposed Architecture
+
+Wrap the dynamic content in `AnimatePresence` with `motion.div` wrappers.
+
+```tsx
+import { AnimatePresence, motion } from 'framer-motion';
+
+// Direction: negative = left, positive = right
+const slideVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? '100%' : '-100%',
+    opacity: 0,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction: number) => ({
+    x: direction > 0 ? '-100%' : '100%',
+    opacity: 0,
+  }),
+};
+
+const springTransition = { type: 'spring', stiffness: 400, damping: 35 };
+
+// Inside App component:
+const [direction, setDirection] = useState(0); // Track direction for animation
+
+// Update direction when mode changes (could use useEffect or derive)
+const handleModeChange = (newMode: PrimaryNavMode) => {
+  setDirection(newMode === 'reference' ? -1 : 1);
+  setPrimaryMode(newMode);
+};
+
+// Render:
+<div className={styles.workspaceContainer}>
+  <AnimatePresence mode="wait" custom={direction}>
+    {primaryMode === 'reference' ? (
+      <motion.div
+        key="reference"
+        className={styles.fullWorkspaceContent}
+        variants={slideVariants}
+        initial="enter"
+        animate="center"
+        exit="exit"
+        custom={direction}
+        transition={springTransition}
+      >
+        <ReferencesPage />
+      </motion.div>
+    ) : (
+      <motion.div
+        key="builder"
+        className={styles.threePaneLayout}
+        variants={slideVariants}
+        initial="enter"
+        animate="center"
+        exit="exit"
+        custom={direction}
+        transition={springTransition}
+      >
+        {/* ... builder panels ... */}
+      </motion.div>
+    )}
+  </AnimatePresence>
+</div>
+```
+
+### CSS Requirements
+
+The `workspaceContainer` must have `overflow: hidden` to prevent the sliding content from being visible outside its bounds during animation.
 
 ```css
-.heroContainer {
-  display: flex;
-  gap: var(--spacing-4);
-  margin-bottom: var(--spacing-8);
+.workspaceContainer {
+  overflow: hidden; /* CRITICAL for slide animation */
+  position: relative;
 }
 
-.heroCard {
-  flex: 1; /* Base flex-grow */
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--spacing-3);
-  padding: var(--spacing-6);
-
-  background-color: var(--surface-bg-primary);
-  border: 1px solid var(--surface-border-secondary);
-  border-radius: var(--radius-2xl);
-  box-shadow: var(--surface-shadow-md);
-
-  cursor: pointer;
-  /* NO CSS transition for flex-grow; Framer handles it */
-}
-
-.heroCard[data-hovered="true"] {
-  background-color: var(--control-bg-selected);
-}
-
-.heroCard h3 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--surface-fg-primary);
-  margin: 0;
-}
-
-.heroCard .material-symbols-rounded {
-  font-size: 24px;
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-  color: var(--surface-fg-theme-primary);
-}
-
-.arrow {
-  font-size: 1.5rem;
-  color: var(--control-fg-selected);
-  margin-left: auto;
+.fullWorkspaceContent,
+.threePaneLayout {
+  /* These should already be position: relative or default, which is fine */
 }
 ```
 
@@ -207,9 +172,10 @@ export const ReferenceHero = () => {
 
 | File | Action | Reason |
 |------|--------|--------|
-| `ReferencesPage.tsx` | **MODIFY** | Import and render `<ReferenceHero />` |
-| `ReferencesPage.module.css` | **MODIFY** | May need minor adjustments to header |
-| `components/ReferenceHero/` | **NEW** | Create component and styles |
+| `src/App.tsx` | **MODIFY** | Wrap content in `AnimatePresence` + `motion.div`. Add direction state. |
+| `src/App.module.css` | **MODIFY** | Add `overflow: hidden` to `.workspaceContainer`. |
+| `src/features/Sidebar/Sidebar.tsx` | **MODIFY** (optional) | If direction logic is hoisted, sidebar may need to set direction on toggle. |
+| `framer-motion` | **EXISTING** | Already installed. |
 
 ---
 
@@ -219,16 +185,17 @@ export const ReferenceHero = () => {
 
 | Step | Expected Result |
 |------|-----------------|
-| 1. Navigate to Reference tab. | Cards stagger in from bottom. |
-| 2. Hover over each card. | Hovered card expands. Arrow fades in. Others shrink smoothly. |
-| 3. Move mouse quickly between cards. | No jank. Smooth spring physics. |
-| 4. Click a card. | Page smooth-scrolls to that section. |
-| 5. Inspect with DevTools. | `layout` is using transforms, not width. No layout thrashing. |
+| 1. Click "Reference" toggle. | Builder slides out right, Reference slides in from left. |
+| 2. Click "Builder" toggle. | Reference slides out left, Builder slides in from right. |
+| 3. Rapidly toggle back and forth. | Animation interrupts cleanly. No flickering or stuck states. |
+| 4. Inspect with DevTools. | Only `transform` and `opacity` are animated (no `width`, `left`, etc.). |
+| 5. Check `.workspaceContainer`. | Has `overflow: hidden`. |
 
 ---
 
 ## Open Questions for User
 
-1.  **Icon choice per section?** I can propose defaults (e.g., `smart_toy` for AI 101, `edit_note` for Prompt Engineering, `music_note` for Vibe Coding), or you can provide.
-2.  **Do you want a brief subtitle visible in the unexpanded card, or only on hover?**
-3.  **Mobile/responsive behavior?** Stack vertically on smaller screens, or is this desktop-only for now?
+1.  **Should the sidebar stay fixed, or should everything slide?** (Currently: Only the workspace content slides.)
+2.  **Preference on `AnimatePresence mode`?** `wait` (one finishes before next starts) or `popLayout` (overlapping)?
+3.  **Any concern with the direction metaphor (Reference = left, Builder = right)?** This matches the toggle order.
+

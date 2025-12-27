@@ -1,6 +1,8 @@
 // src/App.tsx
+import { useEffect, useRef, useState } from 'react';
 import { useAtomValue } from 'jotai';
 import { DndContext, DragOverlay, DropAnimation, defaultDropAnimationSideEffects, PointerSensor, useSensor, useSensors, rectIntersection } from '@dnd-kit/core';
+import { AnimatePresence, motion, Variants } from 'framer-motion';
 
 // Features
 import { Sidebar } from './features/Sidebar/Sidebar';
@@ -25,10 +27,29 @@ import {
   shouldShowPanelsAtom,
   activeDndIdAtom,
   SidebarNavItem,
+  PrimaryNavMode,
 } from './data/atoms';
 
 // Styles
 import styles from './App.module.css';
+
+// --- Slide Animation Variants ---
+const slideVariants: Variants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? '100%' : '-100%',
+    opacity: 0,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction: number) => ({
+    x: direction > 0 ? '-100%' : '100%',
+    opacity: 0,
+  }),
+};
+
+const slideTransition = { type: 'tween', duration: 0.3, ease: 'easeOut' };
 
 const dropAnimation: DropAnimation = {
   duration: 0,
@@ -50,6 +71,20 @@ function App() {
   const activeNavItem = useAtomValue(sidebarNavItemAtom);
   const shouldShowPanels = useAtomValue(shouldShowPanelsAtom);
   const activeDndId = useAtomValue(activeDndIdAtom);
+
+  // Track slide direction: -1 = left (to Reference), 1 = right (to Builder)
+  const prevModeRef = useRef<PrimaryNavMode>(primaryMode);
+  const [slideDirection, setSlideDirection] = useState(0);
+
+  useEffect(() => {
+    if (prevModeRef.current !== primaryMode) {
+      // Reference is "left" of Builder in the toggle, so:
+      // Going TO reference = slide left (direction -1)
+      // Going TO builder = slide right (direction 1)
+      setSlideDirection(primaryMode === 'reference' ? -1 : 1);
+      prevModeRef.current = primaryMode;
+    }
+  }, [primaryMode]);
 
   const { activeDndItem, handleDragStart, handleDragOver, handleDragEnd } = useCanvasDnd();
 
@@ -79,52 +114,89 @@ function App() {
     return <PlaceholderPanel title={labId} />;
   };
 
-  const renderWorkspaceContent = () => {
-    // Reference mode: show references page
+  // Determine which view to show and its animation key
+  const getWorkspaceView = () => {
     if (primaryMode === 'reference') {
-      return (
-        <div className={styles.fullWorkspaceContent}>
-          <ReferencesPage />
-        </div>
-      );
+      return {
+        key: 'reference',
+        content: (
+          <motion.div
+            key="reference"
+            className={styles.fullWorkspaceContent}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            custom={slideDirection}
+            transition={slideTransition}
+          >
+            <ReferencesPage />
+          </motion.div>
+        ),
+      };
     }
 
-    // Welcome: show welcome page (no panels)
     if (activeNavItem === 'welcome') {
-      return (
-        <div className={styles.fullWorkspaceContent}>
-          <WelcomePage />
-        </div>
-      );
+      return {
+        key: 'welcome',
+        content: (
+          <motion.div
+            key="welcome"
+            className={styles.fullWorkspaceContent}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            custom={slideDirection}
+            transition={slideTransition}
+          >
+            <WelcomePage />
+          </motion.div>
+        ),
+      };
     }
 
     // Builder mode with Lab selected: three-pane layout
-    return (
-      <div className={styles.threePaneLayout}>
-        <ResizablePanel
-          initialWidth={INITIAL_PANEL_WIDTH}
-          minWidth={MIN_PANEL_WIDTH}
-          maxWidth={MAX_PANEL_WIDTH}
-          position="left"
-          isAnimatedVisible={shouldShowPanels}
+    return {
+      key: `builder-${activeNavItem}`,
+      content: (
+        <motion.div
+          key={`builder-${activeNavItem}`}
+          className={styles.threePaneLayout}
+          variants={slideVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          custom={slideDirection}
+          transition={slideTransition}
         >
-          {renderLeftPanelContent()}
-        </ResizablePanel>
-        <div className={styles.centerPane}>
-          <EditorCanvas />
-        </div>
-        <ResizablePanel
-          initialWidth={400}
-          minWidth={320}
-          maxWidth={800}
-          position="right"
-          isAnimatedVisible={shouldShowPanels}
-        >
-          <OutputPanel />
-        </ResizablePanel>
-      </div>
-    );
+          <ResizablePanel
+            initialWidth={INITIAL_PANEL_WIDTH}
+            minWidth={MIN_PANEL_WIDTH}
+            maxWidth={MAX_PANEL_WIDTH}
+            position="left"
+            isAnimatedVisible={shouldShowPanels}
+          >
+            {renderLeftPanelContent()}
+          </ResizablePanel>
+          <div className={styles.centerPane}>
+            <EditorCanvas />
+          </div>
+          <ResizablePanel
+            initialWidth={400}
+            minWidth={320}
+            maxWidth={800}
+            position="right"
+            isAnimatedVisible={shouldShowPanels}
+          >
+            <OutputPanel />
+          </ResizablePanel>
+        </motion.div>
+      ),
+    };
   };
+
+  const workspaceView = getWorkspaceView();
 
   return (
     <DndContext
@@ -138,7 +210,9 @@ function App() {
       <div className={styles.appContainer}>
         <Sidebar />
         <div className={styles.workspaceContainer}>
-          {renderWorkspaceContent()}
+          <AnimatePresence initial={false} custom={slideDirection}>
+            {workspaceView.content}
+          </AnimatePresence>
         </div>
         <ToastContainer />
       </div>

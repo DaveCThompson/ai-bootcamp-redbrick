@@ -55,7 +55,9 @@
     font-family: var(--font-family-sans);
     color: var(--surface-fg-secondary);
     cursor: pointer;
-    transition: all 0.15s ease-in-out;
+    transition: color 0.15s ease-in-out;
+    /* Enable absolute positioning for sliding indicator */
+    position: relative;
 }
 
 .toggleItem:hover:not([aria-pressed='true']) {
@@ -64,10 +66,23 @@
 }
 
 .toggleItem[aria-pressed='true'] {
-    background: var(--primitives-base-white);
     color: var(--surface-fg-primary);
     font-weight: 600;
+}
+
+/* Sliding indicator - shared layoutId element */
+.toggleIndicator {
+    position: absolute;
+    inset: 0;
+    background: var(--primitives-base-white);
+    border-radius: var(--radius-sm);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Text label sits above the indicator */
+.toggleLabel {
+    position: relative;
+    z-index: 1;
 }
 
 /* --- Navigation Section --- */
