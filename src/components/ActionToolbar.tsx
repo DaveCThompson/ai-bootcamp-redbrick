@@ -29,12 +29,14 @@ export const ActionToolbar = ({
     refs,
     floatingStyles,
   } = useFloating({
+    // Position at top, aligned to right edge but inset 32px
     placement: 'top-end',
     open: true,
     middleware:
       mode === 'element-relative'
         ? [
-          offset(12),
+          // mainAxis: -20 to sit over top border, crossAxis: -48px insets toolbar from right edge
+          offset({ mainAxis: -20, crossAxis: -48 }),
           flip({ padding: 8 }),
           shift({ padding: 8 }),
           arrow({ element: arrowRef }),
@@ -62,6 +64,9 @@ export const ActionToolbar = ({
       ref={mode === 'element-relative' ? refs.setFloating : undefined}
       style={finalStyles}
       className={toolbarClasses}
+      data-toolbar="true"
+      // Bubble-wrap pattern: stop both pointer and click events from bubbling to parent handlers
+      onPointerDown={(e) => e.stopPropagation()}
       onClick={(e) => e.stopPropagation()}
     >
       {children}

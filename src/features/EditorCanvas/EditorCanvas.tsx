@@ -26,11 +26,11 @@ const CanvasView = () => {
   const setInteractionState = useSetAtom(canvasInteractionAtom);
   const { setNodeRef: setBackgroundNodeRef } = useDroppable({ id: CANVAS_BACKGROUND_ID });
 
-  // Click on background deselects all, but ignore clicks inside Radix portals
+  // Click on background deselects all, but ignore clicks inside Radix portals or toolbar
   const handleCanvasClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     const isInsideOverlay = target.closest(
-      '[data-radix-popper-content-wrapper], [data-radix-select-content], [data-radix-portal], .menu-popover, [data-floating-ui-portal]'
+      '[data-radix-popper-content-wrapper], [data-radix-select-content], [data-radix-portal], .menu-popover, [data-floating-ui-portal], [data-toolbar]'
     );
     if (isInsideOverlay) return;
 
@@ -94,7 +94,7 @@ export const EditorCanvas = () => {
       const isInsideSelectable = target.closest('[data-id]');
       // Check if click is inside a popover, menu, select, or toolbar
       const isInsideOverlay = target.closest(
-        '[data-radix-popper-content-wrapper], [data-radix-select-content], [data-radix-portal], .menu-popover, [data-floating-ui-portal]'
+        '[data-radix-popper-content-wrapper], [data-radix-select-content], [data-radix-portal], .menu-popover, [data-floating-ui-portal], [data-toolbar]'
       );
 
       if (!isInsideSelectable && !isInsideOverlay) {

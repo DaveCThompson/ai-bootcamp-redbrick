@@ -94,20 +94,23 @@ export const CanvasSelectionToolbar = ({
               </Button>
             </Toolbar.Button>
           </Tooltip>
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger asChild>
-              <Toolbar.Button asChild>
-                <Button variant="tertiary" size="s" iconOnly aria-label="More options">
-                  <span className="material-symbols-rounded">more_vert</span>
-                </Button>
-              </Toolbar.Button>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Portal>
-              <DropdownMenu.Content className="menu-popover" sideOffset={8} align="start" onCloseAutoFocus={(e) => e.preventDefault()}>
-                <ActionMenu items={menuItems} />
-              </DropdownMenu.Content>
-            </DropdownMenu.Portal>
-          </DropdownMenu.Root>
+          {/* Bubble-wrap pattern: isolate dropdown events from parent handlers */}
+          <div onPointerDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
+            <DropdownMenu.Root modal={false}>
+              <DropdownMenu.Trigger asChild>
+                <Toolbar.Button asChild>
+                  <Button variant="tertiary" size="s" iconOnly aria-label="More options">
+                    <span className="material-symbols-rounded">more_horiz</span>
+                  </Button>
+                </Toolbar.Button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Portal>
+                <DropdownMenu.Content className="menu-popover" sideOffset={8} align="start" onCloseAutoFocus={(e) => e.preventDefault()}>
+                  <ActionMenu items={menuItems} />
+                </DropdownMenu.Content>
+              </DropdownMenu.Portal>
+            </DropdownMenu.Root>
+          </div>
         </>
       </Toolbar.Root>
     </ActionToolbar>

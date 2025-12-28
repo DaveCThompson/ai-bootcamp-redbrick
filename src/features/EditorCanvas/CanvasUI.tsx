@@ -61,11 +61,6 @@ export const FloatingMultiSelectToolbar = () => {
       <Button variant="tertiary" size="s" iconOnly onClick={handleWrap} aria-label="Wrap in container">
         <span className="material-symbols-rounded">add_box</span>
       </Button>
-      <Tooltip content="Repath items (Coming Soon)">
-        <Button variant="tertiary" size="s" iconOnly aria-label="Repath selected components" disabled>
-          <span className="material-symbols-rounded">alt_route</span>
-        </Button>
-      </Tooltip>
       <Button variant="tertiary" size="s" iconOnly onClick={handleDelete} aria-label="Delete selected components">
         <span className="material-symbols-rounded">delete</span>
       </Button>

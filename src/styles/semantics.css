@@ -124,10 +124,10 @@
   --control-bg-secondary: var(--primitives-grey-20);
   --control-bg-secondary-hover: var(--primitives-grey-50);
   --control-bg-secondary-pressed: var(--primitives-grey-100);
-  --control-bg-selected: var(--primitives-theme-50);
-  --control-bg-selected-hover: var(--primitives-theme-100);
+  --control-bg-selected: var(--primitives-grey-30);
+  --control-bg-selected-hover: var(--primitives-grey-60);
   --control-bg-tertiary: var(--utility-alpha-grey-10);
-  --control-bg-tertiary-hover: var(--utility-alpha-grey-30);
+  --control-bg-tertiary-hover: var(--utility-alpha-grey-50);
   --control-bg-tertiary-pressed: var(--utility-alpha-grey-60);
   --control-bg-quaternary: transparent;
   /* Explicitly transparent at rest for components like buttons */

@@ -42,19 +42,6 @@ export const GeneralComponentsBrowser = ({ labId = 'lab-1' }: GeneralComponentsB
           {/* Floating header inside scroll container for sticky behavior */}
           <div className={panelStyles.floatingPanelHeader}>
             <h4>Prompt Elements</h4>
-            <div className={panelStyles.floatingHeaderActions}>
-              <Tooltip content="Close Panel">
-                <Button
-                  variant="quaternary"
-                  size="s"
-                  iconOnly
-                  aria-label="Close Panel"
-                  onClick={handleClosePanel}
-                >
-                  <span className="material-symbols-rounded">close</span>
-                </Button>
-              </Tooltip>
-            </div>
           </div>
           <ul className={panelStyles.componentList}>
             {showSnippetsAndTemplates && <SnippetsSection />}

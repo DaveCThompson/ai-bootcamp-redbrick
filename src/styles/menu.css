@@ -144,20 +144,26 @@
 .menu-item[data-state="checked"] {
     background-color: var(--control-bg-selected);
     border-color: transparent;
-    color: var(--control-fg-selected);
+    /* Use primary fg for text, not theme color */
+    color: var(--surface-fg-primary);
 }
 
-.menu-item[data-state="checked"] .material-symbols-rounded,
+.menu-item[data-state="checked"] .material-symbols-rounded {
+    /* Keep icon red, use brighter theme-500 */
+    color: var(--primitives-theme-500);
+}
+
 .menu-item[data-state="checked"] .hotkey,
 .menu-item[data-state="checked"] .chevron {
-    color: var(--control-fg-selected);
+    color: var(--surface-fg-secondary);
 }
 
 /* NEW: Hover/Focus state for CHECKED items */
 .menu-item[data-state='checked']:hover:not(:disabled):not([data-disabled]),
 .menu-item[data-state='checked'][data-highlighted]:not([data-disabled]) {
     background-color: var(--control-bg-selected-hover);
-    color: var(--control-fg-selected-hover);
+    /* Keep text as primary fg on hover */
+    color: var(--surface-fg-primary);
 }
 
 /* NEW: Keyboard focus state for CHECKED items */

@@ -118,3 +118,12 @@ These are non-negotiable rules learned from the project's history. Violating the
     -   **Scroll Fade:** Add `::after` pseudo-element with 48px gradient to indicate scrollable content.
     -   **Class References:** See `panel.module.css` for `.floatingPanelHeader`, `.scrollFadeContainer`, `.scrollableContent`.
 
+27. **Toolbar Positioning & Interaction.** Floating toolbars (e.g., ActionToolbar) must:
+    -   **Positioning:** Use `top-end` placement with negative offsets (e.g., `mainAxis: -20, crossAxis: -48`) to overlap the target's top border precisely.
+    -   **Exclusion:** Must include `data-toolbar="true"` attribute and be explicitly excluded from global click-to-deselect handlers in `EditorCanvas`.
+    -   **Event Isolation:** Must use the "Bubble-Wrap Pattern" (stop propagation on pointerdown/click) to prevent canvas interaction conflicts.
+
+28. **Button State Purity.** Ghost/Tertiary buttons **MUST NOT** acquire borders on hover. They should only darken their background/foreground.
+    -   **Rest:** Transparent bg, transparent border.
+    -   **Hover:** Darkened transparent bg (`alpha-grey-50`), **NO visible border**.
+    -   **Rationale:** Preserves the "lightweight" feel and prevents visual clutter in dense UIs like toolbars.

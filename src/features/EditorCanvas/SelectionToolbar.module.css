@@ -1,28 +1,6 @@
 /* src/features/EditorCanvas/SelectionToolbar.module.css */
-.toolbarWrapper {
-  position: absolute;
-  /* Center on the right border - shifted left 32px to avoid chevron */
-  top: calc(50% - 16px);
-  right: calc(-32px);
-  transform: translateY(-50%);
-  z-index: 10;
-}
 
-.selectionToolbar {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-1);
-  /* Slight pink tint using theme tokens */
-  background-color: var(--primitives-theme-25);
-  /* Concentric radii: 10px button + 4px padding ≈ 12px container */
-  border-radius: var(--radius-xl);
-  padding: var(--spacing-1);
-  color: var(--surface-fg-primary);
-  border: 1px solid var(--primitives-theme-100);
-  box-shadow: var(--surface-shadow-lg);
-  animation: fadeIn 0.1s ease-out;
-}
-
+/* Drag handle cursor states */
 .dragHandle {
   cursor: grab;
 }
@@ -31,14 +9,15 @@
   cursor: grabbing;
 }
 
-/* Divider for secondary-bg toolbar */
+/* Divider between toolbar sections */
 .divider {
   width: 1px;
   height: 24px;
-  background-color: var(--surface-border-secondary);
+  background-color: var(--surface-border-primary);
   margin: 0 var(--spacing-1);
 }
 
+/* Divider for dropdown menus */
 .menuDivider {
   height: 1px;
   background-color: var(--surface-border-secondary);

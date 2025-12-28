@@ -147,13 +147,13 @@
 .btn[data-variant="tertiary"]:hover:not(:disabled) {
   background-color: var(--control-bg-tertiary-hover);
   color: var(--control-fg-tertiary-hover);
-  border-color: var(--control-border-quaternary-hover);
+  /* No border on hover - subtle hover with darkened fg only */
 }
 
 .btn[data-variant="tertiary"]:active:not(:disabled) {
   background-color: var(--control-bg-tertiary-pressed);
   color: var(--control-fg-tertiary-hover);
-  border-color: var(--control-border-quaternary-pressed);
+  /* No border on active */
 }
 
 /* --- Quaternary Button --- */
@@ -183,15 +183,12 @@
 
 .btn[data-variant="on-solid"]:hover:not(:disabled) {
   background-color: var(--control-bg-on-solid-hover);
-  border-color: var(--control-border-tertiary-hover);
-  /* Re-using tertiary border seems appropriate here */
+  /* No border on hover */
   box-shadow: none;
-
 }
 
 .btn[data-variant="on-solid"]:active:not(:disabled) {
   background-color: var(--control-bg-on-solid-pressed);
-  border-color: var(--control-border-tertiary-pressed);
-  /* Re-using tertiary border seems appropriate here */
+  /* No border on active */
   box-shadow: none;
 }

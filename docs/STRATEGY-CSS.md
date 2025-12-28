@@ -185,3 +185,19 @@ The application uses a "Warm & Capable" aesthetic defined by the Pink/Red theme.
 - **Tinted Backgrounds:** Use `theme-25` or `theme-50` for subtle active states (like toolbars or active inputs).
 
 **Avoid:** Hardcoded `#3b82f6` or `blue-500` values for focus or selection.
+
+### The Button State Pattern
+
+Buttons use a simplified "Ghost Interaction" model to reduce visual noise in dense UIs:
+
+-   **Rest:** Tertiary/Ghost buttons are completely transparent (no border, no background).
+-   **Hover:** Acquires a darkened background (`alpha-grey-50`) but **NO border**.
+-   **Constraint:** Do not add borders on hover for tertiary actions; it shifts layout or creates unnecessary weight.
+
+### The Floating Toolbar Pattern
+
+Contextual toolbars (like Selection Toolbar) must sit precisely above their target to avoid obscuring it or conflict with drag handles:
+
+-   **Positioning:** `top-end` relative to the target.
+-   **Offset:** Negative values `mainAxis: -20, crossAxis: -48` to overlap the top border.
+-   **Architecture:** Must use `[data-toolbar="true"]` and be excluded from global click handlers to prevent immediate close-on-click issues.
